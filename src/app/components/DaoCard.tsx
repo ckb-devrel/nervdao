@@ -120,7 +120,7 @@ export const DaoCard = ({ dao }: { dao: ccc.Cell }) => {
   return (
     <>
       <div 
-        className="bg-gray-900 rounded-lg p-4 w-full max-w-sm border h-44 border-gray-400 cursor-pointer"
+        className="bg-gray-900 rounded-lg p-4 w-full border h-44 border-gray-400 cursor-pointer"
         onClick={handleOpenModal}
       >
         <div className="flex justify-between items-center mb-1">
