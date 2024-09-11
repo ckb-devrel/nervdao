@@ -79,7 +79,7 @@ const AppLayout: React.FC = () => {
             <NavItem href="dashboard" icon="home" label="Dashboard" />
             <NavItem href="deposit" icon="deposit" label="Deposit" />
             <NavItem href="withdraw" icon="withdraw" label="Withdraw" />
-            <NavItem href="history" icon="history" label="History" />
+            {/* <NavItem href="history" icon="history" label="History" /> */}
           </ul>
         </nav>
       </aside>
