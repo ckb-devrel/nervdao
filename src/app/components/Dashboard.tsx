@@ -8,7 +8,7 @@ import DaoCard from './DaoCard';
 const Dashboard: React.FC = () => {
   const signer = ccc.useSigner();
   const [daos, setDaos] = useState<ccc.Cell[]>([]);
-
+  
   useEffect(() => {
     if (!signer) {
       return;

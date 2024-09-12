@@ -3,6 +3,7 @@ import DashboardHistoryItem from './DashboardHistoryItem';
 import { addTypeToCell, CellWithType, sortCells } from '@/utils/cellUtils';
 import { Cell } from '@ckb-lumos/lumos';
 import { useCollectDeposits, useCollectWithdrawals } from '@/hooks/DaoCollect';
+import DashboardRecentTransactionsSkeleton from './TransactionSkeleton';
 
 interface RecentTransactionsProps {
   type?: 'all' | 'deposit' | 'withdraw';
@@ -37,7 +38,7 @@ const RecentTransactions: React.FC<RecentTransactionsProps> = ({
                 (type === 'all' || type === 'withdraw' ? withdrawalError : null);
 
   if (isLoading) {
-    return <div className="text-cyan-400">Loading...</div>;
+    return <DashboardRecentTransactionsSkeleton />;
   }
 
   if (error) {

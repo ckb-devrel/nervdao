@@ -115,8 +115,6 @@ export const DaoCard = ({ dao }: { dao: ccc.Cell }) => {
     setModalOpen(false);
   };
 
-  console.log('infos', infos);
-
   return (
     <>
       <div 

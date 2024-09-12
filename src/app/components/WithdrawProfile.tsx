@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react';
 import { ccc } from '@ckb-ccc/connector-react';
 import { useCollectDeposits, useCollectWithdrawals } from '@/hooks/DaoCollect';
 import { getProfit } from '@/utils/epoch';
+import SkeletonLoader from './SkeletonLoader';
 // import { addTypeToCell, sortCells } from '@/utils/cellUtils';
 
 const WithdrawProfile: React.FC = () => {
@@ -66,7 +67,6 @@ const WithdrawProfile: React.FC = () => {
           setTotalProfit(ccc.fixedPointToString(sumProfit));
           setIsLoadingBalance(true);
         } catch (error) {
-          console.error('Error fetching balance:', error);
         } finally {
           setIsLoadingBalance(false);
         }
@@ -79,9 +79,7 @@ const WithdrawProfile: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="bg-gray-900 rounded-lg p-4 w-full flex justify-center items-center h-64">
-        <div className="text-cyan-400">Loading...</div>
-      </div>
+      <SkeletonLoader showHeader={false} itemCount={3} showChart={false} />
     );
   }
 

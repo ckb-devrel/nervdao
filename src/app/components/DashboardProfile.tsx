@@ -7,6 +7,7 @@ import { ccc } from '@ckb-ccc/connector-react';
 import { formatBalance, truncateAddress } from '@/utils/stringUtils';
 import { useCollectDeposits, useCollectWithdrawals } from '@/hooks/DaoCollect';
 // import { addTypeToCell, sortCells } from '@/utils/cellUtils';
+import SkeletonLoader from './SkeletonLoader';
 
 const DashboardProfile: React.FC = () => {
   const [balance, setBalance] = useState<string>('');
@@ -27,7 +28,6 @@ const DashboardProfile: React.FC = () => {
           setBalance(ccc.fixedPointToString(bal));
           setAddress(addr);
         } catch (error) {
-          console.error('Error fetching balance:', error);
         } finally {
           setIsLoadingBalance(false);
         }
@@ -39,11 +39,7 @@ const DashboardProfile: React.FC = () => {
   const error = depositError || withdrawalError;
 
   if (isLoading) {
-    return (
-      <div className="bg-gray-900 rounded-lg p-4 w-full flex justify-center items-center h-64">
-        <div className="text-cyan-400">Loading...</div>
-      </div>
-    );
+    return <SkeletonLoader />;
   }
 
   if (error) {
