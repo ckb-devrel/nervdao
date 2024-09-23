@@ -1,6 +1,5 @@
 import { useGetExplorerLink } from "@/hooks/Explorer";
 import { useNotification } from "@/context/NotificationProvider";
-import { getClaimEpoch } from "@/utils/epoch";
 import { truncateString } from "@/utils/stringUtils";
 import { ccc } from "@ckb-ccc/connector-react";
 import React, { useEffect, useState } from "react";
@@ -50,7 +49,8 @@ export function DaoDepositDetailModal({
       return;
     }
 
-    const [_profit, _depositTx, _depositHeader] = cell;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const [_, _depositTx] = cell;
     if (!_depositTx.blockHash || !_depositTx.blockNumber) {
       //TODO: handle error
       return;

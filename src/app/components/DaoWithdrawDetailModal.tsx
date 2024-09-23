@@ -123,7 +123,7 @@ export function DaoWithdrawDetailModal({
     tx.outputs[0].capacity += profit;
     const result = await signer.sendTransaction(tx);
     showNotification("success", `Withdraw Success: ${result}`);
-  }, [signer, infos]);
+  }, [signer, infos, dao, showNotification]);
 
   const handleClose = (e: React.MouseEvent) => {
     e.stopPropagation();

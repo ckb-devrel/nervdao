@@ -99,7 +99,7 @@ export const DaoCard = ({ dao }: { dao: ccc.Cell }) => {
           parseEpoch(infos[3][1].epoch) - parseEpoch(infos[2].epoch)
         )
       ) / 180
-    : 0;
+    : 1;
   const remainingCycles =
     infos && tip
       ? Number(
@@ -108,7 +108,7 @@ export const DaoCard = ({ dao }: { dao: ccc.Cell }) => {
               parseEpoch(tip.epoch)
           )
         ) / 180
-      : 0;
+      : 1;
 
   const remainingDays = remainingCycles * 30;
   const progressPercentage = Math.min(
