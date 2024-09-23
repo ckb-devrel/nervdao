@@ -1,11 +1,13 @@
-"use client";
-
 import "./globals.css";
 import { Work_Sans, Play } from "next/font/google";
-import { ccc } from "@ckb-ccc/connector-react";
-import { NotificationProvider } from "@/context/NotificationProvider";
-import Notification from "@/app/components/Notification";
-import { CSSProperties } from "react";
+import { Metadata } from "next";
+import { LayoutProvider } from "./layoutProvider";
+
+export const metadata: Metadata = {
+  title: "NervDAO",
+  description: "A Universal Wallet-Interfaced Nervos DAO Portal",
+  icons: "/favicon.svg",
+};
 
 const workSans = Work_Sans({
   subsets: ["latin"],
@@ -27,25 +29,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${workSans.variable} ${play.variable}`}>
-        <ccc.Provider
-          connectorProps={{
-            style: {
-              "--background": "#232323",
-              "--divider": "rgba(255, 255, 255, 0.1)",
-              "--btn-primary": "#2D2F2F",
-              "--btn-primary-hover": "#515151",
-              "--btn-secondary": "#2D2F2F",
-              "--btn-secondary-hover": "#515151",
-              color: "#ffffff",
-              "--tip-color": "#666",
-            } as CSSProperties,
-          }}
-        >
-          <NotificationProvider>
-            {children}
-            <Notification />
-          </NotificationProvider>
-        </ccc.Provider>
+        <LayoutProvider>{children}</LayoutProvider>
       </body>
     </html>
   );
