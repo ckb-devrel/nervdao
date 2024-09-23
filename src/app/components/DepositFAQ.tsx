@@ -21,7 +21,7 @@ const DepositFAQ: React.FC = () => {
   const faqs = [
     {
       question: "When can I withdraw my deposit?",
-      answer: "You can initiate a withdrawal from Nervos DAO at any time. However, withdrawals will only complete after the current 30-day cycle (or roughly 180 epochs) has finished. Once the cycle ends, your CKB will be available for use, and you'll receive your initial deposit along with any earned compensation."
+      answer: "You can initiate a redemption from Nervos DAO at any time. However, redemptions will only become settled after the current 180-epoch cycle (roughly 30 days) has finished. Once the settlement period ends, you can withdraw your CKB at any time, and you'll receive your initial deposit and all earned compensation."
     },
     {
       question: "How are compensation calculated for my deposit?",

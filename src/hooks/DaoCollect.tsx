@@ -1,62 +1,77 @@
-import { useState, useEffect, useMemo } from 'react';
-import { ccc } from '@ckb-ccc/connector-react';
-import { Cell } from '@ckb-lumos/base';
-import { dao } from '@ckb-lumos/common-scripts';
-import { Indexer } from '@ckb-lumos/ckb-indexer';
-import { config } from '@ckb-lumos/lumos';
+import { useState, useEffect, useMemo } from "react";
+import { ccc } from "@ckb-ccc/connector-react";
 
-type CollectType = 'deposit' | 'withdraw';
+async function* collectDaoCells(signer: ccc.Signer, isRedeeming?: boolean) {
+  for await (const cell of signer.findCells(
+    {
+      script: await ccc.Script.fromKnownScript(
+        signer.client,
+        ccc.KnownScript.NervosDao,
+        "0x"
+      ),
+      scriptLenRange: [33, 34],
+      outputDataLenRange: [8, 9],
+      ...(isRedeeming ?? true
+        ? {}
+        : {
+            outputDataSearchMode: "exact",
+            outputData: "00".repeat(8),
+          }),
+    },
+    true
+  )) {
+    if (isRedeeming && ccc.numFrom(cell.outputData) === ccc.Zero) {
+      continue;
+    }
+    yield cell;
+  }
+}
 
-//TODO: change to mainnet
-const indexer = new Indexer('https://testnet.ckb.dev/indexer'); 
-
-const useCollectCells = (collectType: CollectType) => {
-  const [cells, setCells] = useState<Cell[]>([]);
+export function useDaoCells(isRedeeming?: boolean) {
+  const [cells, setCells] = useState<ccc.Cell[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
   const signer = ccc.useSigner();
 
   useEffect(() => {
-    const collectCells = async () => {
-      if (!signer) {
-        setIsLoading(false);
-        return;
-      }
+    if (!signer) {
+      setIsLoading(false);
+      return;
+    }
 
+    (async () => {
       try {
         setIsLoading(true);
-        const ckbAddress = await signer.getRecommendedAddress();
-        const daoCellCollector = new dao.CellCollector(
-          ckbAddress,
-          indexer,
-          collectType,
-          { config: config.TESTNET }
-        );
-        const collectedCells: Cell[] = [];
-        for await (const inputCell of daoCellCollector.collect()) {
+        const collectedCells: ccc.Cell[] = [];
+        for await (const inputCell of collectDaoCells(signer, isRedeeming)) {
           collectedCells.push(inputCell);
         }
 
         setCells(collectedCells);
         setError(null);
       } catch (err) {
-        setError(err instanceof Error ? err : new Error('An unknown error occurred'));
+        setError(
+          err instanceof Error ? err : new Error("An unknown error occurred")
+        );
       } finally {
         setIsLoading(false);
       }
-    };
+    })();
+  }, [signer, isRedeeming]);
 
-    collectCells();
-  }, [signer, collectType]);
-  
   const sum = useMemo(() => {
     return cells.reduce(
       (sum, c) => sum + BigInt(c.cellOutput.capacity),
       BigInt(0)
     );
   }, [cells]);
-  return { cells, isLoading, error, sum };
-};
 
-export const useCollectDeposits = () => useCollectCells('deposit');
-export const useCollectWithdrawals = () => useCollectCells('withdraw');
+  return { cells, isLoading, error, sum };
+}
+
+export function useDaoDeposits() {
+  return useDaoCells(false);
+}
+export function useDaoRedeems() {
+  return useDaoCells(true);
+}

@@ -1,8 +1,9 @@
-import React from 'react';
+import React from "react";
 
 interface CircularProgressProps {
   percentage: number;
   size?: number;
+  noText?: boolean;
   strokeWidth?: number;
   circleColor?: string;
   progressColor?: string;
@@ -11,9 +12,10 @@ interface CircularProgressProps {
 const CircularProgress: React.FC<CircularProgressProps> = ({
   percentage,
   size = 48,
+  noText = false,
   strokeWidth = 4,
-  circleColor = '#374151',
-  progressColor = '#10B981'
+  circleColor = "#374151",
+  progressColor = "#10B981",
 }) => {
   const radius = (size - strokeWidth) / 2;
   const circumference = radius * 2 * Math.PI;
@@ -41,9 +43,11 @@ const CircularProgress: React.FC<CircularProgressProps> = ({
           fill="none"
         />
       </svg>
-      <div className="absolute inset-0 flex items-center justify-center">
-        <span className="font-work-sans text-white text-sm font-bold">{`${percentage}%`}</span>
-      </div>
+      {noText ? undefined : (
+        <div className="absolute inset-0 flex items-center justify-center">
+          <span className="font-work-sans text-white text-sm font-bold">{`${percentage}%`}</span>
+        </div>
+      )}
     </div>
   );
 };

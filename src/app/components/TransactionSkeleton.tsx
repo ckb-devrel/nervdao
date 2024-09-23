@@ -1,12 +1,19 @@
-import React from 'react';
+import React from "react";
 
 interface DashboardRecentTransactionsSkeletonProps {
   itemCount?: number;
 }
 
-const DashboardRecentTransactionsSkeleton: React.FC<DashboardRecentTransactionsSkeletonProps> = ({ itemCount = 5 }) => {
+export function DashboardRecentTransactionsSkeleton({
+  itemCount = 5,
+  ...props
+}: DashboardRecentTransactionsSkeletonProps &
+  React.ComponentPropsWithoutRef<"div">) {
   return (
-    <div className="bg-gray-900 rounded-lg p-4 flex-grow animate-pulse">
+    <div
+      {...props}
+      className={`bg-gray-900 rounded-lg p-4 flex-grow animate-pulse ${props.className}`}
+    >
       <div className="h-6 bg-gray-700 rounded w-48 mb-6"></div>
       <div className="space-y-4">
         {Array.from({ length: itemCount }).map((_, index) => (
@@ -27,6 +34,4 @@ const DashboardRecentTransactionsSkeleton: React.FC<DashboardRecentTransactionsS
       </div>
     </div>
   );
-};
-
-export default DashboardRecentTransactionsSkeleton;
+}

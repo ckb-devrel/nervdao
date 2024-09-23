@@ -1,4 +1,3 @@
-
 export function truncateString(str: string, frontChars: number, endChars: number): string {
   if (str.length <= frontChars + endChars) {
     return str;

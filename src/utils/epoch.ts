@@ -1,9 +1,9 @@
-import { ccc } from "@ckb-ccc/ccc";
+import { ccc } from "@ckb-ccc/connector-react";
 
-export const getClaimEpoch = (
+export function getClaimEpoch(
   depositHeader: ccc.ClientBlockHeader,
-  withdrawHeader: ccc.ClientBlockHeader,
-): ccc.Epoch => {
+  withdrawHeader: ccc.ClientBlockHeader
+): ccc.Epoch {
   const depositEpoch = depositHeader.epoch;
   const withdrawEpoch = withdrawHeader.epoch;
   const intDiff = withdrawEpoch[0] - depositEpoch[0];
@@ -26,13 +26,13 @@ export const getClaimEpoch = (
   ];
 }
 
-export const getProfit = (
+export function getProfit(
   dao: ccc.Cell,
   depositHeader: ccc.ClientBlockHeader,
-  withdrawHeader: ccc.ClientBlockHeader,
-) => {
+  withdrawHeader: ccc.ClientBlockHeader
+) {
   const occupiedSize = ccc.fixedPointFrom(
-    dao.cellOutput.occupiedSize + ccc.bytesFrom(dao.outputData).length,
+    dao.cellOutput.occupiedSize + ccc.bytesFrom(dao.outputData).length
   );
   const profitableSize = dao.cellOutput.capacity - occupiedSize;
 
@@ -42,7 +42,7 @@ export const getProfit = (
   );
 }
 
-export const parseEpoch = (epoch: ccc.Epoch) => {
+export function parseEpoch(epoch: ccc.Epoch) {
   return (
     ccc.fixedPointFrom(epoch[0].toString()) +
     (ccc.fixedPointFrom(epoch[1].toString()) * ccc.fixedPointFrom(1)) /
