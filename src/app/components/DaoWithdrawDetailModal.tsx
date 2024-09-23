@@ -77,17 +77,17 @@ export function DaoWithdrawDetailModal({
     if (!signer || !infos) return;
     const [profit, depositTx, depositHeader] = infos;
     if (!depositTx.blockHash) {
-      //TODO: handle error
+      showNotification("error", "Unknown error, invalid withdraw");
       return;
     }
     const { blockHash } = depositTx;
     if (!infos[3]) {
-      //TODO: handle error
+      showNotification("error", "Unknown error, invalid withdraw");
       return;
     }
     const [withdrawTx, withdrawHeader] = infos[3];
     if (!withdrawTx?.blockHash) {
-      //TODO: handle error
+      showNotification("error", "Unknown error, invalid withdraw");
       return;
     }
     const tx = ccc.Transaction.from({
@@ -211,9 +211,15 @@ export function DaoWithdrawDetailModal({
           <div className="flex justify-between items-center">
             <span className="text-gray-400">Status</span>
             {infos?.[1].status === "committed" ? (
-              <span className="bg-purple-900 text-purple-400 px-2 py-0.5 rounded text-xs flex items-center">
-                Redeeming
-              </span>
+              remainingDays >= 0 ? (
+                <span className="bg-purple-900 text-purple-400 px-2 py-0.5 rounded text-xs flex items-center">
+                  Redeeming
+                </span>
+              ) : (
+                <span className="bg-green-900 text-green-400 px-2 py-0.5 rounded text-xs flex items-center">
+                  Withdrawable
+                </span>
+              )
             ) : (
               <span className="bg-orange-300 text-orange-800 px-2 py-0.5 rounded text-xs flex items-center">
                 Pending

@@ -1,11 +1,15 @@
 /* eslint-disable @next/next/no-img-element */
 import { useEffect, useState, useMemo } from "react";
 import { DashboardRecentTransactions } from "./DashboardRecentTransactions";
-import WithdrawProfile from "./WithdrawProfile";
+import { WithdrawProfile } from "./WithdrawProfile";
 import { ccc } from "@ckb-ccc/connector-react";
 import DaoCard from "./DaoCard";
 
-const Withdraw = () => {
+export function Withdraw({
+  setCurrentPage,
+}: {
+  setCurrentPage: (page: string) => void;
+}) {
   const signer = ccc.useSigner();
   const [daos, setDaos] = useState<ccc.Cell[]>([]);
 
@@ -69,14 +73,14 @@ const Withdraw = () => {
                   height={160}
                 />
               </div>
-              <h3 className="text-xl font-bold mb-2">
-                No Withdrawable Holdings
-              </h3>
+              <h3 className="text-xl font-bold mb-2">No Redemptions</h3>
               <p className="text-gray-400 mb-4">
-                You dont have any DAO deposits ready for withdrawal at the
-                moment.
+                You don&apos;t have any DAO redemptions at the moment.
               </p>
-              <button className="bg-teal-500 text-gray-900 font-semibold py-2 px-4 rounded hover:bg-teal-400">
+              <button
+                className="font-bold bg-btn-gradient text-gray-800 text-body-2 py-3 px-6 rounded-lg hover:bg-btn-gradient-hover transition duration-200 disabled:opacity-50 disabled:hover:bg-btn-gradient"
+                onClick={() => setCurrentPage("deposit")}
+              >
                 View Deposits
               </button>
             </div>
@@ -90,6 +94,4 @@ const Withdraw = () => {
       />
     </div>
   );
-};
-
-export default Withdraw;
+}

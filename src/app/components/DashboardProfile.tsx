@@ -15,12 +15,10 @@ const DashboardProfile: React.FC = () => {
   const {
     sum: depositSum,
     isLoading: isLoadingDeposits,
-    error: depositError,
   } = useDaoDeposits();
   const {
     sum: withdrawalSum,
     isLoading: isLoadingWithdrawals,
-    error: withdrawalError,
   } = useDaoRedeems();
   const { wallet } = ccc.useCcc();
   const signer = ccc.useSigner();
@@ -44,18 +42,9 @@ const DashboardProfile: React.FC = () => {
 
   const isLoading =
     isLoadingBalance || isLoadingDeposits || isLoadingWithdrawals;
-  const error = depositError || withdrawalError;
 
   if (isLoading) {
     return <SkeletonLoader />;
-  }
-
-  if (error) {
-    return (
-      <div className="bg-gray-900 rounded-lg p-4 w-full flex justify-center items-center h-64">
-        <div className="text-red-500">Error: {error.message}</div>
-      </div>
-    );
   }
 
   const totalBalance =

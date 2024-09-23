@@ -8,19 +8,12 @@ import { getProfit } from "@/utils/epoch";
 import SkeletonLoader from "./SkeletonLoader";
 import CircularProgress from "./CircularProgress";
 
-const WithdrawProfile: React.FC = () => {
+export function WithdrawProfile() {
   const [isLoadingBalance, setIsLoadingBalance] = useState(true);
   const [totalProfit, setTotalProfit] = useState<ccc.FixedPoint>(ccc.Zero);
-  const {
-    sum: depositSum,
-    isLoading: isLoadingDeposits,
-    error: depositError,
-  } = useDaoDeposits();
-  const {
-    sum: withdrawalSum,
-    isLoading: isLoadingWithdrawals,
-    error: withdrawalError,
-  } = useDaoRedeems();
+  const { sum: depositSum, isLoading: isLoadingDeposits } = useDaoDeposits();
+  const { sum: withdrawalSum, isLoading: isLoadingWithdrawals } =
+    useDaoRedeems();
   const signer = ccc.useSigner();
 
   useEffect(() => {
@@ -84,7 +77,6 @@ const WithdrawProfile: React.FC = () => {
 
   const isLoading =
     isLoadingBalance || isLoadingDeposits || isLoadingWithdrawals;
-  const error = depositError || withdrawalError;
 
   const totalBalance = ccc.numMax(
     totalProfit + depositSum + withdrawalSum,
@@ -100,14 +92,6 @@ const WithdrawProfile: React.FC = () => {
   if (isLoading) {
     return (
       <SkeletonLoader showHeader={false} itemCount={3} showChart={false} />
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="bg-gray-900 rounded-lg p-4 w-full flex justify-center items-center h-64">
-        <div className="text-red-500">Error: {error.message}</div>
-      </div>
     );
   }
 
@@ -137,10 +121,7 @@ const WithdrawProfile: React.FC = () => {
           color: "#3CFF97",
         },
       ].map(({ label, value, percentage, color }, index) => (
-        <div
-          key={index}
-          className="bg-gray-800 relative rounded-lg p-3 mb-2"
-        >
+        <div key={index} className="bg-gray-800 relative rounded-lg p-3 mb-2">
           <div className="flex justify-between items-center">
             <span className="font-work-sans text-gray-400">{label}</span>
           </div>
@@ -161,6 +142,4 @@ const WithdrawProfile: React.FC = () => {
       ))}
     </div>
   );
-};
-
-export default WithdrawProfile;
+}

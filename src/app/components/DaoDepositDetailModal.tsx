@@ -52,7 +52,7 @@ export function DaoDepositDetailModal({
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [_, _depositTx] = cell;
     if (!_depositTx.blockHash || !_depositTx.blockNumber) {
-      //TODO: handle error
+      showNotification("error", "Unknown error, invalid redeem");
       return;
     }
     const { blockHash, blockNumber } = _depositTx;

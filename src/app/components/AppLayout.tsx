@@ -2,15 +2,12 @@
 "use client";
 
 import React, { useState } from "react";
-import ConnectWallet from "./ConnectWallet";
-import Dashboard from "./Dashboard";
-import { ccc } from "@ckb-ccc/connector-react";
+import { Dashboard } from "./Dashboard";
 import Title from "./Ttitle";
 import Deposit from "./Deposit";
-import Withdraw from "./Withdraw";
+import { Withdraw } from "./Withdraw";
 
 const AppLayout: React.FC = () => {
-  const { wallet } = ccc.useCcc();
   const [currentPage, setCurrentPage] = useState("dashboard");
 
   const NavItem = ({
@@ -53,25 +50,17 @@ const AppLayout: React.FC = () => {
   };
 
   const renderContent = () => {
-    if (!wallet) {
-      return <ConnectWallet />;
-    }
-
     switch (currentPage) {
       case "dashboard":
-        return <Dashboard />;
+        return <Dashboard setCurrentPage={setCurrentPage} />;
       case "deposit":
         return <Deposit />;
       case "withdraw":
-        return <Withdraw />;
+        return <Withdraw setCurrentPage={setCurrentPage} />;
       // case 'history':
       //   return <History />;
     }
   };
-
-  if (!wallet) {
-    return <ConnectWallet />;
-  }
 
   return (
     <div className="flex flex-col lg:flex-row lg:h-screen bg-gray-950 text-white">

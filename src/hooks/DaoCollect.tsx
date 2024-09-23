@@ -30,7 +30,6 @@ async function* collectDaoCells(signer: ccc.Signer, isRedeeming?: boolean) {
 export function useDaoCells(isRedeeming?: boolean) {
   const [cells, setCells] = useState<ccc.Cell[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
   const signer = ccc.useSigner();
 
   useEffect(() => {
@@ -48,11 +47,6 @@ export function useDaoCells(isRedeeming?: boolean) {
         }
 
         setCells(collectedCells);
-        setError(null);
-      } catch (err) {
-        setError(
-          err instanceof Error ? err : new Error("An unknown error occurred")
-        );
       } finally {
         setIsLoading(false);
       }
@@ -66,7 +60,7 @@ export function useDaoCells(isRedeeming?: boolean) {
     );
   }, [cells]);
 
-  return { cells, isLoading, error, sum };
+  return { cells, isLoading, sum };
 }
 
 export function useDaoDeposits() {

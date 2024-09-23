@@ -21,12 +21,10 @@ export function DashboardRecentTransactions({
   const {
     cells: depositCells,
     isLoading: isLoadingDeposits,
-    error: depositError,
   } = useDaoDeposits();
   const {
     cells: withdrawalCells,
     isLoading: isLoadingWithdrawals,
-    error: withdrawalError,
   } = useDaoRedeems();
 
   const combinedCells = useMemo(() => {
@@ -55,20 +53,9 @@ export function DashboardRecentTransactions({
   const isLoading =
     (type === "all" || type === "deposit" ? isLoadingDeposits : false) ||
     (type === "all" || type === "withdraw" ? isLoadingWithdrawals : false);
-  const error =
-    (type === "all" || type === "deposit" ? depositError : null) ||
-    (type === "all" || type === "withdraw" ? withdrawalError : null);
 
   if (isLoading) {
     return <DashboardRecentTransactionsSkeleton {...props} />;
-  }
-
-  if (error) {
-    return (
-      <div {...props} className={`text-red-500 ${props.className}`}>
-        Error: {error.message}
-      </div>
-    );
   }
 
   if (combinedCells.length === 0) {

@@ -5,7 +5,11 @@ import { DashboardRecentTransactions } from "./DashboardRecentTransactions";
 import DaoCard from "./DaoCard";
 import { useDaoCells } from "@/hooks/DaoCollect";
 
-const Dashboard: React.FC = () => {
+export function Dashboard({
+  setCurrentPage,
+}: {
+  setCurrentPage: (page: string) => void;
+}) {
   const { cells: daos } = useDaoCells();
 
   return (
@@ -37,7 +41,10 @@ const Dashboard: React.FC = () => {
                 Make a deposit to start accumulating compensation through the
                 Nervos DAO.
               </p>
-              <button className="bg-teal-500 text-gray-900 font-semibold py-2 px-4 rounded hover:bg-teal-400">
+              <button
+                className="font-bold bg-btn-gradient text-gray-800 text-body-2 py-3 px-6 rounded-lg hover:bg-btn-gradient-hover transition duration-200"
+                onClick={() => setCurrentPage("deposit")}
+              >
                 Make a Deposit
               </button>
             </div>
@@ -47,6 +54,4 @@ const Dashboard: React.FC = () => {
       <DashboardRecentTransactions className="lg:hidden" />
     </div>
   );
-};
-
-export default Dashboard;
+}

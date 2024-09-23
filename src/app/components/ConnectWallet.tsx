@@ -23,7 +23,7 @@ const ConnectWallet: React.FC = () => {
         </p>
         <button
           onClick={open}
-          className="bg-gray-900 hover:bg-gray-700 w-full h-14 rounded"
+          className="font-bold bg-btn-gradient text-gray-800 text-body-2 py-3 px-8 rounded-lg hover:bg-btn-gradient-hover transition duration-200"
         >
           Connect Wallet
         </button>
