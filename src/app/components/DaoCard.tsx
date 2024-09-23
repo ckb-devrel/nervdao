@@ -3,8 +3,8 @@
 import { getClaimEpoch, getProfit, parseEpoch } from "@/utils/epoch";
 import { ccc } from "@ckb-ccc/connector-react";
 import { useEffect, useMemo, useState } from "react";
-import DaoDepositDetailModal from "./DaoDepositDetailModal";
-import DaoWithdrawDetailModal from "./DaoWithdrawDetailModal";
+import { DaoDepositDetailModal } from "./DaoDepositDetailModal";
+import { DaoWithdrawDetailModal } from "./DaoWithdrawDetailModal";
 
 export const DaoCard = ({ dao }: { dao: ccc.Cell }) => {
   const signer = ccc.useSigner();
@@ -188,7 +188,6 @@ export const DaoCard = ({ dao }: { dao: ccc.Cell }) => {
           isOpen={modalOpen}
           onClose={handleCloseModal}
           dao={dao}
-          isNew={isNew}
           remainingDays={remainingDays}
           amount={amount}
           cycle={profitCycles}

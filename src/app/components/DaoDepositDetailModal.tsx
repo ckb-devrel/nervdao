@@ -21,11 +21,10 @@ interface DaoDetailModalProps {
   profit: string;
   remainingDays: number;
   cycle: number;
-  isNew: boolean;
   dao: ccc.Cell;
 }
 
-const DaoDepositDetailModal: React.FC<DaoDetailModalProps> = ({
+export function DaoDepositDetailModal({
   isOpen,
   onClose,
   remainingDays,
@@ -33,9 +32,8 @@ const DaoDepositDetailModal: React.FC<DaoDetailModalProps> = ({
   cell,
   amount,
   profit,
-  isNew,
   dao,
-}) => {
+}: DaoDetailModalProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [transactionFee, setTransactionFee] = useState<string>("");
   const [createTime, setCreateTime] = useState<string>("");
@@ -48,77 +46,30 @@ const DaoDepositDetailModal: React.FC<DaoDetailModalProps> = ({
   const { showNotification } = useNotification();
 
   const withdraw = async () => {
-    if (!signer || !cell) return;
+    if (!signer || !cell) {
+      return;
+    }
+
     const [_profit, _depositTx, _depositHeader] = cell;
     if (!_depositTx.blockHash || !_depositTx.blockNumber) {
       //TODO: handle error
       return;
     }
     const { blockHash, blockNumber } = _depositTx;
-    let tx;
-    if (isNew) {
-      tx = ccc.Transaction.from({
-        headerDeps: [blockHash],
-        inputs: [{ previousOutput: dao.outPoint }],
-        outputs: [dao.cellOutput],
-        outputsData: [ccc.numLeToBytes(blockNumber, 8)],
-      });
-      await tx.addCellDepsOfKnownScripts(
-        signer.client,
-        ccc.KnownScript.NervosDao
-      );
-      await tx.completeInputsByCapacity(signer);
-      await tx.completeFeeBy(signer, 1000);
-    } else {
-      if (!cell[3]) {
-        //TODO: handle error
-        return;
-      }
-      const [withdrawTx, withdrawHeader] = cell[3];
-      if (!withdrawTx?.blockHash) {
-        //TODO: handle error
-        return;
-      }
-      if (!withdrawTx.blockHash) {
-        //TODO: handle error
-        return;
-      }
-      tx = ccc.Transaction.from({
-        headerDeps: [withdrawTx.blockHash, blockHash],
-        inputs: [
-          {
-            previousOutput: dao.outPoint,
-            since: {
-              relative: "absolute",
-              metric: "epoch",
-              value: ccc.numLeFromBytes(
-                ccc.epochToHex(getClaimEpoch(_depositHeader, withdrawHeader))
-              ),
-            },
-          },
-        ],
-        outputs: [
-          {
-            lock: (await signer.getRecommendedAddressObj()).script,
-          },
-        ],
-        witnesses: [
-          ccc.WitnessArgs.from({
-            inputType: ccc.numLeToBytes(1, 8),
-          }).toBytes(),
-        ],
-      });
-      await tx.addCellDepsOfKnownScripts(
-        signer.client,
-        ccc.KnownScript.NervosDao
-      );
-
-      await tx.completeInputsByCapacity(signer);
-      await tx.completeFeeChangeToOutput(signer, 0, 1000);
-      tx.outputs[0].capacity += _profit;
-    }
+    const tx = ccc.Transaction.from({
+      headerDeps: [blockHash],
+      inputs: [{ previousOutput: dao.outPoint }],
+      outputs: [dao.cellOutput],
+      outputsData: [ccc.numLeToBytes(blockNumber, 8)],
+    });
+    await tx.addCellDepsOfKnownScripts(
+      signer.client,
+      ccc.KnownScript.NervosDao
+    );
+    await tx.completeInputsByCapacity(signer);
+    await tx.completeFeeBy(signer, 1000);
     const result = await signer.sendTransaction(tx);
-    showNotification("success", `Deposit Success: ${result}`);
+    showNotification("success", `Redeem Success: ${result}`);
   };
 
   useEffect(() => {
@@ -142,7 +93,9 @@ const DaoDepositDetailModal: React.FC<DaoDetailModalProps> = ({
     setTxHash(hash);
   }, [transaction, cell, signer]);
 
-  if (!isOpen) return null;
+  if (!isOpen) {
+    return undefined;
+  }
 
   const handleClose = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -271,6 +224,4 @@ const DaoDepositDetailModal: React.FC<DaoDetailModalProps> = ({
       </div>
     </div>
   );
-};
-
-export default DaoDepositDetailModal;
+}

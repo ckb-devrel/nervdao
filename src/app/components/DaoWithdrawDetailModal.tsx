@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
 import { ccc } from "@ckb-ccc/connector-react";
 import { truncateString } from "@/utils/stringUtils";
 import Link from "next/link";
 import CircularProgress from "./CircularProgress";
 import { useGetExplorerLink } from "@/hooks/Explorer";
+import { useNotification } from "@/context/NotificationProvider";
+import { getClaimEpoch } from "@/utils/epoch";
 
 interface DaoWithdrawDetailModalProps {
   isOpen: boolean;
@@ -25,7 +27,7 @@ interface DaoWithdrawDetailModalProps {
     | undefined;
 }
 
-const DaoWithdrawDetailModal: React.FC<DaoWithdrawDetailModalProps> = ({
+export function DaoWithdrawDetailModal({
   isOpen,
   onClose,
   remainingDays,
@@ -33,8 +35,9 @@ const DaoWithdrawDetailModal: React.FC<DaoWithdrawDetailModalProps> = ({
   profit,
   cycle,
   infos,
+  dao,
   tip,
-}) => {
+}: DaoWithdrawDetailModalProps) {
   const { index } = useGetExplorerLink();
   const signer = ccc.useSigner();
 
@@ -43,6 +46,8 @@ const DaoWithdrawDetailModal: React.FC<DaoWithdrawDetailModalProps> = ({
   const [txHash, setTxHash] = useState<string>("");
   const transaction = infos?.[3][0]?.transaction;
   const [transactionFee, setTransactionFee] = useState<string>("");
+  const { showNotification } = useNotification();
+
   useEffect(() => {
     if (!transaction || !signer) {
       return;
@@ -68,18 +73,76 @@ const DaoWithdrawDetailModal: React.FC<DaoWithdrawDetailModalProps> = ({
     setTxHash(hash);
   }, [transaction, signer, infos]);
 
+  const withdraw = useCallback(async () => {
+    if (!signer || !infos) return;
+    const [profit, depositTx, depositHeader] = infos;
+    if (!depositTx.blockHash) {
+      //TODO: handle error
+      return;
+    }
+    const { blockHash } = depositTx;
+    if (!infos[3]) {
+      //TODO: handle error
+      return;
+    }
+    const [withdrawTx, withdrawHeader] = infos[3];
+    if (!withdrawTx?.blockHash) {
+      //TODO: handle error
+      return;
+    }
+    const tx = ccc.Transaction.from({
+      headerDeps: [withdrawTx.blockHash, blockHash],
+      inputs: [
+        {
+          previousOutput: dao.outPoint,
+          since: {
+            relative: "absolute",
+            metric: "epoch",
+            value: ccc.epochToHex(getClaimEpoch(depositHeader, withdrawHeader)),
+          },
+        },
+      ],
+      outputs: [
+        {
+          lock: (await signer.getRecommendedAddressObj()).script,
+        },
+      ],
+      witnesses: [
+        ccc.WitnessArgs.from({
+          inputType: ccc.numLeToBytes(1, 8),
+        }).toBytes(),
+      ],
+    });
+    await tx.addCellDepsOfKnownScripts(
+      signer.client,
+      ccc.KnownScript.NervosDao
+    );
+
+    await tx.completeInputsByCapacity(signer);
+    await tx.completeFeeChangeToOutput(signer, 0, 1000);
+    tx.outputs[0].capacity += profit;
+    const result = await signer.sendTransaction(tx);
+    showNotification("success", `Withdraw Success: ${result}`);
+  }, [signer, infos]);
+
   const handleClose = (e: React.MouseEvent) => {
     e.stopPropagation();
     onClose();
   };
 
+  if (!isOpen) {
+    return undefined;
+  }
+
   return (
     <div
-      className={`fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 ${
-        isOpen ? "" : "hidden"
-      }`}
+      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+      onClick={handleClose}
     >
-      <div className="bg-gray-800 rounded-lg p-6 w-full max-w-md relative">
+      <div
+        className="bg-gray-800 rounded-lg p-6 w-full max-w-md relative"
+        onClick={(e) => e.stopPropagation()}
+      >
         <button
           onClick={handleClose}
           className="absolute top-4 right-4 bg-gray-950 rounded-full p-2 text-gray-400 hover:text-white"
@@ -184,7 +247,7 @@ const DaoWithdrawDetailModal: React.FC<DaoWithdrawDetailModalProps> = ({
 
         <button
           className="w-full font-bold bg-btn-gradient text-gray-800 text-body-2 py-3 rounded-lg hover:bg-btn-gradient-hover transition duration-200 disabled:opacity-50 disabled:hover:bg-btn-gradient"
-          onClick={() => {}}
+          onClick={withdraw}
           disabled={remainingDays >= 0}
         >
           Withdraw
@@ -214,6 +277,4 @@ const DaoWithdrawDetailModal: React.FC<DaoWithdrawDetailModalProps> = ({
       </div>
     </div>
   );
-};
-
-export default DaoWithdrawDetailModal;
+}
