@@ -177,7 +177,7 @@ export function DaoWithdrawDetailModal({
             <span>-{transactionFee} CKB</span>
           </div>
           <div className="flex justify-between">
-            <span>Estimated Compensation</span>
+            <span>Compensation</span>
             <span className="text-green-400">+{profit} CKB</span>
           </div>
         </div>
@@ -192,11 +192,13 @@ export function DaoWithdrawDetailModal({
             <span>{createTime}</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-gray-400">Redeem Date</span>
+            <span className="text-gray-400">Redeemed Date</span>
             <span>{withdrawTime}</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-gray-400">Expected Settle Date</span>
+            <span className="text-gray-400">
+              {remainingDays >= 0 ? "Settle" : "Settled"} Date
+            </span>
             <span>
               {!tip
                 ? "-"
