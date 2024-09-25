@@ -5,7 +5,7 @@ import DepositFAQ from "./DepositFAQ";
 
 const Deposit: React.FC = () => {
   return (
-    <div className="flex flex-col lg:flex-row gap-6">
+    <div className="flex flex-col lg:flex-row items-start gap-6">
       <div className="flex-1 space-y-6">
         <DepositForm />
         <DashboardRecentTransactions

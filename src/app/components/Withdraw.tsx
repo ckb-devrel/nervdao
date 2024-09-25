@@ -44,7 +44,7 @@ export function Withdraw({
   }, [daos]);
 
   return (
-    <div className="flex flex-col lg:flex-row gap-6">
+    <div className="flex flex-col lg:flex-row items-start gap-6">
       <div className="flex flex-col gap-6 flex-grow">
         <WithdrawProfile />
         <DashboardRecentTransactions

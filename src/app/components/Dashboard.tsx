@@ -13,7 +13,7 @@ export function Dashboard({
   const { cells: daos } = useDaoCells();
 
   return (
-    <div className="flex flex-col lg:flex-row flex-grow gap-6">
+    <div className="flex flex-col lg:flex-row flex-grow items-start gap-6">
       <div className="flex flex-col flex-grow gap-6">
         <DashboardProfile />
         <DashboardRecentTransactions className="hidden lg:block" />
