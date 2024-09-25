@@ -98,7 +98,7 @@ export function useDaoCells(isRedeeming?: boolean) {
   const [isLoading, setIsLoading] = useState(true);
   const signer = ccc.useSigner();
   const { client } = ccc.useCcc();
-  
+
   useEffect(() => {
     const refresh = () => client.getTipHeader().then(setTip);
 
@@ -119,35 +119,33 @@ export function useDaoCells(isRedeeming?: boolean) {
           collectedCells.push(inputCell);
         }
 
-        setCells((cells) => {
-          collectedCells.forEach((cell) => {
+        setCells((cells) =>
+          collectedCells.map((cell) => {
             const isRedeeming = ccc.numFrom(cell.outputData) !== ccc.Zero;
-            const existed = cells.find((c) =>
+            const info = cells.find((c) =>
               c.cell.outPoint.eq(cell.outPoint)
-            );
-            if (!existed) {
-              cells.push({
-                cell,
-                isRedeeming,
-                infos: undefined,
-              });
-            }
-            if (!tip) {
-              return;
-            }
-            getDaoInfo(tip, cell, isRedeeming, signer.client).then((infos) => {
-              setCells((cells) =>
-                cells.map((c) => {
-                  if (c.cell.outPoint.eq(cell.outPoint)) {
-                    return { ...c, infos };
-                  }
-                  return c;
-                })
+            ) ?? {
+              cell,
+              isRedeeming,
+              infos: undefined,
+            };
+            if (tip) {
+              getDaoInfo(tip, cell, isRedeeming, signer.client).then(
+                (infos) => {
+                  setCells((cells) =>
+                    cells.map((c) => {
+                      if (c.cell.outPoint.eq(cell.outPoint)) {
+                        return { ...c, infos };
+                      }
+                      return c;
+                    })
+                  );
+                }
               );
-            });
-          });
-          return [...cells];
-        });
+            }
+            return info;
+          })
+        );
       } finally {
         setIsLoading(false);
       }
