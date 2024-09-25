@@ -46,7 +46,7 @@ export function DashboardHistoryItem({
   const [date, setDate] = useState("-");
 
   useEffect(() => {
-    (async () => {
+    const updateDate = async () => {
       if (!transaction.blockHash) {
         return;
       }
@@ -57,7 +57,12 @@ export function DashboardHistoryItem({
       }
 
       setDate(new Date(Number(header.timestamp)).toLocaleString());
-    })();
+      clearInterval(interval);
+    };
+    const interval = setInterval(updateDate, 1000);
+    updateDate();
+
+    return () => clearInterval(interval);
   }, [client, transaction]);
 
   return (

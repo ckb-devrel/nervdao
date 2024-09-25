@@ -1,97 +1,30 @@
 "use client";
 
-import { getClaimEpoch, getProfit, parseEpoch } from "@/utils/epoch";
+import { getClaimEpoch, parseEpoch } from "@/utils/epoch";
 import { ccc } from "@ckb-ccc/connector-react";
-import { useEffect, useMemo, useState } from "react";
+import { useState } from "react";
 import { DaoDepositDetailModal } from "./DaoDepositDetailModal";
 import { DaoWithdrawDetailModal } from "./DaoWithdrawDetailModal";
+import { DaoInfo } from "@/hooks/DaoCollect";
 
-export const DaoCard = ({ dao }: { dao: ccc.Cell }) => {
-  const signer = ccc.useSigner();
+export const DaoCard = ({
+  tip,
+  dao: { isRedeeming, infos, cell },
+}: {
+  tip?: ccc.ClientBlockHeader,
+  dao: DaoInfo;
+}) => {
   const [modalOpen, setModalOpen] = useState(false);
-  const [tip, setTip] = useState<ccc.ClientBlockHeader | undefined>();
-
-  const [infos, setInfos] = useState<
-    | [
-        ccc.Num,
-        ccc.ClientTransactionResponse,
-        ccc.ClientBlockHeader,
-        [undefined | ccc.ClientTransactionResponse, ccc.ClientBlockHeader]
-      ]
-    | undefined
-  >();
-  const isNew = useMemo(() => dao.outputData === "0x0000000000000000", [dao]);
-  useEffect(() => {
-    if (!signer) {
-      return;
-    }
-
-    (async () => {
-      const tipHeader = await signer.client.getTipHeader();
-      setTip(tipHeader);
-
-      const previousTx = await signer.client.getTransaction(
-        dao.outPoint.txHash
-      );
-      if (!previousTx?.blockHash) {
-        return;
-      }
-      const previousHeader = await signer.client.getHeaderByHash(
-        previousTx.blockHash
-      );
-      if (!previousHeader) {
-        return;
-      }
-
-      const claimInfo = await (async (): Promise<typeof infos> => {
-        if (isNew) {
-          return;
-        }
-
-        const depositTxHash =
-          previousTx.transaction.inputs[Number(dao.outPoint.index)]
-            .previousOutput.txHash;
-        const depositTx = await signer.client.getTransaction(depositTxHash);
-        if (!depositTx?.blockHash) {
-          return;
-        }
-        const depositHeader = await signer.client.getHeaderByHash(
-          depositTx.blockHash
-        );
-
-        if (!depositHeader) {
-          return;
-        }
-        return [
-          getProfit(dao, depositHeader, previousHeader),
-          depositTx,
-          depositHeader,
-          [previousTx, previousHeader],
-        ];
-      })();
-
-      if (claimInfo) {
-        setInfos(claimInfo);
-      } else {
-        setInfos([
-          getProfit(dao, previousHeader, tipHeader),
-          previousTx,
-          previousHeader,
-          [undefined, tipHeader],
-        ]);
-      }
-    })();
-  }, [dao, signer, isNew, modalOpen]);
 
   const amount = ccc.fixedPointToString(
-    (dao.cellOutput.capacity / ccc.fixedPointFrom("0.01")) *
+    (cell.cellOutput.capacity / ccc.fixedPointFrom("0.01")) *
       ccc.fixedPointFrom("0.01")
   );
   const profit = infos
     ? ccc.fixedPointToString(
         (infos[0] / ccc.fixedPointFrom("0.0001")) * ccc.fixedPointFrom("0.0001")
       )
-    : "0";
+    : "-";
 
   const profitCycles = infos
     ? Number(
@@ -108,12 +41,12 @@ export const DaoCard = ({ dao }: { dao: ccc.Cell }) => {
               parseEpoch(tip.epoch)
           )
         ) / 180
-      : 1;
+      : undefined;
 
-  const remainingDays = remainingCycles * 30;
+  const remainingDays = (remainingCycles ?? 1) * 30;
   const progressPercentage = Math.min(
     100,
-    Math.max(0, (1 - remainingCycles) * 100)
+    Math.max(0, (1 - (remainingCycles ?? 1)) * 100)
   );
 
   const handleOpenModal = () => {
@@ -123,7 +56,11 @@ export const DaoCard = ({ dao }: { dao: ccc.Cell }) => {
   const handleCloseModal = () => {
     setModalOpen(false);
   };
-  const color = isNew ? "cyan" : remainingDays <= 0 ? "emerald" : "purple";
+  const color = isRedeeming
+    ? remainingDays <= 0
+      ? "emerald"
+      : "purple"
+    : "cyan";
 
   return (
     <>
@@ -136,24 +73,27 @@ export const DaoCard = ({ dao }: { dao: ccc.Cell }) => {
           <span
             className={`px-2 py-0.5 rounded text-xs bg-${color}-900 text-${color}-400`}
           >
-            {isNew
-              ? "Deposited"
-              : remainingDays <= 0
-              ? "Withdrawable"
-              : "Redeeming"}
+            {isRedeeming
+              ? remainingDays <= 0
+                ? "Withdrawable"
+                : "Redeeming"
+              : "Deposited"}
           </span>
         </div>
         <div className="text-2xl font-bold text-white mb-4">{amount} CKB</div>
 
         <div className="flex justify-between items-center mb-1 text-sm">
           <span className="text-gray-400">
-            Cycle #{Math.ceil(profitCycles)}
+            Cycle #
+            {remainingCycles === undefined ? "-" : Math.ceil(profitCycles)}
           </span>
           <span className="text-gray-400">
-            {remainingDays >= 0
-              ? isNew
-                ? `${Math.ceil(remainingDays)}d remaining`
-                : `Settle in ${Math.ceil(remainingDays)}d`
+            {remainingCycles === undefined
+              ? "Pending Transaction"
+              : remainingDays >= 0
+              ? isRedeeming
+                ? `Settle in ${Math.ceil(remainingDays)}d`
+                : `${Math.ceil(remainingDays)}d remaining`
               : "Ended"}
           </span>
         </div>
@@ -183,28 +123,28 @@ export const DaoCard = ({ dao }: { dao: ccc.Cell }) => {
           <span className="text-sm">{profit} CKB</span>
         </div>
       </div>
-      {isNew ? (
-        <DaoDepositDetailModal
-          isOpen={modalOpen}
-          onClose={handleCloseModal}
-          dao={dao}
-          remainingDays={remainingDays}
-          amount={amount}
-          cycle={profitCycles}
-          profit={profit}
-          cell={infos}
-        />
-      ) : (
+      {isRedeeming ? (
         <DaoWithdrawDetailModal
           isOpen={modalOpen}
           onClose={handleCloseModal}
-          dao={dao}
+          dao={cell}
           infos={infos}
           remainingDays={remainingDays}
           tip={tip}
           amount={amount}
           cycle={profitCycles}
           profit={profit}
+        />
+      ) : (
+        <DaoDepositDetailModal
+          isOpen={modalOpen}
+          onClose={handleCloseModal}
+          dao={cell}
+          remainingDays={remainingDays}
+          amount={amount}
+          cycle={profitCycles}
+          profit={profit}
+          cell={infos}
         />
       )}
     </>

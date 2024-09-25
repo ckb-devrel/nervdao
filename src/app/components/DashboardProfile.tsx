@@ -12,9 +12,16 @@ const DashboardProfile: React.FC = () => {
   const [balance, setBalance] = useState<string>("");
   const [address, setAddress] = useState<string>("");
   const [isLoadingBalance, setIsLoadingBalance] = useState(true);
-  const { sum: depositSum, isLoading: isLoadingDeposits } = useDaoDeposits();
-  const { sum: withdrawalSum, isLoading: isLoadingWithdrawals } =
-    useDaoRedeems();
+  const {
+    profitSum: depositProfit,
+    sum: depositSum,
+    isLoading: isLoadingDeposits,
+  } = useDaoDeposits();
+  const {
+    profitSum: withdrawalProfit,
+    sum: withdrawalSum,
+    isLoading: isLoadingWithdrawals,
+  } = useDaoRedeems();
   const { wallet } = ccc.useCcc();
   const signer = ccc.useSigner();
 
@@ -42,8 +49,12 @@ const DashboardProfile: React.FC = () => {
     return <SkeletonLoader />;
   }
 
+  const profit = depositProfit + withdrawalProfit;
   const totalBalance = ccc.numMax(
-    BigInt(ccc.fixedPointFrom(balance, 8)) + depositSum + withdrawalSum,
+    BigInt(ccc.fixedPointFrom(balance, 8)) +
+      depositSum +
+      withdrawalSum +
+      profit,
     ccc.numFrom(1)
   );
   const availablePercentage =
@@ -52,6 +63,7 @@ const DashboardProfile: React.FC = () => {
     Number((depositSum * BigInt(100)) / totalBalance) || 0;
   const withdrawingPercentage =
     Number((withdrawalSum * BigInt(100)) / totalBalance) || 0;
+  const profitPercentage = Number((profit * BigInt(100)) / totalBalance) || 0;
 
   return (
     <div className="bg-gray-900 rounded-lg p-4 w-full">
@@ -87,6 +99,12 @@ const DashboardProfile: React.FC = () => {
           value: ccc.fixedPointToString(withdrawalSum),
           percentage: withdrawingPercentage,
           color: "#8C76FF",
+        },
+        {
+          label: "Current Compensation",
+          value: ccc.fixedPointToString(profit),
+          percentage: profitPercentage,
+          color: "#FF9E1A",
         },
       ].map(({ label, value, percentage, color }, index) => (
         <div key={index} className="bg-gray-800 relative rounded-lg p-3 mb-2">

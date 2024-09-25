@@ -5,7 +5,6 @@ import React, { useState } from "react";
 import { Dashboard } from "./Dashboard";
 import Title from "./Ttitle";
 import Deposit from "./Deposit";
-import { Withdraw } from "./Withdraw";
 
 const AppLayout: React.FC = () => {
   const [currentPage, setCurrentPage] = useState("dashboard");
@@ -40,10 +39,6 @@ const AppLayout: React.FC = () => {
         return "Dashboard";
       case "deposit":
         return "Deposit";
-      case "withdraw":
-        return "Withdraw";
-      case "history":
-        return "History";
       default:
         return currentPage.charAt(0).toUpperCase() + currentPage.slice(1);
     }
@@ -55,10 +50,6 @@ const AppLayout: React.FC = () => {
         return <Dashboard setCurrentPage={setCurrentPage} />;
       case "deposit":
         return <Deposit />;
-      case "withdraw":
-        return <Withdraw setCurrentPage={setCurrentPage} />;
-      // case 'history':
-      //   return <History />;
     }
   };
 
@@ -72,7 +63,6 @@ const AppLayout: React.FC = () => {
           <ul className="flex gap-2 lg:flex-col items-stretch">
             <NavItem href="dashboard" icon="home" label="Dashboard" />
             <NavItem href="deposit" icon="deposit" label="Deposit" />
-            <NavItem href="withdraw" icon="withdraw" label="Redeem" />
           </ul>
         </nav>
       </aside>

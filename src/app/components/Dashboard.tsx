@@ -4,16 +4,17 @@ import DashboardProfile from "./DashboardProfile";
 import { DashboardRecentTransactions } from "./DashboardRecentTransactions";
 import DaoCard from "./DaoCard";
 import { useDaoCells } from "@/hooks/DaoCollect";
+import { ccc } from "@ckb-ccc/connector-react";
 
 export function Dashboard({
   setCurrentPage,
 }: {
   setCurrentPage: (page: string) => void;
 }) {
-  const { cells: daos } = useDaoCells();
+  const { cells: daos, tip } = useDaoCells();
 
   return (
-    <div className="flex flex-col lg:flex-row flex-grow items-start gap-6">
+    <div className="flex flex-col lg:flex-row flex-grow lg:items-start gap-6">
       <div className="flex flex-col flex-grow gap-6">
         <DashboardProfile />
         <DashboardRecentTransactions className="hidden lg:block" />
@@ -25,7 +26,13 @@ export function Dashboard({
 
         <div className="grid lg:grid-cols-2 gap-2">
           {daos && daos.length > 0 ? (
-            daos.map((dao) => <DaoCard key={dao.outPoint.txHash} dao={dao} />)
+            daos.map((dao) => (
+              <DaoCard
+                key={ccc.hexFrom(dao.cell.outPoint.toBytes())}
+                dao={dao}
+                tip={tip}
+              />
+            ))
           ) : (
             <div className="col-span-2 flex flex-col items-center justify-center h-full">
               <div className="bg-gray-800 rounded-full mb-4">
