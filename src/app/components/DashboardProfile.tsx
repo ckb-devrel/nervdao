@@ -26,20 +26,28 @@ const DashboardProfile: React.FC = () => {
   const signer = ccc.useSigner();
 
   useEffect(() => {
-    if (signer) {
-      (async () => {
-        try {
-          setIsLoadingBalance(true);
-          const addr = await signer.getRecommendedAddress();
-          const bal = await signer.getBalance();
-          setBalance(ccc.fixedPointToString(bal));
-          setAddress(addr);
-        } catch (error) {
-        } finally {
-          setIsLoadingBalance(false);
-        }
-      })();
+    if (!signer) {
+      return;
     }
+
+    (async () => {
+      const addr = await signer.getRecommendedAddress();
+      setAddress(addr);
+    })();
+
+    const refresh = async () => {
+      try {
+        const bal = await signer.getBalance();
+        setBalance(ccc.fixedPointToString(bal));
+      } catch (error) {
+      } finally {
+        setIsLoadingBalance(false);
+      }
+    };
+
+    const interval = setInterval(refresh, 5000);
+    refresh();
+    return () => clearInterval(interval);
   }, [signer]);
 
   const isLoading =
