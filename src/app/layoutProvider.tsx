@@ -4,8 +4,15 @@ import { ccc } from "@ckb-ccc/connector-react";
 import { NotificationProvider } from "@/context/NotificationProvider";
 import Notification from "@/app/components/Notification";
 import { CSSProperties } from "react";
+import React from "react";
 
 export function LayoutProvider({ children }: { children: React.ReactNode }) {
+  const defaultClient = React.useMemo(() => {
+    return process.env.NEXT_PUBLIC_IS_MAINNET === "true"
+      ? new ccc.ClientPublicMainnet()
+      : new ccc.ClientPublicTestnet();
+  }, []);
+
   return (
     <ccc.Provider
       connectorProps={{
@@ -22,6 +29,7 @@ export function LayoutProvider({ children }: { children: React.ReactNode }) {
           "--tip-color": "#666",
         } as CSSProperties,
       }}
+      defaultClient={defaultClient}
       clientOptions={[
         {
           name: "CKB Testnet",
