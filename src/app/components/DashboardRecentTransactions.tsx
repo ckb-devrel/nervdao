@@ -63,6 +63,34 @@ export function DashboardRecentTransactions({
 
     setTxGenerator(getDaoTransactions(signer, isRedeeming));
     setLimit(5);
+
+    const refresh = async () => {
+      setTxs((txs) => {
+        if (txs.length !== 0) {
+          (async () => {
+            for await (const hash of getDaoTransactions(signer, isRedeeming)) {
+              if (txs.find((t) => t.transaction.hash() === hash)) {
+                break;
+              }
+              const tx = await signer.client.getTransaction(hash);
+              if (!tx) {
+                return txs;
+              }
+              setTxs((txs) => {
+                if (txs.find((t) => t.transaction.hash() === hash)) {
+                  return txs;
+                }
+                return [tx, ...txs];
+              });
+            }
+          })();
+        }
+        return txs;
+      });
+    };
+
+    const interval = setInterval(refresh, 5000);
+    return () => clearInterval(interval);
   }, [signer, isRedeeming]);
 
   useEffect(() => {
