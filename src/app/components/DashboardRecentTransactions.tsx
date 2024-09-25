@@ -1,64 +1,88 @@
-import React, { useMemo } from "react";
-import DashboardHistoryItem from "./DashboardHistoryItem";
-import { useDaoDeposits, useDaoRedeems } from "@/hooks/DaoCollect";
-import { DashboardRecentTransactionsSkeleton } from "./TransactionSkeleton";
+import React, { useEffect } from "react";
+import { DashboardHistoryItem } from "./DashboardHistoryItem";
 import { ccc } from "@ckb-ccc/connector-react";
 
 interface DashboardRecentTransactionsProps {
-  type?: "all" | "deposit" | "withdraw";
-  limit?: number;
-  showViewAll?: boolean;
+  isRedeeming?: boolean;
   title?: string;
 }
 
+async function* getDaoTransactions(signer: ccc.Signer, isRedeeming?: boolean) {
+  const addresses = await signer.getAddressObjs();
+
+  for (const address of addresses) {
+    for await (const tx of signer.client.findTransactions(
+      {
+        script: address.script,
+        scriptType: "lock",
+        scriptSearchMode: "exact",
+        filter: {
+          script: await ccc.Script.fromKnownScript(
+            signer.client,
+            ccc.KnownScript.NervosDao,
+            "0x"
+          ),
+        },
+        groupByTransaction: true,
+      },
+      "desc"
+    )) {
+      if (isRedeeming === undefined) {
+        yield tx.txHash;
+        continue;
+      }
+
+      const inInput = tx.cells.find(({ isInput }) => isInput);
+      const inOutput = tx.cells.find(({ isInput }) => !isInput);
+      if (isRedeeming && inInput && inOutput) {
+        yield tx.txHash;
+      } else if (!isRedeeming && !inInput && inOutput) {
+        yield tx.txHash;
+      }
+    }
+  }
+}
+
 export function DashboardRecentTransactions({
-  type = "all",
-  limit = 5,
-  showViewAll = true,
+  isRedeeming,
   title = "Recent Transactions",
   ...props
 }: DashboardRecentTransactionsProps & React.ComponentPropsWithoutRef<"div">) {
-  const {
-    cells: depositCells,
-    isLoading: isLoadingDeposits,
-  } = useDaoDeposits();
-  const {
-    cells: withdrawalCells,
-    isLoading: isLoadingWithdrawals,
-  } = useDaoRedeems();
+  const signer = ccc.useSigner();
 
-  const combinedCells = useMemo(() => {
-    let cellsToProcess: { cell: ccc.Cell; isRedeeming: boolean }[] = [];
-    if (type === "all" || type === "deposit") {
-      cellsToProcess = [
-        ...cellsToProcess,
-        ...depositCells.map((cell) => ({
-          cell,
-          isRedeeming: false,
-        })),
-      ];
+  const [limit, setLimit] = React.useState(5);
+  const [txs, setTxs] = React.useState<ccc.ClientTransactionResponse[]>([]);
+  const [txGenerator, setTxGenerator] = React.useState<
+    AsyncGenerator<ccc.Hex> | undefined
+  >(undefined);
+
+  useEffect(() => {
+    if (!signer) {
+      return;
     }
-    if (type === "all" || type === "withdraw") {
-      cellsToProcess = [
-        ...cellsToProcess,
-        ...withdrawalCells.map((cell) => ({
-          cell,
-          isRedeeming: true,
-        })),
-      ];
+
+    setTxGenerator(getDaoTransactions(signer, isRedeeming));
+    setLimit(5);
+  }, [signer, isRedeeming]);
+
+  useEffect(() => {
+    if (!txGenerator || !signer || txs.length >= limit) {
+      return;
     }
-    return cellsToProcess;
-  }, [depositCells, withdrawalCells, type]);
 
-  const isLoading =
-    (type === "all" || type === "deposit" ? isLoadingDeposits : false) ||
-    (type === "all" || type === "withdraw" ? isLoadingWithdrawals : false);
+    (async () => {
+      const { value, done } = await txGenerator.next();
+      if (done) {
+        setTxGenerator(undefined);
+        return;
+      }
 
-  if (isLoading) {
-    return <DashboardRecentTransactionsSkeleton {...props} />;
-  }
+      const tx = await signer.client.getTransaction(value);
+      setTxs((txs) => (tx ? [...txs, tx] : [...txs]));
+    })();
+  }, [txGenerator, limit, txs, signer]);
 
-  if (combinedCells.length === 0) {
+  if (txs.length === 0) {
     return (
       <div
         {...props}
@@ -76,18 +100,17 @@ export function DashboardRecentTransactions({
     >
       <h3 className="text-xl font-play font-bold mb-4">{title}</h3>
       <div className="mt-6">
-        {combinedCells.slice(0, limit).map(({ cell, isRedeeming }, index) => (
-          <DashboardHistoryItem
-            key={index}
-            cell={cell}
-            isRedeeming={isRedeeming}
-          />
+        {txs.slice(0, limit).map((transaction, index) => (
+          <DashboardHistoryItem key={index} transaction={transaction} />
         ))}
-        {showViewAll && combinedCells.length > limit && (
-          <button className="text-cyan-400 mt-4 hover:underline">
+        {txGenerator ? (
+          <button
+            className="text-cyan-400 mt-4 hover:underline"
+            onClick={() => setLimit(limit + 5)}
+          >
             View all history
           </button>
-        )}
+        ) : undefined}
       </div>
     </div>
   );

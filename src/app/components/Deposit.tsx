@@ -8,7 +8,10 @@ const Deposit: React.FC = () => {
     <div className="flex flex-col lg:flex-row gap-6">
       <div className="flex-1 space-y-6">
         <DepositForm />
-        <DashboardRecentTransactions type="deposit" title="Recent Deposits" />
+        <DashboardRecentTransactions
+          isRedeeming={false}
+          title="Recent Deposits"
+        />
       </div>
       <div className="flex-1">
         <DepositFAQ />

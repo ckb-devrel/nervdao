@@ -48,7 +48,7 @@ export function Withdraw({
       <div className="flex flex-col gap-6 flex-grow">
         <WithdrawProfile />
         <DashboardRecentTransactions
-          type="withdraw"
+          isRedeeming={false}
           title="Recent Redemptions"
           className="hidden lg:block"
         />
@@ -88,7 +88,7 @@ export function Withdraw({
         </div>
       </div>
       <DashboardRecentTransactions
-        type="withdraw"
+        isRedeeming
         title="Recent Redemptions"
         className="lg:hidden"
       />

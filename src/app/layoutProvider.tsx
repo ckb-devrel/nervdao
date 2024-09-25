@@ -16,10 +16,22 @@ export function LayoutProvider({ children }: { children: React.ReactNode }) {
           "--btn-primary-hover": "#515151",
           "--btn-secondary": "#2D2F2F",
           "--btn-secondary-hover": "#515151",
+          "--icon-primary": "#FFFFFF",
+          "--icon-secondary": "rgba(255, 255, 255, 0.6)",
           color: "#ffffff",
           "--tip-color": "#666",
         } as CSSProperties,
       }}
+      clientOptions={[
+        {
+          name: "CKB Testnet",
+          client: new ccc.ClientPublicTestnet(),
+        },
+        {
+          name: "CKB Mainnet",
+          client: new ccc.ClientPublicMainnet(),
+        },
+      ]}
     >
       <NotificationProvider>
         {children}

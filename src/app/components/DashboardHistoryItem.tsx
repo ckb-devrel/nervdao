@@ -2,38 +2,63 @@ import React, { useEffect, useState } from "react";
 import { ccc } from "@ckb-ccc/connector-react";
 
 interface DashboardHistoryItemProps {
-  isRedeeming: boolean;
-  cell: ccc.Cell;
+  transaction: ccc.ClientTransactionResponse;
 }
 
-const DashboardHistoryItem: React.FC<DashboardHistoryItemProps> = ({
-  cell,
-  isRedeeming,
-}) => {
+export function DashboardHistoryItem({
+  transaction,
+}: DashboardHistoryItemProps) {
   const { client } = ccc.useCcc();
+  const [isRedeeming, setIsRedeeming] = useState(false);
+  const [formattedAmount, setFormattedAmount] = useState("-");
+
+  useEffect(() => {
+    (async () => {
+      const daoType = await ccc.Script.fromKnownScript(
+        client,
+        ccc.KnownScript.NervosDao,
+        "0x"
+      );
+
+      setIsRedeeming(
+        transaction.transaction.outputs.find(
+          (o, i) =>
+            o.type?.eq(daoType) &&
+            ccc.numFrom(transaction.transaction.outputsData[i]) !== ccc.Zero
+        ) !== undefined
+      );
+
+      setFormattedAmount(
+        ccc.fixedPointToString(
+          transaction.transaction.outputs
+            .filter((o) => o.type?.eq(daoType))
+            .reduce((acc, a) => acc + a.capacity, ccc.Zero)
+        )
+      );
+    })();
+  }, [transaction, client]);
 
   const iconColor = isRedeeming ? "bg-purple-600" : "bg-cyan-600";
   const actionText = isRedeeming
     ? "Redeem from Nervos DAO"
     : "Deposit to Nervos DAO";
-  const formattedAmount = ccc.fixedPointToString(cell.cellOutput.capacity);
+
   const [date, setDate] = useState("-");
 
   useEffect(() => {
     (async () => {
-      const tx = await client.getTransaction(cell.outPoint.txHash);
-      if (!tx?.blockHash) {
+      if (!transaction.blockHash) {
         return;
       }
 
-      const header = await client.getHeaderByHash(tx.blockHash);
+      const header = await client.getHeaderByHash(transaction.blockHash);
       if (!header) {
         return;
       }
 
       setDate(new Date(Number(header.timestamp)).toLocaleString());
     })();
-  }, [client, cell]);
+  }, [client, transaction]);
 
   return (
     <div className="flex items-center justify-between py-2">
@@ -68,6 +93,4 @@ const DashboardHistoryItem: React.FC<DashboardHistoryItemProps> = ({
       </div>
     </div>
   );
-};
-
-export default DashboardHistoryItem;
+}
