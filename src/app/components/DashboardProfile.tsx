@@ -12,14 +12,9 @@ const DashboardProfile: React.FC = () => {
   const [balance, setBalance] = useState<string>("");
   const [address, setAddress] = useState<string>("");
   const [isLoadingBalance, setIsLoadingBalance] = useState(true);
-  const {
-    sum: depositSum,
-    isLoading: isLoadingDeposits,
-  } = useDaoDeposits();
-  const {
-    sum: withdrawalSum,
-    isLoading: isLoadingWithdrawals,
-  } = useDaoRedeems();
+  const { sum: depositSum, isLoading: isLoadingDeposits } = useDaoDeposits();
+  const { sum: withdrawalSum, isLoading: isLoadingWithdrawals } =
+    useDaoRedeems();
   const { wallet } = ccc.useCcc();
   const signer = ccc.useSigner();
 
@@ -47,8 +42,10 @@ const DashboardProfile: React.FC = () => {
     return <SkeletonLoader />;
   }
 
-  const totalBalance =
-    BigInt(ccc.fixedPointFrom(balance, 8)) + depositSum + withdrawalSum;
+  const totalBalance = ccc.numMax(
+    BigInt(ccc.fixedPointFrom(balance, 8)) + depositSum + withdrawalSum,
+    ccc.numFrom(1)
+  );
   const availablePercentage =
     Number((ccc.fixedPointFrom(balance, 8) * BigInt(100)) / totalBalance) || 0;
   const depositedPercentage =
