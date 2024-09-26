@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@ckb-ccc/connector-react':
-        specifier: ^0.0.14-alpha.3
-        version: 0.0.14-alpha.3(@types/react@18.3.8)(react@18.3.1)(typescript@5.6.2)
+        specifier: ^0.0.14
+        version: 0.0.14(@types/react@18.3.8)(react@18.3.1)(typescript@5.6.2)
       framer-motion:
         specifier: ^11.5.4
         version: 11.5.6(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -61,40 +61,40 @@ packages:
     resolution: {integrity: sha512-UrcABB+4bUrFABwbluTIBErXwvbsU/V7TZWfmbgJfbkwiBuziS9gxdODUyuiecfdGQ85jglMW6juS3+z5TsKLw==}
     engines: {node: '>=10'}
 
-  '@ckb-ccc/ccc@0.0.14-alpha.2':
-    resolution: {integrity: sha512-nQ3spch88Cr4OKAMJrI/G0NB8TtaD7f9JxC01/WcQ0FQ+MV6AsTI+Mm/NwyhuyhXFxRhTq0Gq8f9MovDhPRIAw==}
+  '@ckb-ccc/ccc@0.0.14':
+    resolution: {integrity: sha512-fOqnQfdazlzkaMNms1wM3hbaJ78ZRciiruJlat+elR/7Vz4iVH8T1X7taZs44fgv6SMbFqnP7ar0E7vpzpHOsg==}
 
-  '@ckb-ccc/connector-react@0.0.14-alpha.3':
-    resolution: {integrity: sha512-2pXWFLLaXUUHKLywz8t7lIUbPCjLOA6i1sVdVN3hrcvzBItNbAS6QetRmn4wSSTlChftKLiuPCSgDJkBHunpWw==}
+  '@ckb-ccc/connector-react@0.0.14':
+    resolution: {integrity: sha512-CGWpTgAY/PzmxCNN9IqYG+CE1l98lXmeR4/HJ2oNI/678exiHI+QPM3O6WmJffotQmjBKq6im2vsUAArMWN3rQ==}
     peerDependencies:
       react: '>=16'
 
-  '@ckb-ccc/connector@0.0.14-alpha.3':
-    resolution: {integrity: sha512-VNUJlj21eT7Pme+nbWB2P+rl00bkrt5r9yqSGMzxvRTjn8rpnFcA2umwNzehSwZXlQfCP9s8iAPore6w6/wHoQ==}
+  '@ckb-ccc/connector@0.0.14':
+    resolution: {integrity: sha512-NetnLSmY/EWgQvzw1c99tRLsyccmYqU/fmxIHzYr4waDSUNos959FKxn/X27VH+levtWPG3f2qM0oeKyG8jYZQ==}
 
-  '@ckb-ccc/core@0.0.14-alpha.2':
-    resolution: {integrity: sha512-4+rovwhyxTDuNzoohm3u7r0OSamS0jgjS1V7a/gjjEKnDsk/pIKutYjjMBZJybJMCri9gzBWvE/kGHR6hn33+g==}
+  '@ckb-ccc/core@0.0.14':
+    resolution: {integrity: sha512-sOj11Ai9WHJotCiyNq4tDJo7DviGl+GoZRrnebxBWgmySXuMV4KRYMAz2/K+O6rLwk4xLSIvX4BrvIwKsZCeYQ==}
 
-  '@ckb-ccc/eip6963@0.0.14-alpha.2':
-    resolution: {integrity: sha512-oKW0f9E+VNWA0Tua4fDOp30LjcyTpoM/7F3y6KliqKDbUlsJDzxLUXYL72cr/hqEAXOWeGKP5rybLcfpNHmqEw==}
+  '@ckb-ccc/eip6963@0.0.14':
+    resolution: {integrity: sha512-9ubTiEM5uvSCAlRE5yHISzH/O9wd9XNGe0JqliyMZinDcORnLMTaL/8pQnm82SKX2pmAqVZO+Lny/LK5zPG/Ow==}
 
-  '@ckb-ccc/joy-id@0.0.14-alpha.2':
-    resolution: {integrity: sha512-xW2MfGeHMUL14yb6sNABPAA7fJS/rg4aGdNXfcnFkm2bcB5VXlEoaMz37IC/oJLWPd1a14RWlRcqFW+//GqHkw==}
+  '@ckb-ccc/joy-id@0.0.14':
+    resolution: {integrity: sha512-yBh7jafuSa2sTxOmlqiSEjnwXMDNdeLbfuwDTzYrJN1D37pTOKlyY4JUNAqk8OXH6E7XLRiqn3LsYsVGnb79Sw==}
 
-  '@ckb-ccc/nip07@0.0.14-alpha.2':
-    resolution: {integrity: sha512-1/8LBIKJ/USF7KNtmSrjIaQ3Y1YfEJKa6GQ7XTa710WmpUPETAFYCkBC+Z19lYKwuFWsH5xt0hJbEbIwhI1xrQ==}
+  '@ckb-ccc/nip07@0.0.14':
+    resolution: {integrity: sha512-JasNhSez/24D/mCnlFBEjmfMbE6g42Q1z5Qo7wTbvhHdbTJ20MCMXDn4/+wFqw03gugEWnLMbNpWPVPLPpzIxQ==}
 
-  '@ckb-ccc/okx@0.0.14-alpha.2':
-    resolution: {integrity: sha512-B9/9OBlSGjn7pA5vXBQrCGbrXqdHz98mwiGmpElLPMZVRLqibWrXX1v3nqs/EZN160m4hvOSxT9VsR3pPu20HA==}
+  '@ckb-ccc/okx@0.0.14':
+    resolution: {integrity: sha512-9OQvrvFDFk76vchhHag/o4UiVgeG3Dzb4uKyD3Anahp9UgSZO3CLFf5FQknoU59/8SePEeQOrO7ERcKzCmXr9g==}
 
-  '@ckb-ccc/rei@0.0.14-alpha.2':
-    resolution: {integrity: sha512-ZBGxa471iZ1S71RLH23pPqZ8CAImbsu5vse6wZaZ6YZppNqNxfiTMXdLla3kqkCC4+XuBqbc/bahYIav9iZ/+A==}
+  '@ckb-ccc/rei@0.0.14':
+    resolution: {integrity: sha512-R/rvdaJTrvC/Qpccg7qn8yGyS+e0jMFvaFK+GaDSojFGepe+/Wy9CJPyRUeCjxSN4gMDohtjMz/AUIrBZVIzyQ==}
 
-  '@ckb-ccc/uni-sat@0.0.14-alpha.2':
-    resolution: {integrity: sha512-DNAah5pW52IGduy53/eA58E58/etCI/YFBZWElsqRWRV64HO5lzgkxfp+COJNSFVbhoeiNnWe4+ytloC8aKSRw==}
+  '@ckb-ccc/uni-sat@0.0.14':
+    resolution: {integrity: sha512-R9NRPXG9JPIO3Qdn5YfsIF7JPpbfl4VFxE0SjqR8V9JegAgGeMdXRUKFYnNezrenlJoNcrwFRqhgTdmznKvmVw==}
 
-  '@ckb-ccc/utxo-global@0.0.14-alpha.2':
-    resolution: {integrity: sha512-v/FUzDs1DNQg4+/xRqag0tyRB145UvvT2EuDW9Z5TpZms6tWhj7gnc7oeAy/H7Y//yY4y8z6uDO80AAMV3yKUQ==}
+  '@ckb-ccc/utxo-global@0.0.14':
+    resolution: {integrity: sha512-j/h7xSaabuxj4PFuMXaZjsFdsFJYSz8QOLTtJDoK0gmayXwXvob/1UzbBRWlRVtNHuFb0F2DejKuyOGxBdRLJA==}
 
   '@eslint-community/eslint-utils@4.4.0':
     resolution: {integrity: sha512-1/sA4dwrzBAyeUoQ6oxahHKmrZvsnLCg4RfxW3ZFGGmQkSNQPFNLV9CUEFQP1x9EYXHTo5p6xdhZM1Ne9p/AfA==}
@@ -1901,16 +1901,16 @@ snapshots:
 
   '@alloc/quick-lru@5.2.0': {}
 
-  '@ckb-ccc/ccc@0.0.14-alpha.2(typescript@5.6.2)':
+  '@ckb-ccc/ccc@0.0.14(typescript@5.6.2)':
     dependencies:
-      '@ckb-ccc/core': 0.0.14-alpha.2(typescript@5.6.2)
-      '@ckb-ccc/eip6963': 0.0.14-alpha.2(typescript@5.6.2)
-      '@ckb-ccc/joy-id': 0.0.14-alpha.2(typescript@5.6.2)
-      '@ckb-ccc/nip07': 0.0.14-alpha.2(typescript@5.6.2)
-      '@ckb-ccc/okx': 0.0.14-alpha.2(typescript@5.6.2)
-      '@ckb-ccc/rei': 0.0.14-alpha.2(typescript@5.6.2)
-      '@ckb-ccc/uni-sat': 0.0.14-alpha.2(typescript@5.6.2)
-      '@ckb-ccc/utxo-global': 0.0.14-alpha.2(typescript@5.6.2)
+      '@ckb-ccc/core': 0.0.14(typescript@5.6.2)
+      '@ckb-ccc/eip6963': 0.0.14(typescript@5.6.2)
+      '@ckb-ccc/joy-id': 0.0.14(typescript@5.6.2)
+      '@ckb-ccc/nip07': 0.0.14(typescript@5.6.2)
+      '@ckb-ccc/okx': 0.0.14(typescript@5.6.2)
+      '@ckb-ccc/rei': 0.0.14(typescript@5.6.2)
+      '@ckb-ccc/uni-sat': 0.0.14(typescript@5.6.2)
+      '@ckb-ccc/utxo-global': 0.0.14(typescript@5.6.2)
     transitivePeerDependencies:
       - bufferutil
       - encoding
@@ -1918,9 +1918,9 @@ snapshots:
       - utf-8-validate
       - zod
 
-  '@ckb-ccc/connector-react@0.0.14-alpha.3(@types/react@18.3.8)(react@18.3.1)(typescript@5.6.2)':
+  '@ckb-ccc/connector-react@0.0.14(@types/react@18.3.8)(react@18.3.1)(typescript@5.6.2)':
     dependencies:
-      '@ckb-ccc/connector': 0.0.14-alpha.3(typescript@5.6.2)
+      '@ckb-ccc/connector': 0.0.14(typescript@5.6.2)
       '@lit/react': 1.0.5(@types/react@18.3.8)
       react: 18.3.1
     transitivePeerDependencies:
@@ -1931,9 +1931,9 @@ snapshots:
       - utf-8-validate
       - zod
 
-  '@ckb-ccc/connector@0.0.14-alpha.3(typescript@5.6.2)':
+  '@ckb-ccc/connector@0.0.14(typescript@5.6.2)':
     dependencies:
-      '@ckb-ccc/ccc': 0.0.14-alpha.2(typescript@5.6.2)
+      '@ckb-ccc/ccc': 0.0.14(typescript@5.6.2)
       lit: 3.2.0
     transitivePeerDependencies:
       - bufferutil
@@ -1942,7 +1942,7 @@ snapshots:
       - utf-8-validate
       - zod
 
-  '@ckb-ccc/core@0.0.14-alpha.2(typescript@5.6.2)':
+  '@ckb-ccc/core@0.0.14(typescript@5.6.2)':
     dependencies:
       '@joyid/ckb': 1.0.1(typescript@5.6.2)
       '@noble/ciphers': 0.5.3
@@ -1963,9 +1963,9 @@ snapshots:
       - utf-8-validate
       - zod
 
-  '@ckb-ccc/eip6963@0.0.14-alpha.2(typescript@5.6.2)':
+  '@ckb-ccc/eip6963@0.0.14(typescript@5.6.2)':
     dependencies:
-      '@ckb-ccc/core': 0.0.14-alpha.2(typescript@5.6.2)
+      '@ckb-ccc/core': 0.0.14(typescript@5.6.2)
     transitivePeerDependencies:
       - bufferutil
       - encoding
@@ -1973,9 +1973,9 @@ snapshots:
       - utf-8-validate
       - zod
 
-  '@ckb-ccc/joy-id@0.0.14-alpha.2(typescript@5.6.2)':
+  '@ckb-ccc/joy-id@0.0.14(typescript@5.6.2)':
     dependencies:
-      '@ckb-ccc/core': 0.0.14-alpha.2(typescript@5.6.2)
+      '@ckb-ccc/core': 0.0.14(typescript@5.6.2)
       '@joyid/ckb': 1.0.1(typescript@5.6.2)
       '@joyid/common': 0.2.0(typescript@5.6.2)
     transitivePeerDependencies:
@@ -1985,9 +1985,9 @@ snapshots:
       - utf-8-validate
       - zod
 
-  '@ckb-ccc/nip07@0.0.14-alpha.2(typescript@5.6.2)':
+  '@ckb-ccc/nip07@0.0.14(typescript@5.6.2)':
     dependencies:
-      '@ckb-ccc/core': 0.0.14-alpha.2(typescript@5.6.2)
+      '@ckb-ccc/core': 0.0.14(typescript@5.6.2)
     transitivePeerDependencies:
       - bufferutil
       - encoding
@@ -1995,11 +1995,11 @@ snapshots:
       - utf-8-validate
       - zod
 
-  '@ckb-ccc/okx@0.0.14-alpha.2(typescript@5.6.2)':
+  '@ckb-ccc/okx@0.0.14(typescript@5.6.2)':
     dependencies:
-      '@ckb-ccc/core': 0.0.14-alpha.2(typescript@5.6.2)
-      '@ckb-ccc/nip07': 0.0.14-alpha.2(typescript@5.6.2)
-      '@ckb-ccc/uni-sat': 0.0.14-alpha.2(typescript@5.6.2)
+      '@ckb-ccc/core': 0.0.14(typescript@5.6.2)
+      '@ckb-ccc/nip07': 0.0.14(typescript@5.6.2)
+      '@ckb-ccc/uni-sat': 0.0.14(typescript@5.6.2)
     transitivePeerDependencies:
       - bufferutil
       - encoding
@@ -2007,9 +2007,9 @@ snapshots:
       - utf-8-validate
       - zod
 
-  '@ckb-ccc/rei@0.0.14-alpha.2(typescript@5.6.2)':
+  '@ckb-ccc/rei@0.0.14(typescript@5.6.2)':
     dependencies:
-      '@ckb-ccc/core': 0.0.14-alpha.2(typescript@5.6.2)
+      '@ckb-ccc/core': 0.0.14(typescript@5.6.2)
     transitivePeerDependencies:
       - bufferutil
       - encoding
@@ -2017,9 +2017,9 @@ snapshots:
       - utf-8-validate
       - zod
 
-  '@ckb-ccc/uni-sat@0.0.14-alpha.2(typescript@5.6.2)':
+  '@ckb-ccc/uni-sat@0.0.14(typescript@5.6.2)':
     dependencies:
-      '@ckb-ccc/core': 0.0.14-alpha.2(typescript@5.6.2)
+      '@ckb-ccc/core': 0.0.14(typescript@5.6.2)
     transitivePeerDependencies:
       - bufferutil
       - encoding
@@ -2027,9 +2027,9 @@ snapshots:
       - utf-8-validate
       - zod
 
-  '@ckb-ccc/utxo-global@0.0.14-alpha.2(typescript@5.6.2)':
+  '@ckb-ccc/utxo-global@0.0.14(typescript@5.6.2)':
     dependencies:
-      '@ckb-ccc/core': 0.0.14-alpha.2(typescript@5.6.2)
+      '@ckb-ccc/core': 0.0.14(typescript@5.6.2)
     transitivePeerDependencies:
       - bufferutil
       - encoding

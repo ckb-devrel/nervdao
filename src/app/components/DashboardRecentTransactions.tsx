@@ -8,37 +8,28 @@ interface DashboardRecentTransactionsProps {
 }
 
 async function* getDaoTransactions(signer: ccc.Signer, isRedeeming?: boolean) {
-  const addresses = await signer.getAddressObjs();
-
-  for (const address of addresses) {
-    for await (const tx of signer.client.findTransactions(
+  for await (const tx of signer.findTransactions(
       {
-        script: address.script,
-        scriptType: "lock",
-        scriptSearchMode: "exact",
-        filter: {
-          script: await ccc.Script.fromKnownScript(
-            signer.client,
-            ccc.KnownScript.NervosDao,
-            "0x"
-          ),
-        },
-        groupByTransaction: true,
+        script: await ccc.Script.fromKnownScript(
+          signer.client,
+          ccc.KnownScript.NervosDao,
+          "0x"
+        ),
       },
-      "desc"
-    )) {
-      if (isRedeeming === undefined) {
-        yield tx.txHash;
-        continue;
-      }
+      true,
+    "desc"
+  )) {
+    if (isRedeeming === undefined) {
+      yield tx.txHash;
+      continue;
+    }
 
-      const inInput = tx.cells.find(({ isInput }) => isInput);
-      const inOutput = tx.cells.find(({ isInput }) => !isInput);
-      if (isRedeeming && inInput && inOutput) {
-        yield tx.txHash;
-      } else if (!isRedeeming && !inInput && inOutput) {
-        yield tx.txHash;
-      }
+    const inInput = tx.cells.find(({ isInput }) => isInput);
+    const inOutput = tx.cells.find(({ isInput }) => !isInput);
+    if (isRedeeming && inInput && inOutput) {
+      yield tx.txHash;
+    } else if (!isRedeeming && !inInput && inOutput) {
+      yield tx.txHash;
     }
   }
 }
