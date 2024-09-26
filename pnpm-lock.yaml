@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@ckb-ccc/connector-react':
-        specifier: ^0.0.14
-        version: 0.0.14(@types/react@18.3.8)(react@18.3.1)(typescript@5.6.2)
+        specifier: ^0.0.15
+        version: 0.0.15(@types/react@18.3.8)(react@18.3.1)(typescript@5.6.2)
       framer-motion:
         specifier: ^11.5.4
         version: 11.5.6(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -64,13 +64,13 @@ packages:
   '@ckb-ccc/ccc@0.0.14':
     resolution: {integrity: sha512-fOqnQfdazlzkaMNms1wM3hbaJ78ZRciiruJlat+elR/7Vz4iVH8T1X7taZs44fgv6SMbFqnP7ar0E7vpzpHOsg==}
 
-  '@ckb-ccc/connector-react@0.0.14':
-    resolution: {integrity: sha512-CGWpTgAY/PzmxCNN9IqYG+CE1l98lXmeR4/HJ2oNI/678exiHI+QPM3O6WmJffotQmjBKq6im2vsUAArMWN3rQ==}
+  '@ckb-ccc/connector-react@0.0.15':
+    resolution: {integrity: sha512-LRpzNq2W32d8995QSWnUf/35M6RJvQSj1GHubThFlhZyCGvOc67TjlJqRqC34RsTX++flz8Fer5a5ZguHqp5Rg==}
     peerDependencies:
       react: '>=16'
 
-  '@ckb-ccc/connector@0.0.14':
-    resolution: {integrity: sha512-NetnLSmY/EWgQvzw1c99tRLsyccmYqU/fmxIHzYr4waDSUNos959FKxn/X27VH+levtWPG3f2qM0oeKyG8jYZQ==}
+  '@ckb-ccc/connector@0.0.15':
+    resolution: {integrity: sha512-10y3tMg3dcRvLHe3tGbK/yONRRSGyhxX7GbvGbp5/+6kHpMKKNEpAn+E8pVcbFdIxIXj3YOIgr5icTA/teKiPg==}
 
   '@ckb-ccc/core@0.0.14':
     resolution: {integrity: sha512-sOj11Ai9WHJotCiyNq4tDJo7DviGl+GoZRrnebxBWgmySXuMV4KRYMAz2/K+O6rLwk4xLSIvX4BrvIwKsZCeYQ==}
@@ -1918,9 +1918,9 @@ snapshots:
       - utf-8-validate
       - zod
 
-  '@ckb-ccc/connector-react@0.0.14(@types/react@18.3.8)(react@18.3.1)(typescript@5.6.2)':
+  '@ckb-ccc/connector-react@0.0.15(@types/react@18.3.8)(react@18.3.1)(typescript@5.6.2)':
     dependencies:
-      '@ckb-ccc/connector': 0.0.14(typescript@5.6.2)
+      '@ckb-ccc/connector': 0.0.15(typescript@5.6.2)
       '@lit/react': 1.0.5(@types/react@18.3.8)
       react: 18.3.1
     transitivePeerDependencies:
@@ -1931,7 +1931,7 @@ snapshots:
       - utf-8-validate
       - zod
 
-  '@ckb-ccc/connector@0.0.14(typescript@5.6.2)':
+  '@ckb-ccc/connector@0.0.15(typescript@5.6.2)':
     dependencies:
       '@ckb-ccc/ccc': 0.0.14(typescript@5.6.2)
       lit: 3.2.0

@@ -9,14 +9,14 @@ interface DashboardRecentTransactionsProps {
 
 async function* getDaoTransactions(signer: ccc.Signer, isRedeeming?: boolean) {
   for await (const tx of signer.findTransactions(
-      {
-        script: await ccc.Script.fromKnownScript(
-          signer.client,
-          ccc.KnownScript.NervosDao,
-          "0x"
-        ),
-      },
-      true,
+    {
+      script: await ccc.Script.fromKnownScript(
+        signer.client,
+        ccc.KnownScript.NervosDao,
+        "0x"
+      ),
+    },
+    true,
     "desc"
   )) {
     if (isRedeeming === undefined) {
