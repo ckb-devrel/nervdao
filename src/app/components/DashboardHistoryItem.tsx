@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { ccc } from "@ckb-ccc/connector-react";
+import { icons } from "lucide-react";
 
 interface DashboardHistoryItemProps {
   transaction: ccc.ClientTransactionResponse;
@@ -9,7 +10,7 @@ export function DashboardHistoryItem({
   transaction,
 }: DashboardHistoryItemProps) {
   const { client } = ccc.useCcc();
-  const [isRedeeming, setIsRedeeming] = useState(false);
+  const [action, setAction] = useState<"Deposit" | "Redeem" | "Withdraw">("Deposit");
   const [formattedAmount, setFormattedAmount] = useState("-");
 
   useEffect(() => {
@@ -20,28 +21,58 @@ export function DashboardHistoryItem({
         "0x"
       );
 
-      setIsRedeeming(
-        transaction.transaction.outputs.find(
-          (o, i) =>
-            o.type?.eq(daoType) &&
-            ccc.numFrom(transaction.transaction.outputsData[i]) !== ccc.Zero
-        ) !== undefined
+      const first = transaction.transaction.outputs.findIndex((o) =>
+        o.type?.eq(daoType)
       );
 
-      setFormattedAmount(
-        ccc.fixedPointToString(
-          transaction.transaction.outputs
-            .filter((o) => o.type?.eq(daoType))
-            .reduce((acc, a) => acc + a.capacity, ccc.Zero)
-        )
-      );
+      if (first === -1) {
+        setAction("Withdraw");
+        setFormattedAmount(
+          ccc.fixedPointToString(
+            transaction.transaction.getOutputsCapacity() -
+              (await transaction.transaction.getInputsCapacity(client)) +
+              transaction.transaction.inputs
+                .filter((i) => i.cellOutput?.type?.eq(daoType))
+                .reduce(
+                  (acc, a) => acc + (a.cellOutput?.capacity ?? ccc.Zero),
+                  ccc.Zero
+                )
+          )
+        );
+      } else {
+        if (
+          ccc.numFrom(transaction.transaction.outputsData[first]) !== ccc.Zero
+        ) {
+          setAction("Redeem");
+        } else {
+          setAction("Deposit");
+        }
+        setFormattedAmount(
+          ccc.fixedPointToString(
+            transaction.transaction.outputs
+              .filter((o) => o.type?.eq(daoType))
+              .reduce((acc, a) => acc + a.capacity, ccc.Zero)
+          )
+        );
+      }
     })();
   }, [transaction, client]);
 
-  const iconColor = isRedeeming ? "bg-purple-600" : "bg-cyan-600";
-  const actionText = isRedeeming
-    ? "Redeem from Nervos DAO"
-    : "Deposit to Nervos DAO";
+  const iconColor = {
+    Deposit: "bg-cyan-600",
+    Redeem: "bg-purple-600",
+    Withdraw: "bg-green-600",
+  }[action];
+  const actionText = {
+    Deposit: "Deposit to Nervos DAO",
+    Redeem: "Redeem from Nervos DAO",
+    Withdraw: "Withdraw",
+  }[action];
+  const Icon = {
+    Deposit: icons["Download"],
+    Redeem: icons["ClockArrowUp"],
+    Withdraw: icons["ArrowUp"],
+  }[action];
 
   const [date, setDate] = useState("-");
 
@@ -69,24 +100,7 @@ export function DashboardHistoryItem({
     <div className="flex items-center justify-between py-2">
       <div className="flex items-center">
         <div className={`${iconColor} rounded-full p-2 mr-3`}>
-          {isRedeeming ? (
-            <svg
-              className="w-4 h-4 text-white"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M5 10l7-7m0 0l7 7m-7-7v18"
-              />
-            </svg>
-          ) : (
-            <img src={"./svg/deposit.svg"} alt="Deposit" className="w-4 h-4" />
-          )}
+          <Icon className="w-4 h-4" />
         </div>
         <div>
           <p className="text-white font-work-sans text-body-2">{actionText}</p>

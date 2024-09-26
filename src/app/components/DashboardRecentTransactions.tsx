@@ -26,7 +26,7 @@ async function* getDaoTransactions(signer: ccc.Signer, isRedeeming?: boolean) {
 
     const inInput = tx.cells.find(({ isInput }) => isInput);
     const inOutput = tx.cells.find(({ isInput }) => !isInput);
-    if (isRedeeming && inInput && inOutput) {
+    if (isRedeeming && inInput) {
       yield tx.txHash;
     } else if (!isRedeeming && !inInput && inOutput) {
       yield tx.txHash;
