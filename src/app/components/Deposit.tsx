@@ -5,17 +5,21 @@ import DepositFAQ from "./DepositFAQ";
 
 const Deposit: React.FC = () => {
   return (
-    <div className="flex flex-col lg:flex-row lg:items-start gap-6">
-      <div className="flex-1 space-y-6">
+    <div className="flex flex-col flex-grow lg:flex-row lg:items-stretch gap-6">
+      <div className="space-y-6 flex flex-col flex-1">
         <DepositForm />
-        <DepositFAQ />
-      </div>
-      <div className="flex-1">
         <DashboardRecentTransactions
           isRedeeming={false}
           title="Recent Deposits"
+          className="flex-grow hidden lg:flex"
         />
       </div>
+      <DepositFAQ />
+      <DashboardRecentTransactions
+        isRedeeming={false}
+        title="Recent Deposits"
+        className="flex-grow lg:hidden"
+      />
     </div>
   );
 };

@@ -1,21 +1,15 @@
-import React, { useState } from "react";
+import React from "react";
 
 const FAQItem: React.FC<{ question: string; answer: string }> = ({
   question,
   answer,
 }) => {
-  const [isOpen, setIsOpen] = useState(false);
-
   return (
     <div className="mb-4">
-      <div
-        className="flex justify-between items-center cursor-pointer"
-        onClick={() => setIsOpen(!isOpen)}
-      >
-        <h3 className="">{question}</h3>
-        <span>{isOpen ? "−" : "+"}</span>
-      </div>
-      {isOpen && <p className="text-gray-400 mt-2">{answer}</p>}
+      <h3 className="flex justify-between items-center font-bold">
+        {question}
+      </h3>
+      <p className="text-gray-400 mt-2">{answer}</p>
     </div>
   );
 };
@@ -40,7 +34,7 @@ const DepositFAQ: React.FC = () => {
   ];
 
   return (
-    <div className="bg-gray-800 rounded-lg p-6">
+    <div className="bg-gray-800 rounded-lg p-6 flex-1 self-start">
       <h2 className="text-2xl mb-4">FAQ</h2>
       {faqs.map((faq, index) => (
         <FAQItem key={index} question={faq.question} answer={faq.answer} />

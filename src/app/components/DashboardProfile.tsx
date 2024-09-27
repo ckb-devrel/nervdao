@@ -7,6 +7,7 @@ import { ccc } from "@ckb-ccc/connector-react";
 import { formatBalance, truncateAddress } from "@/utils/stringUtils";
 import { useDaoDeposits, useDaoRedeems } from "@/hooks/DaoCollect";
 import SkeletonLoader from "./SkeletonLoader";
+import { User } from "lucide-react";
 
 const DashboardProfile: React.FC = () => {
   const [balance, setBalance] = useState<string>("");
@@ -23,7 +24,7 @@ const DashboardProfile: React.FC = () => {
     sum: withdrawalSum,
     isLoading: isLoadingWithdrawals,
   } = useDaoRedeems();
-  const { wallet } = ccc.useCcc();
+  const { wallet, open } = ccc.useCcc();
   const signer = ccc.useSigner();
 
   useEffect(() => {
@@ -97,7 +98,7 @@ const DashboardProfile: React.FC = () => {
 
   return (
     <div className="bg-gray-900 rounded-lg p-4 w-full">
-      <div className="flex items-center mb-4">
+      <div className="flex items-center mb-4 cursor-pointer" onClick={open}>
         <div className="rounded-full p-2 mr-3">
           {wallet && <img src={wallet.icon} alt="avatar" className="w-6 h-6" />}
         </div>
@@ -105,8 +106,8 @@ const DashboardProfile: React.FC = () => {
           <h2 className="font-play text-cyan-400 text-2xl font-bold">
             {formatBalance(ccc.fixedPointToString(totalBalance))} CKB
           </h2>
-          <p className="font-work-sans text-gray-400 text-sm">
-            {truncateAddress(address, 10, 6)}
+          <p className="font-work-sans text-gray-400 text-sm flex items-center gap-2">
+            {truncateAddress(address, 10, 6)} <User className="w-4 h-4"/>
           </p>
         </div>
       </div>

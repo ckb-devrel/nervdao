@@ -105,7 +105,7 @@ export function DashboardRecentTransactions({
     return (
       <div
         {...props}
-        className={`bg-gray-800 rounded-lg p-4 text-center ${props.className}`}
+        className={`flex flex-grow items-center justify-center bg-gray-800 rounded-lg p-4  ${props.className}`}
       >
         <p className="text-gray-400">No recent transactions</p>
       </div>
@@ -115,10 +115,10 @@ export function DashboardRecentTransactions({
   return (
     <div
       {...props}
-      className={`bg-gray-900 rounded-lg p-4 flex-grow ${props.className}`}
+      className={`bg-gray-900 rounded-lg p-4 flex flex-col ${props.className}`}
     >
       <h3 className="text-xl font-play font-bold mb-4">{title}</h3>
-      <div className="mt-6">
+      <div>
         {txs.slice(0, limit).map((transaction, index) => (
           <DashboardHistoryItem key={index} transaction={transaction} />
         ))}
