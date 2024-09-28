@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@ckb-ccc/connector-react':
-        specifier: ^0.0.16
-        version: 0.0.16(@types/react@18.3.8)(react@18.3.1)(typescript@5.6.2)
+        specifier: ^0.0.17-alpha.1
+        version: 0.0.17-alpha.1(@types/react@18.3.8)(react@18.3.1)(typescript@5.6.2)
       framer-motion:
         specifier: ^11.5.4
         version: 11.5.6(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -61,16 +61,16 @@ packages:
     resolution: {integrity: sha512-UrcABB+4bUrFABwbluTIBErXwvbsU/V7TZWfmbgJfbkwiBuziS9gxdODUyuiecfdGQ85jglMW6juS3+z5TsKLw==}
     engines: {node: '>=10'}
 
-  '@ckb-ccc/ccc@0.0.15':
-    resolution: {integrity: sha512-ajdIwi14QlNjIniZX/ZLz5ukl2O5vR0JHq+rWgfgdKbWZoJl4mg8KZngpYuo61o2cD/gBlVzN+2dcUqrdgjqFw==}
+  '@ckb-ccc/ccc@0.0.16-alpha.0':
+    resolution: {integrity: sha512-G/pjGXIu6UPn7UpHEaAC0/SJP1DtEBlnin+eVaBy0jR09UagzkdVa3vLYb700r2K8wI1hJ+ezyymWNT+sJBu9A==}
 
-  '@ckb-ccc/connector-react@0.0.16':
-    resolution: {integrity: sha512-SlZgQ+rzy+Jz0Y2FlreMGVbyyRs+qQYoBS9yxVh4+DQid/rNlPu5AQh1fhDhQiuIe5yq0gfXigLpVVmQo5rByg==}
+  '@ckb-ccc/connector-react@0.0.17-alpha.1':
+    resolution: {integrity: sha512-cH3ie3jtHzPtelOKviUMGvdbqvWBXtbZ1izE9qM8x3iCrDZaZmUa0yJ/FwINZI49QmYm8hRhYCNgspz2Q7fbjA==}
     peerDependencies:
       react: '>=16'
 
-  '@ckb-ccc/connector@0.0.16':
-    resolution: {integrity: sha512-KL7W8m+cJSrplf8FcUx+4L9Z+zmZMKdiVs0yEhFQnQJNaE/E80b8uerHoWsjLIPh4rl1t5cVSq08JgajC1DZCw==}
+  '@ckb-ccc/connector@0.0.17-alpha.1':
+    resolution: {integrity: sha512-3fhPsQ0HPS5MnUa+6hxpuxcopVonUFciigkl1ohzhtlZB9TkoQrbzCbTfbhcfUDNBybhfMlY44Nq6WQ8/R44cw==}
 
   '@ckb-ccc/core@0.0.15':
     resolution: {integrity: sha512-+x1ESD3X9/89g0pNJgxB1gOFEToVJ2/ebnR+XETyRj69aOkmz7NTilEXayemP/ko09nLIw6wnZOW1zDatmBOQQ==}
@@ -95,6 +95,9 @@ packages:
 
   '@ckb-ccc/utxo-global@0.0.15':
     resolution: {integrity: sha512-dFuzHVKJ7xiucnTpI7T6idA3BXah3R7rKV4/Nq7F9B9FZ2AK85Fc7NdHpyfZvxagmwFpRGrApdnd5v1eshDleg==}
+
+  '@ckb-ccc/xverse@0.0.15-alpha.0':
+    resolution: {integrity: sha512-no2KMM4jT8sarfencgiwoOq5iywmtJSWWPzq6Yr5qHPp7OE3alCeKNdDs8rvO6qFJrpRbvz8Kf7SQjrwRygFaw==}
 
   '@eslint-community/eslint-utils@4.4.0':
     resolution: {integrity: sha512-1/sA4dwrzBAyeUoQ6oxahHKmrZvsnLCg4RfxW3ZFGGmQkSNQPFNLV9CUEFQP1x9EYXHTo5p6xdhZM1Ne9p/AfA==}
@@ -1818,6 +1821,14 @@ packages:
   util-deprecate@1.0.2:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
 
+  valibot@0.42.1:
+    resolution: {integrity: sha512-3keXV29Ar5b//Hqi4MbSdV7lfVp6zuYLZuA9V1PvQUsXqogr+u5lvLPLk3A4f74VUXDnf/JfWMN6sB+koJ/FFw==}
+    peerDependencies:
+      typescript: '>=5'
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+
   varuint-bitcoin@1.1.2:
     resolution: {integrity: sha512-4EVb+w4rx+YfVM32HQX42AbbT7/1f5zwAYhIujKXKk8NQK+JfRVl3pqT3hjNn/L+RstigmGGKVwHA/P0wgITZw==}
 
@@ -1901,7 +1912,7 @@ snapshots:
 
   '@alloc/quick-lru@5.2.0': {}
 
-  '@ckb-ccc/ccc@0.0.15(typescript@5.6.2)':
+  '@ckb-ccc/ccc@0.0.16-alpha.0(typescript@5.6.2)':
     dependencies:
       '@ckb-ccc/core': 0.0.15(typescript@5.6.2)
       '@ckb-ccc/eip6963': 0.0.15(typescript@5.6.2)
@@ -1911,6 +1922,7 @@ snapshots:
       '@ckb-ccc/rei': 0.0.15(typescript@5.6.2)
       '@ckb-ccc/uni-sat': 0.0.15(typescript@5.6.2)
       '@ckb-ccc/utxo-global': 0.0.15(typescript@5.6.2)
+      '@ckb-ccc/xverse': 0.0.15-alpha.0(typescript@5.6.2)
     transitivePeerDependencies:
       - bufferutil
       - encoding
@@ -1918,9 +1930,9 @@ snapshots:
       - utf-8-validate
       - zod
 
-  '@ckb-ccc/connector-react@0.0.16(@types/react@18.3.8)(react@18.3.1)(typescript@5.6.2)':
+  '@ckb-ccc/connector-react@0.0.17-alpha.1(@types/react@18.3.8)(react@18.3.1)(typescript@5.6.2)':
     dependencies:
-      '@ckb-ccc/connector': 0.0.16(typescript@5.6.2)
+      '@ckb-ccc/connector': 0.0.17-alpha.1(typescript@5.6.2)
       '@lit/react': 1.0.5(@types/react@18.3.8)
       react: 18.3.1
     transitivePeerDependencies:
@@ -1931,9 +1943,9 @@ snapshots:
       - utf-8-validate
       - zod
 
-  '@ckb-ccc/connector@0.0.16(typescript@5.6.2)':
+  '@ckb-ccc/connector@0.0.17-alpha.1(typescript@5.6.2)':
     dependencies:
-      '@ckb-ccc/ccc': 0.0.15(typescript@5.6.2)
+      '@ckb-ccc/ccc': 0.0.16-alpha.0(typescript@5.6.2)
       lit: 3.2.0
     transitivePeerDependencies:
       - bufferutil
@@ -2030,6 +2042,17 @@ snapshots:
   '@ckb-ccc/utxo-global@0.0.15(typescript@5.6.2)':
     dependencies:
       '@ckb-ccc/core': 0.0.15(typescript@5.6.2)
+    transitivePeerDependencies:
+      - bufferutil
+      - encoding
+      - typescript
+      - utf-8-validate
+      - zod
+
+  '@ckb-ccc/xverse@0.0.15-alpha.0(typescript@5.6.2)':
+    dependencies:
+      '@ckb-ccc/core': 0.0.15(typescript@5.6.2)
+      valibot: 0.42.1(typescript@5.6.2)
     transitivePeerDependencies:
       - bufferutil
       - encoding
@@ -4079,6 +4102,10 @@ snapshots:
       punycode: 2.3.1
 
   util-deprecate@1.0.2: {}
+
+  valibot@0.42.1(typescript@5.6.2):
+    optionalDependencies:
+      typescript: 5.6.2
 
   varuint-bitcoin@1.1.2:
     dependencies:
