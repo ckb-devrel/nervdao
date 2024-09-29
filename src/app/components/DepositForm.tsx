@@ -129,17 +129,17 @@ const DepositForm: React.FC = () => {
       <p className="text-gray-400 mb-2">Available CKB</p>
       <p className="text-3xl font-bold font-play mb-4">{balance} CKB</p>
 
-      <div className="bg-gray-700 rounded p-3 mb-4 flex justify-between items-center">
-        <input
+      <div className='relative flex items-center mb-4'>
+        <input className="w-full text-left border border-[#777] bg-gray-700 rounded text-lg p-3 pr-16"
           type="text"
-          value={amount}
           onChange={(e) => setAmount(e.target.value)}
-          className="bg-transparent text-white text-lg w-full"
-          placeholder="Enter amount"
-        />
-        <span className="text-teal-500 cursor-pointer" onClick={handleMax}>
+          value={amount}
+          placeholder="Enter amount" />
+       
+        <span className="absolute right-0 p-3 flex items-center text-teal-500 cursor-pointer" onClick={handleMax}>
           MAX
         </span>
+        
       </div>
       <p className="text-gray-400 text-sm mb-4 border-b pb-2 border-white/20">
         Max balance minus estimated transaction fee needed
