@@ -23,8 +23,8 @@ function NavItem({
 
   return (
     <li
-      className={`flex flex-col cursor-pointer flex-grow min-w-14 py-2 items-center justify-center hover:bg-gray-700 hover:border-b-2 lg:hover:border-b-0 lg:hover:border-l-2 border-cyan-500 ${
-        isActive ? "bg-gray-700 border-b-2 lg:border-b-0 lg:border-l-2" : ""
+      className={`flex flex-col cursor-pointer flex-grow min-w-14 py-2 items-center  justify-center hover:bg-gray-700 hover:border-b-2 lg:border-l-2 lg:hover:border-b-0 lg:hover:border-l-2 hover:border-cyan-500 ${
+        isActive ? "bg-gray-700 border-b-2 lg:border-b-0 lg:border-l-2 border-cyan-500" : "border-gray-950"
       }`}
       onClick={onClick}
     >

@@ -5,6 +5,8 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --border-hover: #aaaaaa;
+  --border-focus: #dddddd;
   --font-work-sans: var(--font-work-sans), sans-serif;
   --font-play: var(--font-play), sans-serif;
 }
@@ -30,4 +32,17 @@ body {
 
 .play {
   font-family: var(--font-play);
+}
+
+input {
+  border: 1px solid transparent;
+  outline: 0;
+}
+
+input:focus {
+  border: 1px solid var(--border-focus);
+}
+
+input:hover {
+  border: 1px solid var(--border-hover);
 }
