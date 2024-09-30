@@ -53,29 +53,31 @@ export function DashboardRecentTransactions({
     }
 
     setTxGenerator(getDaoTransactions(signer, isRedeeming));
+    setTxs([]);
     setLimit(5);
 
     const refresh = async () => {
       setTxs((txs) => {
-        if (txs.length !== 0) {
-          (async () => {
-            for await (const hash of getDaoTransactions(signer, isRedeeming)) {
+        if (txs.length === 0) {
+          return txs;
+        }
+        (async () => {
+          for await (const hash of getDaoTransactions(signer, isRedeeming)) {
+            if (txs.find((t) => t.transaction.hash() === hash)) {
+              break;
+            }
+            const tx = await signer.client.getTransaction(hash);
+            if (!tx) {
+              break;
+            }
+            setTxs((txs) => {
               if (txs.find((t) => t.transaction.hash() === hash)) {
-                break;
-              }
-              const tx = await signer.client.getTransaction(hash);
-              if (!tx) {
                 return txs;
               }
-              setTxs((txs) => {
-                if (txs.find((t) => t.transaction.hash() === hash)) {
-                  return txs;
-                }
-                return [tx, ...txs];
-              });
-            }
-          })();
-        }
+              return [tx, ...txs];
+            });
+          }
+        })();
         return txs;
       });
     };
@@ -97,7 +99,10 @@ export function DashboardRecentTransactions({
       }
 
       const tx = await signer.client.getTransaction(value);
-      setTxs((txs) => (tx ? [...txs, tx] : [...txs]));
+      if (!tx) {
+        return;
+      }
+      setTxs((txs) => [...txs, tx]);
     })();
   }, [txGenerator, limit, txs, signer]);
 
