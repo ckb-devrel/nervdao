@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
 
-type NotificationType = 'success' | 'error' | 'info' | 'warning';
+type NotificationType = 'success' | 'error' | 'info' | 'warning' | 'progress';
 
 interface Notification {
   id: string;
@@ -28,10 +28,12 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
     const id = TOTAL_ID.toString();
     TOTAL_ID += 1;
     setNotifications(prev => [...prev, { id, type, message }]);
-
-    setTimeout(() => {
-      removeNotification(id);
-    }, 10000);
+    if(type!=='progress'){
+      setTimeout(() => {
+        removeNotification(id);
+      }, 10000);
+    }
+    return id
   }, [removeNotification]);
 
   useEffect(() => {

@@ -40,6 +40,11 @@ function getNotificationIcon(type: string) {
       bgColor = "bg-cyan-600";
       iconColor = "text-cyan-600";
       break;
+    case "progress":
+      iconPath = "/svg/info-circle.svg";
+      bgColor = "bg-cyan-600";
+      iconColor = "text-cyan-600";
+      break;
     default:
       iconPath = "/svg/warning-circle.svg";
       bgColor = "bg-yellow-800";

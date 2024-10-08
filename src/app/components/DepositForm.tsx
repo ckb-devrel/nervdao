@@ -1,14 +1,20 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState ,CSSProperties } from "react";
 import { ccc } from "@ckb-ccc/connector-react";
 import { useNotification } from "@/context/NotificationProvider";
+const override: CSSProperties = {
+  display: "block",
+  margin: "0 auto",
+  borderColor: "red",
+  position:'fixed',
 
+};
 const DepositForm: React.FC = () => {
   const [amount, setAmount] = useState<string>("");
   const [transactionFee, setTransactionFee] = useState<string>("-");
   const [balance, setBalance] = useState<string>("-");
 
   const signer = ccc.useSigner();
-  const { showNotification } = useNotification();
+  const { showNotification,removeNotification } = useNotification();
 
   useEffect(() => {
     if (!signer) return;
@@ -80,11 +86,15 @@ const DepositForm: React.FC = () => {
       return;
     }
     tx.outputs[0].capacity = ccc.fixedPointFrom(amount);
+    const progressId = await showNotification("progress", `Deposit in progress!`);
 
     await tx.completeInputsByCapacity(signer);
     await tx.completeFeeBy(signer, 1000);
+
     const txHash = await signer.sendTransaction(tx);
+    removeNotification(progressId+'')
     showNotification("success", `Deposit Success: ${txHash}`);
+   
   };
 
   useEffect(() => {
@@ -123,6 +133,7 @@ const DepositForm: React.FC = () => {
 
   return (
     <div className="bg-gray-800 rounded-lg p-6">
+      
       <h2 className="text-2xl font-play font-bold mb-4">
         Deposit to Nervos DAO
       </h2>
