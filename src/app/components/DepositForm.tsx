@@ -1,13 +1,7 @@
-import React, { useEffect, useState ,CSSProperties } from "react";
+import React, { useEffect, useState } from "react";
 import { ccc } from "@ckb-ccc/connector-react";
 import { useNotification } from "@/context/NotificationProvider";
-const override: CSSProperties = {
-  display: "block",
-  margin: "0 auto",
-  borderColor: "red",
-  position:'fixed',
 
-};
 const DepositForm: React.FC = () => {
   const [amount, setAmount] = useState<string>("");
   const [transactionFee, setTransactionFee] = useState<string>("-");
