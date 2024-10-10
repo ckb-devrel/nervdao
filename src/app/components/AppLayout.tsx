@@ -7,20 +7,22 @@ import Title from "./Ttitle";
 import Deposit from "./Deposit";
 import { icons, Menu } from "lucide-react";
 import { useGetExplorerLink } from "@/hooks/Explorer";
+import Ickb from "./Ickb";
 
 function NavItem({
   icon,
   label,
   isActive,
   onClick,
+  iconName
 }: {
   icon: keyof typeof icons;
+  iconName?:string;
   label: string;
   isActive?: boolean;
   onClick?: () => void;
 }) {
-  const Icon = icons[icon];
-
+  const Icon = icons[icon]
   return (
     <li
       className={`flex flex-col cursor-pointer flex-grow min-w-14 py-2 items-center  justify-center hover:bg-gray-700 hover:border-b-2 lg:border-l-2 lg:hover:border-b-0 lg:hover:border-l-2 hover:border-cyan-500 ${
@@ -28,7 +30,8 @@ function NavItem({
       }`}
       onClick={onClick}
     >
-      <Icon className="w-7 h-7" />
+      {iconName?<img src={"/svg/icon-"+iconName+".svg"} alt="ickn" className="w-7 h-7" />:<Icon className="w-7 h-7" />}
+      
       <p className="font-work-sans text-xs transform scale-75">{label}</p>
     </li>
   );
@@ -71,6 +74,8 @@ const AppLayout: React.FC = () => {
         return "Dashboard";
       case "deposit":
         return "Deposit";
+      case "ickb":
+          return "iCKB";
       default:
         return currentPage.charAt(0).toUpperCase() + currentPage.slice(1);
     }
@@ -82,6 +87,8 @@ const AppLayout: React.FC = () => {
         return <Dashboard setCurrentPage={setCurrentPage} />;
       case "deposit":
         return <Deposit />;
+      case "ickb":
+        return <Ickb />;
     }
   };
 
@@ -105,6 +112,12 @@ const AppLayout: React.FC = () => {
                 label="Deposit"
                 isActive={currentPage === "deposit"}
                 onClick={() => setCurrentPage("deposit")}
+              />
+              <NavItem
+                iconName="ickb"
+                icon="ChartBarBig"
+                label="iCKB"
+                onClick={() => setCurrentPage("ickb")}
               />
               <NavItem
                 icon="ChartBarBig"
