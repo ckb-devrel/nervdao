@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { ccc } from "@ckb-ccc/connector-react";
 import { useNotification } from "@/context/NotificationProvider";
+import { TailSpin } from "react-loader-spinner";
 
 const DepositForm: React.FC = () => {
   const [amount, setAmount] = useState<string>("");
   const [transactionFee, setTransactionFee] = useState<string>("-");
   const [balance, setBalance] = useState<string>("-");
-
+  const [transTbc, setTransTbc] = useState<boolean>(false);
+  const [depositPending, setDepositPending] = useState<boolean>(false);
   const signer = ccc.useSigner();
-  const { showNotification,removeNotification } = useNotification();
+  const { showNotification, removeNotification } = useNotification();
 
   useEffect(() => {
     if (!signer) return;
@@ -40,7 +42,7 @@ const DepositForm: React.FC = () => {
         setTransactionFee(
           ccc.fixedPointToString(
             (await tx.getInputsCapacity(signer.client)) -
-              tx.getOutputsCapacity()
+            tx.getOutputsCapacity()
           )
         );
       } catch (error) {
@@ -51,8 +53,10 @@ const DepositForm: React.FC = () => {
 
   const handleDeposit = async () => {
     if (!signer) {
+
       return;
     }
+
     const { script: lock } = await signer.getRecommendedAddressObj();
     const tx = ccc.Transaction.from({
       outputs: [
@@ -80,15 +84,24 @@ const DepositForm: React.FC = () => {
       return;
     }
     tx.outputs[0].capacity = ccc.fixedPointFrom(amount);
-    const progressId = await showNotification("progress", `Deposit in progress!`);
-
     await tx.completeInputsByCapacity(signer);
     await tx.completeFeeBy(signer, 1000);
-
-    const txHash = await signer.sendTransaction(tx);
-    removeNotification(progressId+'')
-    showNotification("success", `Deposit Success: ${txHash}`);
-   
+    setTransTbc(true)
+    try {
+      const txHash = await signer.sendTransaction(tx);
+      const progressId = await showNotification("progress", `Pending Transaction!`);
+      setDepositPending(true)
+      await signer.client.waitTransaction(txHash)
+      setTransTbc(false)
+      removeNotification(progressId + '')
+      setDepositPending(false)
+      showNotification("success", ` Committed`);
+      // showNotification("success", `Deposit Success: ${txHash}`);
+    } catch (error) {
+      setTransTbc(false)
+    } finally {
+      setTransTbc(false)
+    }
   };
 
   useEffect(() => {
@@ -127,7 +140,7 @@ const DepositForm: React.FC = () => {
 
   return (
     <div className="bg-gray-800 rounded-lg p-6">
-      
+
       <h2 className="text-2xl font-play font-bold mb-4">
         Deposit to Nervos DAO
       </h2>
@@ -140,11 +153,11 @@ const DepositForm: React.FC = () => {
           onChange={(e) => setAmount(e.target.value)}
           value={amount}
           placeholder="Enter amount" />
-       
+
         <span className="absolute right-0 p-3 flex items-center text-teal-500 cursor-pointer" onClick={handleMax}>
           MAX
         </span>
-        
+
       </div>
       <p className="text-gray-400 text-sm mb-4 border-b pb-2 border-white/20">
         Max balance minus estimated transaction fee needed
@@ -164,11 +177,22 @@ const DepositForm: React.FC = () => {
           } catch (error) {
             return true;
           }
-          return amount === "";
+          return amount === "" || !!transTbc;
         })()}
       >
-        Deposit
+        {transTbc ? <>
+          <TailSpin
+            height="20"
+            width="20"
+            color="#333333"
+            ariaLabel="tail-spin-loading"
+            radius="1"
+            wrapperStyle={{ 'display': 'inline-block', 'marginRight': '10px' }}
+            wrapperClass="inline-block"
+          /> {depositPending?'pending':'To be confirmed'}
+        </> : 'Deposit'}
       </button>
+
     </div>
   );
 };
