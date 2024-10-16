@@ -5,16 +5,21 @@ import { NotificationProvider } from "@/context/NotificationProvider";
 import Notification from "@/app/components/Notification";
 import { CSSProperties } from "react";
 import React from "react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
-export function LayoutProvider({ children }: { children: React.ReactNode }) {
+
+ 
+export  function  LayoutProvider({ children }: { children: React.ReactNode }) {
   const defaultClient = React.useMemo(() => {
     return process.env.NEXT_PUBLIC_IS_MAINNET === "true"
       ? new ccc.ClientPublicMainnet()
       : new ccc.ClientPublicTestnet();
   }, []);
-
+  
+  
   return (
     <ccc.Provider
+
       connectorProps={{
         style: {
           "--background": "#232323",
@@ -41,10 +46,14 @@ export function LayoutProvider({ children }: { children: React.ReactNode }) {
         },
       ]}
     >
-      <NotificationProvider>
-        {children}
-        <Notification />
-      </NotificationProvider>
+      <QueryClientProvider client={new QueryClient()} >
+       
+        <NotificationProvider>
+          {children}
+          <Notification />
+        </NotificationProvider>
+     
+      </QueryClientProvider>
     </ccc.Provider>
   );
 }

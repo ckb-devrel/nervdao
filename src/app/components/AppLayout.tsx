@@ -30,7 +30,7 @@ function NavItem({
       }`}
       onClick={onClick}
     >
-      {iconName?<img src={"/svg/icon-"+iconName+".svg"} alt="ickn" className="w-7 h-7" />:<Icon className="w-7 h-7" />}
+      {iconName?<img src={"/svg/icon-"+iconName+".svg"} alt="ickb" className="w-7 h-7" />:<Icon className="w-7 h-7" />}
       
       <p className="font-work-sans text-xs transform scale-75">{label}</p>
     </li>
@@ -117,6 +117,7 @@ const AppLayout: React.FC = () => {
                 iconName="ickb"
                 icon="ChartBarBig"
                 label="iCKB"
+                isActive={currentPage === "ickb"}
                 onClick={() => setCurrentPage("ickb")}
               />
               <NavItem
