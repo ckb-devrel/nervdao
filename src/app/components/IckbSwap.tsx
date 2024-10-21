@@ -79,12 +79,10 @@ const IckbSwap: React.FC = () => {
                 SCRIPTS: generateGenesisScriptConfigs(
                     await rpc.getBlockByNumber("0x0"),
                 ),
-                },
+            },
           );
         let txs = TransactionSkeleton()
-        console.log(txs)
          let  tx = ickbDeposit(txs, 1, BigInt(100), config);
-         console.log(tx)
           debugger
         
 
@@ -103,8 +101,20 @@ const IckbSwap: React.FC = () => {
         convertedAmount -= convertedAmount / BigInt(1000);
         return `${toText(convertedAmount)} ${unit}`;
     }
+    function ckbRecive(
+        amount: bigint
+    ) {
+        if(!tipHeader){
+            return
+        }
+        let [convertedAmount, unit] = [ckb2Ickb(amount, tipHeader), "ICKB"]
+
+        //Worst case scenario is a 0.1% fee for bot
+        convertedAmount -= convertedAmount / BigInt(1000);
+        console.log(Number(convertedAmount))
+        return Number(convertedAmount)
+    }
     useEffect(() => {
-      
         (async () => {
             if (!signer) return;
             const balance = await signer.getBalance();
@@ -124,7 +134,7 @@ const IckbSwap: React.FC = () => {
 
     const handleMax = async () => {
         if (!signer) return;
-   
+        
         setAmount(balance);
     };
     const handleAmountChange = useCallback ((e: { target: { value: React.SetStateAction<string>; }; })=>{
@@ -206,7 +216,7 @@ const IckbSwap: React.FC = () => {
                 </div>
                 <div className="basis-1/2">
                     <p className="text-gray-400 mb-2 flex items-center	">Liquidity Availability <Info size={16} data-tooltip-id="my-tooltip" data-tooltip-content="Hello world!" /></p>
-                    <p className="text-2xl font-bold font-play mb-4"> <span className="text-base font-normal">iCKB</span></p>
+                    <p className="text-2xl font-bold font-play mb-4"> <span className="text-base font-normal">- iCKB</span></p>
 
                 </div>
             </div>
@@ -229,7 +239,7 @@ const IckbSwap: React.FC = () => {
                     </label>
                     <input className="w-full text-left border-none hover:border-none focus:border-none bg-gray-700 text-lg mt-1 p-3 pr-16"
                         type="text"
-                        value={ickbExchange}
+                        value={amount&&ckbRecive(BigInt( Math.trunc(parseFloat(amount))))}
                         id="ickb"
                         readOnly
                         placeholder="0" />
@@ -240,13 +250,13 @@ const IckbSwap: React.FC = () => {
                 </p>
                 <div className="flex justify-between my-3 text-base">
                     <span>You will Receive <Info size={16} className="inline-block" data-tooltip-id="my-tooltip" data-tooltip-content="receive info" /></span>
-                    <span>{amount ? <>{transactionFee} CKB</> : 'Calculated after entry'}</span>
+                    <span>{amount ? <>≈{ckbRecive(BigInt( Math.trunc(parseFloat(amount))))} iCKB</> : 'Calculated after entry'}</span>
                 </div>
-                {/* {amount &&
+                {amount &&
                     <div className="rounded border-1 border-yellow-500 p-4 bg-yellow-500/[.12]  my-3">
                         <h3 className="text-lg"><TriangleAlert size={24} className="inline-block" /> NOTE</h3>
-                        <p className="mt-2 text-sm">The remaining 10,000 iCKB (≈ 9620.19471 CKB) will be withdrawable once liquidity becomes available. You can withdraw this amount later from the “Withdraw” tab.</p></div>
-                } */}
+                        <p className="mt-2 text-sm">The remaining {ckbRecive(BigInt( Math.trunc(parseFloat(amount))))} iCKB (≈ {amount} CKB) will be withdrawable once liquidity becomes available. You can withdraw this amount later from the “Withdraw” tab.</p></div>
+                }
                 <div className="flex justify-between my-3 text-base">
                     <span>Transaction Fee <Info size={16} className="inline-block" data-tooltip-id="my-tooltip" data-tooltip-content="Transaction Fee info" /></span>
                     <span>{amount ? <>{transactionFee} CKB</> : 'Calculated after entry'}</span>
