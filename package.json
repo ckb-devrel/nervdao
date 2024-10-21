@@ -10,6 +10,10 @@
   },
   "dependencies": {
     "@ckb-ccc/connector-react": "^0.0.17-alpha.3",
+    "@ckb-ccc/core": "0.1.0-alpha.4",
+    "@ckb-lumos/base": "^0.23.0",
+    "@ckb-lumos/lumos": "^0.23.0",
+    "@ickb/lumos-utils": "^1.4.2",
     "@ickb/v1-core": "^1.4.1",
     "@tanstack/react-query": "^5.59.13",
     "apexcharts": "^3.54.0",
