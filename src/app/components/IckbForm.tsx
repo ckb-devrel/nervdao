@@ -1,13 +1,22 @@
 import React, { useEffect, useState } from "react";
 import { ccc } from "@ckb-ccc/connector-react";
 import { useNotification } from "@/context/NotificationProvider";
-import { ckb2Ickb, ickb2Ckb } from "@ickb/v1-core";
-import { CKB, I8Header } from "@ickb/lumos-utils";
-import { useIckbContext } from '@/context/IckbConfigProvider'
+import { ckb2Ickb, ickb2Ckb, ickbDeposit } from "@ickb/v1-core";
+import { CKB, configAdapterFrom, I8Header } from "@ickb/lumos-utils";
 import { Info, ArrowDown, TriangleAlert } from "lucide-react";
 import { Tooltip } from "react-tooltip";
 import { RPC } from "@ckb-lumos/rpc";
-import { toText } from "@/utils/utils";
+import { toText } from "@/utils/stringUtils";
+import {
+    generateGenesisScriptConfigs,
+    predefined,
+    initializeConfig,
+    helpers,
+  } from "@ckb-lumos/config-manager";
+  import {
+    TransactionSkeleton,
+    type TransactionSkeletonType,
+  } from "@ckb-lumos/helpers";
 
 const IckbForm: React.FC = () => {
     const [status, setStatus] = useState<string>("swap");
@@ -16,6 +25,7 @@ const IckbForm: React.FC = () => {
     const [transactionFee, setTransactionFee] = useState<string>("-");
     const [balance, setBalance] = useState<string>("-");
     const [tipHeader, setTipHeader] = useState<I8Header>();
+    const [feeRate, setfeeRate] = useState();
 
     const signer = ccc.useSigner();
 
@@ -64,40 +74,23 @@ const IckbForm: React.FC = () => {
             return;
         }
         const { script: lock } = await signer.getRecommendedAddressObj();
-        const tx = ccc.Transaction.from({
-            outputs: [
-                {
-                    lock,
-                    type: await ccc.Script.fromKnownScript(
-                        signer.client,
-                        ccc.KnownScript.NervosDao,
-                        "0x"
-                    ),
+        let config = configAdapterFrom(
+            {
+                    //Devnet
+                PREFIX: "ckt",
+                SCRIPTS: generateGenesisScriptConfigs(
+                    await rpc.getBlockByNumber("0x0"),
+                ),
                 },
-            ],
-            outputsData: ["00".repeat(8)],
-        });
-        await tx.addCellDepsOfKnownScripts(
-            signer.client,
-            ccc.KnownScript.NervosDao
-        );
-        if (tx.outputs[0].capacity > ccc.fixedPointFrom(amount)) {
-            showNotification(
-                "error",
-                "Minimal deposit amount is",
-                ccc.fixedPointToString(tx.outputs[0].capacity)
-            );
-            return;
-        }
-        tx.outputs[0].capacity = ccc.fixedPointFrom(amount);
-        const progressId = await showNotification("progress", `Deposit in progress!`);
+          );
+       
+         let  tx = ickbDeposit(TransactionSkeleton(), 1, BigInt(100), config);
+          debugger
+        
 
-        await tx.completeInputsByCapacity(signer);
-        await tx.completeFeeBy(signer, 1000);
-
-        const txHash = await signer.sendTransaction(tx);
-        removeNotification(progressId + '')
-        showNotification("success", `Deposit Success: ${txHash}`);
+        // const txHash = await signer.sendTransaction(tx);
+        // removeNotification(progressId + '')
+        // showNotification("success", `Deposit Success: ${txHash}`);
 
     };
     function approxConversion(
@@ -111,19 +104,21 @@ const IckbForm: React.FC = () => {
         return `${toText(convertedAmount)} ${unit}`;
     }
     const handleWithDraw = async () => { }
-    useEffect(() => {
+        useEffect(() => {
         (async () => {
             if (!signer) return;
             const balance = await signer.getBalance();
             const address = await signer.getInternalAddress()
-            console.log(address)
             setBalance(ccc.fixedPointToString(balance));
         })();
         (async () => {
             if (!signer) return;
             const header = await rpc.getTipHeader();
+            const feeRate = await rpc.getFeeRateStatistics();
+            console.log(feeRate)
             const tipHeader = I8Header.from(header);
             setTipHeader(tipHeader)
+            // setfeeRate(feeRate)
             let [convertedAmount, unit] = [ckb2Ickb(BigInt(10), tipHeader), "ICKB"]
 
             //Worst case scenario is a 0.1% fee for bot
@@ -166,8 +161,8 @@ const IckbForm: React.FC = () => {
         return (
             <><div className="flex flex-row font-play mb-4 mt-8 text-left">
                 <div className="basis-1/2">
-                    <p className="text-gray-400 mb-2">iCKB Balance</p>
-                    <p className="text-2xl font-bold font-play mb-4">{balance} <span className="text-base font-normal">iCKB</span></p>
+                    <p className="text-gray-400 mb-2">CKB Balance</p>
+                    <p className="text-2xl font-bold font-play mb-4">{balance} <span className="text-base font-normal">CKB</span></p>
 
                 </div>
                 <div className="basis-1/2">
@@ -177,7 +172,18 @@ const IckbForm: React.FC = () => {
                 </div>
             </div>
                 <div className='relative mb-4  bg-gray-700 p-4 rounded'>
-                    <label htmlFor="ickb" className="flex items-center px-2">
+                <label className="flex px-2 items-center"><img src="/svg/icon-ckb.svg" alt="CKB" className="mr-2" /> CKB</label>
+                    <input className="w-full text-left border-none hover:border-none focus:border-none bg-gray-700  text-lg p-3 mt-1 pr-16"
+                        type="text"
+                        value={amount && tipHeader && approxConversion(BigInt(ccc.numFromBytes(amount)), tipHeader)}
+                        placeholder="0" />
+                      <span className="absolute right-4 bottom-2 p-3 flex items-center text-teal-500 cursor-pointer" onClick={handleMax}>
+                        MAX
+                    </span>
+                    <div className="absolute bottom-[-30px] w-full text-center left-0 z-[100]"><div className="rounded-full bg-gray-500 p-1 inline-block"><ArrowDown className="inline-block" size={36} /></div></div>
+                </div>
+                <div className='relative mb-4  bg-gray-700 p-4 rounded'>
+                <label htmlFor="ickb" className="flex items-center px-2">
                         <img src="/svg/icon-ickb-1.svg" className="mr-2" alt="iCKB" />
                         iCKB
                     </label>
@@ -187,17 +193,7 @@ const IckbForm: React.FC = () => {
                         value={amount}
                         id="ickb"
                         placeholder="0" />
-                    <span className="absolute right-4 bottom-2 p-3 flex items-center text-teal-500 cursor-pointer" onClick={handleMax}>
-                        MAX
-                    </span>
-                    <div className="absolute bottom-[-30px] w-full text-center left-0 z-[100]"><div className="rounded-full bg-gray-500 p-1 inline-block"><ArrowDown className="inline-block" size={36} /></div></div>
-                </div>
-                <div className='relative mb-4  bg-gray-700 p-4 rounded'>
-                    <label className="flex px-2 items-center"><img src="/svg/icon-ckb.svg" alt="CKB" className="mr-2" /> CKB</label>
-                    <input className="w-full text-left border-none hover:border-none focus:border-none bg-gray-700  text-lg p-3 mt-1 pr-16"
-                        type="text"
-                        value={amount && tipHeader && approxConversion(BigInt(ccc.numFromBytes(amount)), tipHeader)}
-                        placeholder="0" />
+                  
                 </div>
                 <p className="text-center text-large font-bold text-center text-cyan-500 mb-4 pb-2 ">
                     1 CKB ≈ {tipHeader && approxConversion(BigInt(1 * 100000000), tipHeader)} 
@@ -215,26 +211,26 @@ const IckbForm: React.FC = () => {
                     <span>Transaction Fee <Info size={16} className="inline-block" data-tooltip-id="my-tooltip" data-tooltip-content="Transaction Fee info" /></span>
                     <span>{amount ? <>{transactionFee} CKB</> : 'Calculated after entry'}</span>
                 </div>
-                <div className="flex justify-between my-3 text-base">
+                {/* <div className="flex justify-between my-3 text-base">
                     <span>Additional Fee <Info size={16} className="inline-block" data-tooltip-id="my-tooltip" data-tooltip-content="Additional Fee info" /></span>
                     <span>{amount ? <>{transactionFee} CKB</> : 'Calculated after entry'}</span>
                 </div>
                 <div className="flex justify-between my-3 text-base">
                     <span>Completion time</span>
                     <span>~5 days</span>
-                </div>
+                </div> */}
 
                 <button
                     onClick={handleSwap}
                     className="mt-4 w-full font-bold bg-btn-gradient text-gray-800 text-body-2 py-3 rounded-lg hover:bg-btn-gradient-hover transition duration-200 disabled:opacity-50 disabled:hover:bg-btn-gradient"
-                    disabled={(() => {
-                        try {
-                            ccc.numFrom(amount);
-                        } catch (error) {
-                            return true;
-                        }
-                        return amount === "";
-                    })()}
+                    // disabled={(() => {
+                    //     try {
+                    //         ccc.numFrom(amount);
+                    //     } catch (error) {
+                    //         return true;
+                    //     }
+                    //     return amount === "";
+                    // })()}
                 >
                     {amount ? 'Swap' : 'Enter an amount'}
 

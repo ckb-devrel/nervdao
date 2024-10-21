@@ -58,7 +58,7 @@ const IckbStatus: React.FC = () => {
         </div>
         <div className="bg-gray-800 relative rounded-lg p-3 pr-5 mb-2 w-[30%]">
           <div className="flex justify-between items-center font-work-sans text-gray-400">
-            <span>Total Liquidity</span>
+            <span>APR</span>
           </div>
           <div className="flex justify-between items-center mt-1 font-play text-white text-lg font-bold">
             <span>150,000  CKB</span>
