@@ -12,7 +12,7 @@ export interface WalletConfig extends ChainConfig {
     queryClient: QueryClient;
 }
 
-let WalletConfig: WalletConfig | undefined = undefined;
+const WalletConfig: WalletConfig | undefined = undefined;
 
 export async function setupWalletConfig(signer: ccc.Signer) {
     const chain = signer.client.addressPrefix === "ckb" ? "mainnet" : "testnet";
@@ -40,6 +40,7 @@ export async function setupWalletConfig(signer: ccc.Signer) {
 
 export function getWalletConfig(): WalletConfig {
     if (!WalletConfig) {
+
         throw new Error("please call `setupWalletConfig` at first");
     }
     return WalletConfig;

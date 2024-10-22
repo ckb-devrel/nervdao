@@ -3,11 +3,13 @@ import React, {useState } from "react";
 import { Tooltip } from "react-tooltip";
 
 import IckbSwap from "./IckbSwap";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const IckbForm: React.FC = () => {
     const [status, setStatus] = useState<string>("swap");
     
     return (
+        <QueryClientProvider client={ new QueryClient()}>
         <div className="bg-gray-900 rounded-lg p-6">
 
             <div className="flex flex-row font-play mb-4 mt-4 border border-[#777] rounded-lg text-center">
@@ -18,6 +20,7 @@ const IckbForm: React.FC = () => {
             <Tooltip id="my-tooltip" />
 
         </div>
+        </QueryClientProvider>
     );
 };
 

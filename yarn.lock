@@ -61,6 +61,24 @@
     isomorphic-ws "^5.0.0"
     ws "^8.18.0"
 
+"@ckb-ccc/core@0.1.0-alpha.4":
+  version "0.1.0-alpha.4"
+  resolved "https://mirrors.cloud.tencent.com/npm/@ckb-ccc/core/-/core-0.1.0-alpha.4.tgz#511eb8cfda405cbd6b3f70ec801f0af6d336f28f"
+  integrity sha512-+h1IfVFJVkIAQHLBPRo49AKxbXTynJoiMDx8J5ayaPP7o7zKPRknw7WTuxpum4s8oxxqChi2zwO6e72QGeg7Wg==
+  dependencies:
+    "@joyid/ckb" "^1.0.1"
+    "@noble/ciphers" "^0.5.3"
+    "@noble/curves" "^1.4.2"
+    "@noble/hashes" "^1.4.0"
+    abort-controller "^3.0.0"
+    bech32 "^2.0.0"
+    bitcoinjs-message "^2.2.0"
+    buffer "^6.0.3"
+    cross-fetch "^4.0.0"
+    ethers "^6.13.1"
+    isomorphic-ws "^5.0.0"
+    ws "^8.18.0"
+
 "@ckb-ccc/eip6963@0.0.16-alpha.1":
   version "0.0.16-alpha.1"
   resolved "https://mirrors.cloud.tencent.com/npm/@ckb-ccc/eip6963/-/eip6963-0.0.16-alpha.1.tgz#2de91afab14889804eabdd8b6b3069280663a75d"
@@ -163,7 +181,7 @@
   dependencies:
     "@ckb-lumos/bi" "0.23.0"
 
-"@ckb-lumos/common-scripts@^0.23.0":
+"@ckb-lumos/common-scripts@0.23.0", "@ckb-lumos/common-scripts@^0.23.0":
   version "0.23.0"
   resolved "https://mirrors.cloud.tencent.com/npm/@ckb-lumos/common-scripts/-/common-scripts-0.23.0.tgz#ccb04214ca7186829036ddcbb0dc1b5326127a90"
   integrity sha512-Dwic0Al94afdGNu+TGAMmZiU5OVF/zvXbzhCvNmkFS25t8BxPdFjGEc0MlWBI4ZSEoGRrC0O+BOxjzfl5VxSYg==
@@ -191,6 +209,19 @@
     "@types/deep-freeze-strict" "^1.1.0"
     deep-freeze-strict "^1.1.1"
 
+"@ckb-lumos/hd@0.23.0":
+  version "0.23.0"
+  resolved "https://mirrors.cloud.tencent.com/npm/@ckb-lumos/hd/-/hd-0.23.0.tgz#97ddf6e291bdb44b7b8d61bcf437c3a1b17d0182"
+  integrity sha512-z7EsR/GeX54hq4ukqwW3nrqLCsYrTWIFAjZLR1Ao8xycqQp0IBjCWZLLjRrZY6krbUQpVOoiKo3NBLpPW36LXg==
+  dependencies:
+    "@ckb-lumos/base" "0.23.0"
+    "@ckb-lumos/bi" "0.23.0"
+    bn.js "^5.1.3"
+    elliptic "^6.5.4"
+    scrypt-js "^3.0.1"
+    sha3 "^2.1.3"
+    uuid "^8.3.0"
+
 "@ckb-lumos/helpers@0.23.0", "@ckb-lumos/helpers@^0.23.0":
   version "0.23.0"
   resolved "https://mirrors.cloud.tencent.com/npm/@ckb-lumos/helpers/-/helpers-0.23.0.tgz#095a6d4752d756287cfbee0360c614d27a5f71f3"
@@ -204,7 +235,7 @@
     bech32 "^2.0.0"
     immutable "^4.3.0"
 
-"@ckb-lumos/light-client@^0.23.0":
+"@ckb-lumos/light-client@0.23.0", "@ckb-lumos/light-client@^0.23.0":
   version "0.23.0"
   resolved "https://mirrors.cloud.tencent.com/npm/@ckb-lumos/light-client/-/light-client-0.23.0.tgz#093f28d4183971f1212241271e7b23bad9909689"
   integrity sha512-O+dbfubDjl0iODiQ8Q+RVJLfuXYNCN6c0am8xEv4vvazLwfw1y/vn6fG/pFu9Mc1GahZ58y9o6fkUgs8ujH3Mg==
@@ -214,6 +245,24 @@
     "@ckb-lumos/rpc" "0.23.0"
     cross-fetch "^3.1.5"
     events "^3.3.0"
+
+"@ckb-lumos/lumos@^0.23.0":
+  version "0.23.0"
+  resolved "https://mirrors.cloud.tencent.com/npm/@ckb-lumos/lumos/-/lumos-0.23.0.tgz#638b4780a990f42059f86c3e4e33cbd7e6557782"
+  integrity sha512-ocsmzgTgevVwyQeQkUZrg4PLJCfX48D5MEBNYTMoGh5b1g0f1iEBHcAgw4WBGOKgMJQmGRmWB5P6tPDZ3OZBwQ==
+  dependencies:
+    "@ckb-lumos/base" "0.23.0"
+    "@ckb-lumos/bi" "0.23.0"
+    "@ckb-lumos/ckb-indexer" "0.23.0"
+    "@ckb-lumos/codec" "0.23.0"
+    "@ckb-lumos/common-scripts" "0.23.0"
+    "@ckb-lumos/config-manager" "0.23.0"
+    "@ckb-lumos/hd" "0.23.0"
+    "@ckb-lumos/helpers" "0.23.0"
+    "@ckb-lumos/light-client" "0.23.0"
+    "@ckb-lumos/rpc" "0.23.0"
+    "@ckb-lumos/toolkit" "0.23.0"
+    "@ckb-lumos/transaction-manager" "0.23.0"
 
 "@ckb-lumos/rpc@0.23.0", "@ckb-lumos/rpc@^0.23.0":
   version "0.23.0"
@@ -231,6 +280,18 @@
   integrity sha512-7LTsUFfoNCBWJLgh+V/QFnemjGw+y4mmLeQvubwYuJqIPIhIpwKUuKRzkvVG8snA8xVQSfjSSQOs5m3mKp66Kg==
   dependencies:
     "@ckb-lumos/bi" "0.23.0"
+
+"@ckb-lumos/transaction-manager@0.23.0":
+  version "0.23.0"
+  resolved "https://mirrors.cloud.tencent.com/npm/@ckb-lumos/transaction-manager/-/transaction-manager-0.23.0.tgz#2e90d7f0fe5613fd594a7f0b7a2a48c3336b98dd"
+  integrity sha512-sfwt2g8JlYxr5jRx5r/UZNffTpkwn3sh4dD2THzKmX0S1CsSgww2D1ZD7yruWwSu05ZLKlDPFVKyJ50tNc3LuQ==
+  dependencies:
+    "@ckb-lumos/base" "0.23.0"
+    "@ckb-lumos/ckb-indexer" "0.23.0"
+    "@ckb-lumos/codec" "0.23.0"
+    "@ckb-lumos/rpc" "0.23.0"
+    "@ckb-lumos/toolkit" "0.23.0"
+    immutable "^4.3.0"
 
 "@eslint-community/eslint-utils@^4.2.0", "@eslint-community/eslint-utils@^4.4.0":
   version "4.4.0"
@@ -307,6 +368,21 @@
   version "1.4.1"
   resolved "https://mirrors.cloud.tencent.com/npm/@ickb/lumos-utils/-/lumos-utils-1.4.1.tgz#63441d014c0f8897c18ef1ac4080bebb9375a450"
   integrity sha512-GAjZSsPyKrIljufZJK8axrZQrwd1ruNkiZg3YjlkUOxW1NT+DumULv4mQxoVmphX2lmR96dXcfEBOOfE5QMi4w==
+  dependencies:
+    "@ckb-lumos/base" "^0.23.0"
+    "@ckb-lumos/ckb-indexer" "^0.23.0"
+    "@ckb-lumos/codec" "^0.23.0"
+    "@ckb-lumos/common-scripts" "^0.23.0"
+    "@ckb-lumos/config-manager" "^0.23.0"
+    "@ckb-lumos/helpers" "^0.23.0"
+    "@ckb-lumos/light-client" "^0.23.0"
+    "@ckb-lumos/rpc" "^0.23.0"
+    immutable "^4.3.7"
+
+"@ickb/lumos-utils@^1.4.2":
+  version "1.4.2"
+  resolved "https://mirrors.cloud.tencent.com/npm/@ickb/lumos-utils/-/lumos-utils-1.4.2.tgz#a222ba6c15a4772b0a667a6dd7588c8f62140cf7"
+  integrity sha512-sN9wZ5U9sUhK/hvLkRH7TpTgbweszLKNSOSJ6Ber9EKVqyQ0eD7qnJlGzDudmHt1Z/uEPlWBvD0cYOi61sK8Dg==
   dependencies:
     "@ckb-lumos/base" "^0.23.0"
     "@ckb-lumos/ckb-indexer" "^0.23.0"
@@ -572,10 +648,10 @@
   resolved "https://mirrors.cloud.tencent.com/npm/@tanstack/query-core/-/query-core-5.59.13.tgz#8c962980af174bbd446b7e9b9999f7432897df80"
   integrity sha512-Oou0bBu/P8+oYjXsJQ11j+gcpLAMpqW42UlokQYEz4dE7+hOtVO9rVuolJKgEccqzvyFzqX4/zZWY+R/v1wVsQ==
 
-"@tanstack/react-query@^5.59.13":
-  version "5.59.13"
-  resolved "https://mirrors.cloud.tencent.com/npm/@tanstack/react-query/-/react-query-5.59.13.tgz#decac9c15ddc29a54dc3520a41a1dcedb1a9596a"
-  integrity sha512-GB2ELtiH8tL0rcFiM4sWvnXhazt1xRXX/LolMEV12kfEKu58aNA4lQoieslP61PO4vZO9JJMwm+6lqyS0E1HOA==
+"@tanstack/react-query@^5.59.15":
+  version "5.59.15"
+  resolved "https://mirrors.cloud.tencent.com/npm/@tanstack/react-query/-/react-query-5.59.15.tgz#fa1c5b4d96e6a148ec761f214304bbf5ac1906be"
+  integrity sha512-QbVlAkTI78wB4Mqgf2RDmgC0AOiJqer2c5k9STOOSXGv1S6ZkY37r/6UpE8DbQ2Du0ohsdoXgFNEyv+4eDoPEw==
   dependencies:
     "@tanstack/query-core" "5.59.13"
 
@@ -1056,6 +1132,11 @@ bn.js@^4.11.8, bn.js@^4.11.9:
   resolved "https://registry.npmjs.org/bn.js/-/bn.js-4.12.0.tgz"
   integrity sha512-c98Bf3tPniI+scsdk237ku1Dc3ujXQTSgyiPUDEOe7tRkhrqridvh8klBv0HCEso1OLOYcHuCv/cS6DNxKH+ZA==
 
+bn.js@^5.1.3:
+  version "5.2.1"
+  resolved "https://mirrors.cloud.tencent.com/npm/bn.js/-/bn.js-5.2.1.tgz#0bc527a6a0d18d0aa8d5b0538ce4a77dccfa7b70"
+  integrity sha512-eXRvHzWyYPBuB4NBy0cmYQjGitUrtqwbvlzP3G6VFnNRbsZQIxQ10PbKKHt8gZ/HW/D/747aDl+QkDqg3KQLMQ==
+
 brace-expansion@^1.1.7:
   version "1.1.11"
   resolved "https://registry.npmjs.org/brace-expansion/-/brace-expansion-1.1.11.tgz"
@@ -1128,7 +1209,7 @@ buffer-xor@^1.0.3:
   resolved "https://registry.npmjs.org/buffer-xor/-/buffer-xor-1.0.3.tgz"
   integrity sha512-571s0T7nZWK6vB67HI5dyUF7wXiNcfaPPPTl6zYCNApANjIvYJTg7hlud/+cJpdAhS7dVzqMLmfhfHR3rAcOjQ==
 
-buffer@^6.0.3:
+buffer@6.0.3, buffer@^6.0.3:
   version "6.0.3"
   resolved "https://registry.npmjs.org/buffer/-/buffer-6.0.3.tgz"
   integrity sha512-FTiCpNxtwiZZHEZbcbTIcZjERVICn9yq/pDFkTl95/AxzD1naBctN7YO68riM/gLSDY7sdrMby8hofADYuuqOA==
@@ -1444,7 +1525,7 @@ elliptic@6.5.4:
     minimalistic-assert "^1.0.1"
     minimalistic-crypto-utils "^1.0.1"
 
-elliptic@^6.5.2:
+elliptic@^6.5.2, elliptic@^6.5.4:
   version "6.5.7"
   resolved "https://registry.npmjs.org/elliptic/-/elliptic-6.5.7.tgz"
   integrity sha512-ESVCtTwiA+XhY3wyh24QqRGBoP3rEdDUl3EDUUo9tft074fi19IrdpH7hLCMMP3CIj7jb3W96rn8lt/BqIlt5Q==
@@ -3186,6 +3267,11 @@ scheduler@^0.23.2:
   dependencies:
     loose-envify "^1.1.0"
 
+scrypt-js@^3.0.1:
+  version "3.0.1"
+  resolved "https://mirrors.cloud.tencent.com/npm/scrypt-js/-/scrypt-js-3.0.1.tgz#d314a57c2aef69d1ad98a138a21fe9eafa9ee312"
+  integrity sha512-cdwTTnqPu0Hyvf5in5asVdZocVDTNRmR7XEcJuIzMjJeSHybHl7vpB66AzwTaIg6CLSbtjcxc8fqcySfnTkccA==
+
 secp256k1@^3.0.1:
   version "3.8.0"
   resolved "https://registry.npmjs.org/secp256k1/-/secp256k1-3.8.0.tgz"
@@ -3239,6 +3325,13 @@ sha.js@^2.4.0, sha.js@^2.4.8:
   dependencies:
     inherits "^2.0.1"
     safe-buffer "^5.0.1"
+
+sha3@^2.1.3:
+  version "2.1.4"
+  resolved "https://mirrors.cloud.tencent.com/npm/sha3/-/sha3-2.1.4.tgz#000fac0fe7c2feac1f48a25e7a31b52a6492cc8f"
+  integrity sha512-S8cNxbyb0UGUM2VhRD4Poe5N58gJnJsLJ5vC7FYWGUmGhcsj4++WaIOBFVDxlG0W3To6xBuiRh+i0Qp2oNCOtg==
+  dependencies:
+    buffer "6.0.3"
 
 shebang-command@^2.0.0:
   version "2.0.0"
@@ -3699,6 +3792,11 @@ util-deprecate@^1.0.1, util-deprecate@^1.0.2:
   version "1.0.2"
   resolved "https://registry.npmjs.org/util-deprecate/-/util-deprecate-1.0.2.tgz"
   integrity sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==
+
+uuid@^8.3.0:
+  version "8.3.2"
+  resolved "https://mirrors.cloud.tencent.com/npm/uuid/-/uuid-8.3.2.tgz#80d5b5ced271bb9af6c445f21a1a04c606cefbe2"
+  integrity sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==
 
 valibot@^0.42.1:
   version "0.42.1"

@@ -28,7 +28,7 @@ import {
     toText,
     txInfoFrom,
     type TxInfo,
-} from "./utils.js";
+} from "./utils";
 import { ckbSoftCapPerDeposit } from "@ickb/v1-core";
 import { WalletConfig } from "./config.js";
 
@@ -52,7 +52,7 @@ export function base({
     const info: string[] = [];
 
     tx = orderMelt(tx, myOrders);
-    let notCompleted = myOrders.reduce(
+    const notCompleted = myOrders.reduce(
         (c, { info }) => (info.isMatchable ? c + 1 : c),
         0,
     );
@@ -61,7 +61,7 @@ export function base({
             `Cancelling ${notCompleted} Open Order${notCompleted > 1 ? "s" : ""}`,
         );
     }
-    let completed = myOrders.length - notCompleted;
+    const completed = myOrders.length - notCompleted;
     if (completed > 0) {
         info.push(
             `Melting ${completed} Completed Order${completed > 1 ? "s" : ""}`,
@@ -162,7 +162,8 @@ function convertAttempt(
     feeRate: bigint,
     walletConfig: WalletConfig,
 ) {
-    let { tx, info, error } = txInfo;
+    let { tx, info } = txInfo;
+    const {error} = txInfo
     if (error !== "") {
         return txInfo;
     }
@@ -242,14 +243,18 @@ export function addChange(
     feeRate: bigint,
     walletConfig: WalletConfig,
 ) {
-    let { tx, info, error } = txInfo;
+    let { tx, info } = txInfo;
+    const {error} = txInfo
     if (error !== "") {
         return txInfo;
     }
 
     const { accountLock, addPlaceholders, config } = walletConfig;
+    // eslint-disable-next-line
     let txFee, freeCkb, freeIckbUdt;
+        // eslint-disable-next-line
     ({ tx, freeIckbUdt } = addIckbUdtChange(tx, accountLock, config));
+        // eslint-disable-next-line
     ({ tx, txFee, freeCkb } = addCkbChange(
         tx,
         accountLock,
