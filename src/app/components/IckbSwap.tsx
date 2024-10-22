@@ -5,16 +5,13 @@ import { ckb2Ickb, ickbDeposit } from "@ickb/v1-core";
 import { configAdapterFrom, I8Header } from "@ickb/lumos-utils";
 import { Info, ArrowDown, TriangleAlert } from "lucide-react";
 // import { Tooltip } from "react-tooltip";
-import { RPC } from "@ckb-lumos/rpc";
+import { RPC } from "@ckb-lumos/lumos";
 import { toBigInt, toText } from "@/utils/stringUtils";
 import {
-    generateGenesisScriptConfigs,
-
-} from "@ckb-lumos/config-manager";
-import {
-    TransactionSkeleton,
+    helpers,
     // type TransactionSkeletonType,
-} from "@ckb-lumos/helpers";
+} from "@ckb-lumos/lumos";
+import { generateGenesisScriptConfigs } from "@ckb-lumos/lumos/config";
 // import { setupWalletConfig } from "@/cores/config";
 // import { useQuery } from "@tanstack/react-query";
 // import { l1StateOptions } from "@/cores/queries";
@@ -89,7 +86,7 @@ const IckbSwap: React.FC = () => {
         );
         // const walletConfig = setupWalletConfig(signer)
         // console.log(walletConfig)
-        const txs = TransactionSkeleton()
+        const txs = helpers.TransactionSkeleton()
         const tx = ickbDeposit(txs, 1, BigInt(100), config);
         debugger
         console.log(tx)

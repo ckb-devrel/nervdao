@@ -1,6 +1,6 @@
 import { ccc } from "@ckb-ccc/core";
 import { Cell, Transaction, helpers } from "@ckb-lumos/lumos";
-import { cellDeps, headerDeps, witness, since, ChainConfig, chainConfigFrom, I8Script, lockExpanderFrom } from "@ickb/lumos-utils";
+import { ChainConfig, chainConfigFrom, I8Script, lockExpanderFrom, i8ScriptPadding } from "@ickb/lumos-utils";
 import type { QueryClient } from "@tanstack/react-query"
 
 export interface WalletConfig extends ChainConfig {
@@ -20,10 +20,7 @@ export async function setupWalletConfig(signer: ccc.Signer) {
     const signerAddress = await signer.getRecommendedAddressObj();
     const signerLock = I8Script.from({
         ...signerAddress.script,
-        [cellDeps]: [],
-        [headerDeps]: [],
-        [witness]: undefined,
-        [since]: "0x0",
+        ...i8ScriptPadding
     });
     return {
         ...chainConfig,

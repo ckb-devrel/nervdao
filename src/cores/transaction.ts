@@ -1,3 +1,10 @@
+/**
+ * this file is copied from project `v1-interface`
+ * 
+ * @author Phroi
+ * @reference https://github.com/ickb/v1-interface/blob/master/src/transaction.ts
+ */
+
 import { helpers } from "@ckb-lumos/lumos";
 import {
     addCells,
