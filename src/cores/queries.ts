@@ -35,18 +35,20 @@ import {
 import { addChange, base, convert } from "./transaction";
 import type { Cell, Header, HexNumber, Transaction } from "@ckb-lumos/base";
 import { parseAbsoluteEpochSince } from "@ckb-lumos/base/lib/since";
-import { getWalletConfig, type WalletConfig } from "./config";
+import {type WalletConfig } from "./config";
 
-export function l1StateOptions(isFrozen: boolean) {
-    const walletConfig = getWalletConfig();
+export function l1StateOptions(walletConfig:WalletConfig,isFrozen: boolean) {
+    
+    // const walletConfig = getWalletConfig();
     return queryOptions({
         retry: true,
-        refetchInterval: ({ state }) => 60000 * (state.data?.hasMatchable ? 1 : 10),
+        // refetchInterval: ({ state }) => 6 * (state.data?.hasMatchable ? 1 : 10),
         staleTime: 10000,
         queryKey: [walletConfig.chain, walletConfig.address, "l1State"],
         queryFn: async () => {
             try {
-                return await getL1State(walletConfig);
+                const data = await getL1State(walletConfig);
+                return data
             } catch (e) {
                 console.log(e);
                 throw e;
@@ -67,7 +69,6 @@ export function l1StateOptions(isFrozen: boolean) {
 
 async function getL1State(walletConfig: WalletConfig) {
     const { rpc, config, expander } = walletConfig;
-
     const mixedCells = await getMixedCells(walletConfig);
 
     // Prefetch feeRate and tipHeader
@@ -97,7 +98,6 @@ async function getL1State(walletConfig: WalletConfig) {
 
     // Await for headers
     const headers = await headersPromise;
-
     // Sift through iCKB related cells
     const {
         udts,
@@ -208,7 +208,7 @@ async function getL1State(walletConfig: WalletConfig) {
             return addChange(txInfo, feeRate, walletConfig);
         }
 
-        return txInfoFrom({ info, error: "Nothing to convert" });
+        return txInfoFrom({ info, error: "Nothing to convert"});
     };
 
     return {
