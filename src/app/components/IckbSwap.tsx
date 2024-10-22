@@ -15,7 +15,7 @@ import {
     TransactionSkeleton,
     // type TransactionSkeletonType,
 } from "@ckb-lumos/helpers";
-import { setupWalletConfig } from "@/cores/config";
+// import { setupWalletConfig } from "@/cores/config";
 // import { useQuery } from "@tanstack/react-query";
 // import { l1StateOptions } from "@/cores/queries";
 const rpc = new RPC('https://testnet.ckb.dev/')
@@ -87,8 +87,8 @@ const IckbSwap: React.FC = () => {
                 ),
             },
         );
-        const walletConfig = setupWalletConfig(signer)
-        console.log(walletConfig)
+        // const walletConfig = setupWalletConfig(signer)
+        // console.log(walletConfig)
         const txs = TransactionSkeleton()
         const tx = ickbDeposit(txs, 1, BigInt(100), config);
         debugger
