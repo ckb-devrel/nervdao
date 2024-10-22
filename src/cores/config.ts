@@ -1,6 +1,7 @@
 import { ccc } from "@ckb-ccc/core";
 import { Cell, Transaction, helpers } from "@ckb-lumos/lumos";
 import { ChainConfig, chainConfigFrom, I8Script, lockExpanderFrom, i8ScriptPadding } from "@ickb/lumos-utils";
+import { getIckbScriptConfigs } from "@ickb/v1-core";
 import type { QueryClient } from "@tanstack/react-query"
 
 export interface WalletConfig extends ChainConfig {
@@ -16,7 +17,7 @@ const WalletConfig: WalletConfig | undefined = undefined;
 
 export async function setupWalletConfig(signer: ccc.Signer) {
     const chain = signer.client.addressPrefix === "ckb" ? "mainnet" : "testnet";
-    const chainConfig = await chainConfigFrom(chain);
+    const chainConfig = await chainConfigFrom(chain, undefined, true, getIckbScriptConfigs);
     const signerAddress = await signer.getRecommendedAddressObj();
     const signerLock = I8Script.from({
         ...signerAddress.script,
