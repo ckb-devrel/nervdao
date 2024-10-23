@@ -1,53 +1,44 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { ccc } from "@ckb-ccc/connector-react";
 import { useNotification } from "@/context/NotificationProvider";
-import { ckb2Ickb, ickbDeposit } from "@ickb/v1-core";
-import { configAdapterFrom, I8Header } from "@ickb/lumos-utils";
+import { ckb2Ickb } from "@ickb/v1-core";
 import { Info, ArrowDown, TriangleAlert } from "lucide-react";
-import { RPC } from "@ckb-lumos/lumos";
-import { toBigInt, toText } from "@/utils/stringUtils";
-import {
-    helpers,
-    // type TransactionSkeletonType,
-} from "@ckb-lumos/lumos";
-import { generateGenesisScriptConfigs } from "@ckb-lumos/lumos/config";
+import { toText } from "@/utils/stringUtils";
+
 import { type WalletConfig } from "@/cores/config";
 import { useQuery } from "@tanstack/react-query";
 import { l1StateOptions } from "@/cores/queries";
-import { TxInfo, txInfoFrom } from "@/cores/utils";
-const rpc = new RPC('https://testnet.ckb.dev/')
+import { JsonRpcTransformers } from "@ckb-ccc/core/advanced";
 
 const IckbSwap: React.FC<{ walletConfig: WalletConfig }> = ({ walletConfig }) => {
     const [amount, setAmount] = useState<string>("");
-    const [transactionFee, setTransactionFee] = useState<string>("-");
     const { data: ickbData, isStale, isFetching } = useQuery(
         l1StateOptions(walletConfig, false),
     );
-    const txInfo = ickbData?.txBuilder(true, ccc.fixedPointFrom(amount));
-    console.log(txInfo)
+    const txInfo = ickbData?.txBuilder(false, ccc.fixedPointFrom(amount));
+    // console.log(txInfo)
+    const signerCcc = ccc.useSigner();
+    (BigInt.prototype as any).toJSON = function () {
+        return this.toString();
+    };
     const { showNotification, removeNotification } = useNotification();
     async function handleSwap() {
-        if (!txInfo) {
+        if (!txInfo || !signerCcc) {
             return
         }
-        const { rpc, signer } = walletConfig;
-        let progressId
+        let progressId, txHash;
         try {
-            console.log(txInfo.tx)
-            //   freezeTxInfo(txInfo);
-            const txHash = await rpc.sendTransaction(await signer(txInfo.tx));
-            let status = "pending";
-            while (status === "pending" || status === "proposed") {
-                await new Promise((r) => setTimeout(r, 10000));
-                status = (await rpc.getTransaction(txHash)).txStatus.status;
-            }
-            let progressId = await showNotification("progress", `Deposit in progress!`);
-            showNotification("success", `Deposit Success: ${txHash}`);
+            const cccTx = ccc.Transaction.fromLumosSkeleton(txInfo.tx);
+            const signedTx = await signerCcc.signTransaction(cccTx);
+            progressId = await showNotification("progress", `Deposit in progress!`);
 
-            console.log(txHash, status);
+            txHash = await signerCcc.sendTransaction(signedTx);
         } finally {
             removeNotification(progressId + '')
             //   freezeTxInfo(txInfoFrom({}));
+            setAmount('0')
+            showNotification("success", `Deposit Success: ${txHash}`);
+
         }
     }
 
@@ -66,7 +57,7 @@ const IckbSwap: React.FC<{ walletConfig: WalletConfig }> = ({ walletConfig }) =>
 
     const handleMax = async () => {
         if (!ickbData) return;
-        setAmount(ccc.fixedPointToString(ickbData?.ckbBalance));
+        setAmount(ccc.fixedPointToString(ickbData?.ckbAvailable));
     };
     const handleAmountChange = useCallback((e: { target: { value: React.SetStateAction<string>; }; }) => {
         setAmount(e.target.value)
@@ -78,7 +69,7 @@ const IckbSwap: React.FC<{ walletConfig: WalletConfig }> = ({ walletConfig }) =>
             <div className="flex flex-row font-play mb-4 mt-8 text-left">
                 <div className="basis-1/2">
                     <p className="text-gray-400 mb-2">CKB Balance</p>
-                    <p className="text-2xl font-bold font-play mb-4">{ickbData && toText(ickbData?.ckbBalance)} <span className="text-base font-normal">CKB</span></p>
+                    <p className="text-2xl font-bold font-play mb-4">{ickbData && toText(ickbData?.ckbAvailable)} <span className="text-base font-normal">CKB</span></p>
 
                 </div>
                 <div className="basis-1/2">

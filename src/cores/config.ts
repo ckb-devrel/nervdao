@@ -20,8 +20,9 @@ export async function setupWalletConfig(signer: ccc.Signer) {
     const chainConfig = await chainConfigFrom(chain, undefined, true, getIckbScriptConfigs);
     const signerAddress = await signer.getRecommendedAddressObj();
     const signerLock = I8Script.from({
+        ...i8ScriptPadding,
         ...signerAddress.script,
-        ...i8ScriptPadding
+
     });
     return {
         ...chainConfig,
