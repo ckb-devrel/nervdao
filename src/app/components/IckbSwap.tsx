@@ -15,6 +15,7 @@ import { type WalletConfig } from "@/cores/config";
 import { useQuery } from "@tanstack/react-query";
 import { l1StateOptions } from "@/cores/queries";
 import { TxInfo, txInfoFrom } from "@/cores/utils";
+import { JsonRpcTransformers } from "@ckb-ccc/core/advancedBarrel";
 const rpc = new RPC('https://testnet.ckb.dev/')
 
 const IckbSwap: React.FC<{ walletConfig: WalletConfig }> = ({ walletConfig }) => {
@@ -24,18 +25,24 @@ const IckbSwap: React.FC<{ walletConfig: WalletConfig }> = ({ walletConfig }) =>
         l1StateOptions(walletConfig, false),
     );
     const txInfo = ickbData?.txBuilder(true, ccc.fixedPointFrom(amount));
-    console.log(txInfo)
     const { showNotification, removeNotification } = useNotification();
     async function handleSwap() {
         if (!txInfo) {
             return
         }
-        const { rpc, signer } = walletConfig;
+        const signer = ccc.useSigner();
+        if (!signer) {
+            return;
+        }
+        const cccTx = ccc.Transaction.fromLumosSkeleton(txInfo.tx);
+        const signedTx = await signer.signTransaction(cccTx);
+        console.log("tx:", JSON.stringify(JsonRpcTransformers.transactionFrom(signedTx)));
+        const txHash = await signer.sendTransaction(signedTx);
+        // const { rpc, signer } = walletConfig;
         let progressId
         try {
             console.log(txInfo.tx)
             //   freezeTxInfo(txInfo);
-            const txHash = await rpc.sendTransaction(await signer(txInfo.tx));
             let status = "pending";
             while (status === "pending" || status === "proposed") {
                 await new Promise((r) => setTimeout(r, 10000));
