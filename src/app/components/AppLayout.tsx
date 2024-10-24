@@ -121,7 +121,7 @@ const AppLayout: React.FC = () => {
               <NavItem
                 icon="Github"
                 label="Source"
-                onClick={() => window.open("https://github.com/ckb-ecofund/nervdao", "_blank")}
+                onClick={() => window.open("https://github.com/ckb-devrel/nervdao", "_blank")}
               />
             </div>
           </ul>
