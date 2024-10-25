@@ -1,8 +1,8 @@
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback,  useState } from "react";
 import { ccc } from "@ckb-ccc/connector-react";
 import { useNotification } from "@/context/NotificationProvider";
 import { ickb2Ckb } from "@ickb/v1-core";
-import { Info, TriangleAlert, ArrowUp, ArrowDown, ChevronDown, ChevronUp } from "lucide-react";
+import { Info, TriangleAlert, ChevronDown, ChevronUp } from "lucide-react";
 import { toText } from "@/utils/stringUtils";
 import { type WalletConfig } from "@/cores/config";
 import { useQuery } from "@tanstack/react-query";
@@ -29,13 +29,10 @@ const pendingIckbs: SorterObj[] = [
     },
 ];
 
-
-
-
 const IckbWithDraw: React.FC<{ walletConfig: WalletConfig }> = ({ walletConfig }) => {
     const [amount, setAmount] = useState<string>("");
     const [pendingShow, setPendingShow] = useState<boolean>(false);
-    const { data: ickbData, isStale, isFetching } = useQuery(
+    const { data: ickbData} = useQuery(
         l1StateOptions(walletConfig, false),
     );
     const txInfo = ickbData?.txBuilder(true, ccc.fixedPointFrom(amount));
@@ -52,13 +49,12 @@ const IckbWithDraw: React.FC<{ walletConfig: WalletConfig }> = ({ walletConfig }
             const cccTx = ccc.Transaction.fromLumosSkeleton(txInfo.tx);
 
             txHash = await signerCcc.sendTransaction(cccTx);
-            console.log(txHash)
             progressId = await showNotification("progress", `Deposit in progress!`);
 
         } finally {
-            setAmount('0')
+            setAmount('')
             removeNotification(progressId + '')
-            showNotification("success", `Deposit Success: ${txHash}`);
+            showNotification("success", `Withdraw Success: ${txHash}`);
         }
     }
 
@@ -91,7 +87,7 @@ const IckbWithDraw: React.FC<{ walletConfig: WalletConfig }> = ({ walletConfig }
             <div className="flex flex-row font-play mb-4 mt-8 text-left">
                 <div className="basis-1/2">
                     <p className="text-gray-400 mb-2 flex items-center"><span className="w-2 h-2 bg-green-500 mr-2"></span>Withdrawable iCKB</p>
-                    <p className="text-2xl font-bold font-play mb-4">{ickbData && toText(ickbData?.ickbUdtAvailable)} <span className="text-base font-normal">CKB</span></p>
+                    <p className="text-2xl font-bold font-play mb-4">{ickbData? toText(ickbData?.ickbUdtAvailable):'-'} <span className="text-base font-normal">CKB</span></p>
 
                 </div>
                 <div className="basis-1/2">

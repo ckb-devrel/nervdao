@@ -19,11 +19,11 @@ const IckbForm: React.FC = () => {
         (async () => {
             const walletConfig = await setupWalletConfig(signer)
 
-            let setupConfig = {
+            const setupConfig = {
                 ...walletConfig,
                 queryClient: queryClient
             }
-            //@ts-ignore
+            //@ts-expect-error '0xstring&&string'
             setWalletConfig(setupConfig)
 
         })();

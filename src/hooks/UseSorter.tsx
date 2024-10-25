@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 
+
 export interface SorterObj {
   amount: number;
   daterequested: number;
@@ -39,12 +40,10 @@ export default function UseSorter<T>(
   const [key, setKey] = useState<keyof T>();
 
   useEffect(() => {
-    console.log(key)
     if (key !== undefined && dir !== undefined) {
       const result = data.sort((a: T, b: T) => {
         if (key && dir?.valueOf() === SortDirection.Ascending.valueOf()) {
           console.log("Ascending");
-          console.log(a)
           return a[key] < b[key] ? -1 : 1;
         }
         if (key && dir?.valueOf() === SortDirection.Descending.valueOf()) {
@@ -55,7 +54,7 @@ export default function UseSorter<T>(
       });
       setSortedTable(result);
     }
-  }, [sortedTable, dir, key]);
+  }, [sortedTable, dir, key,data]);
 
   return [sortedTable, setSortedTable, dir, setDir, key, setKey];
 }

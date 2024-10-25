@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback,  useState } from "react";
 import { ccc } from "@ckb-ccc/connector-react";
 import { useNotification } from "@/context/NotificationProvider";
 import { ckb2Ickb } from "@ickb/v1-core";
@@ -11,15 +11,13 @@ import { l1StateOptions } from "@/cores/queries";
 
 const IckbSwap: React.FC<{ walletConfig: WalletConfig }> = ({ walletConfig }) => {
     const [amount, setAmount] = useState<string>("");
-    const { data: ickbData, isStale, isFetching } = useQuery(
+    const { data: ickbData } = useQuery(
         l1StateOptions(walletConfig, false),
     );
     const txInfo = ickbData?.txBuilder(false, ccc.fixedPointFrom(amount));
     // console.log(txInfo)
     const signerCcc = ccc.useSigner();
-    (BigInt.prototype as any).toJSON = function () {
-        return this.toString();
-    };
+
     const { showNotification, removeNotification } = useNotification();
     async function handleSwap() {
         if (!txInfo || !signerCcc) {
@@ -39,12 +37,11 @@ const IckbSwap: React.FC<{ walletConfig: WalletConfig }> = ({ walletConfig }) =>
         } finally {
             removeNotification(progressId + '')
             //   freezeTxInfo(txInfoFrom({}));
-            setAmount('0')
+            setAmount("")
             showNotification("success", `Deposit Success: ${txHash}`);
 
         }
     }
-
 
     function approxConversion(
         amount: bigint,
@@ -72,7 +69,7 @@ const IckbSwap: React.FC<{ walletConfig: WalletConfig }> = ({ walletConfig }) =>
             <div className="flex flex-row font-play mb-4 mt-8 text-left">
                 <div className="basis-1/2">
                     <p className="text-gray-400 mb-2">CKB Balance</p>
-                    <p className="text-2xl font-bold font-play mb-4">{ickbData && toText(ickbData?.ckbAvailable)} <span className="text-base font-normal">CKB</span></p>
+                    <p className="text-2xl font-bold font-play mb-4">{ickbData ? toText(ickbData?.ckbAvailable):"-"} <span className="text-base font-normal">CKB</span></p>
 
                 </div>
                 {/* <div className="basis-1/2">
