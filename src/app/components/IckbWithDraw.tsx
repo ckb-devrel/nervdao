@@ -1,15 +1,15 @@
 import React, { useCallback, useMemo, useState } from "react";
 import { ccc } from "@ckb-ccc/connector-react";
 import { useNotification } from "@/context/NotificationProvider";
-import { ckb2Ickb, ickb2Ckb } from "@ickb/v1-core";
+import { ickb2Ckb } from "@ickb/v1-core";
 import { Info, TriangleAlert, ArrowUp, ArrowDown, ChevronDown, ChevronUp } from "lucide-react";
 import { toText } from "@/utils/stringUtils";
-
 import { type WalletConfig } from "@/cores/config";
 import { useQuery } from "@tanstack/react-query";
 import { l1StateOptions } from "@/cores/queries";
-import ClipLoader from "react-spinners/ClipLoader";
-import UseSorter, { SortDirection, ArrowProps, Column,  SorterObj } from "@/hooks/UseSorter";
+import IckbPendingDetail from "./IckbPendingDetail";
+import { SorterObj } from "@/hooks/UseSorter";
+
 
 const pendingIckbs: SorterObj[] = [
     {
@@ -29,34 +29,9 @@ const pendingIckbs: SorterObj[] = [
     },
 ];
 
-const columns: Column[] = [
-    {
-        name: "Amount",
-        key: 'amount'
-    },
-    {
-        name: "Date Requested",
-        key: "daterequested"
-    },
-    {
-        name: "Remaining Time",
-        key: "remainingtime"
-    }
-];
 
 
-const calculateDaysDifference = (timestamp1:number, timestamp2:number) => {
-   
-    try {
-      const date1 = new Date(timestamp1);
-      const date2 = new Date(timestamp2);
-      const diffInMilliseconds = Math.abs(date2.getTime() - date1.getTime());
-      const diffInHoutrs = Math.floor(diffInMilliseconds / (1000 * 60 * 60));
-      return diffInHoutrs;
-    } catch (error) {
-      return "Error calculating days difference: " + error;
-    }
-  };
+
 const IckbWithDraw: React.FC<{ walletConfig: WalletConfig }> = ({ walletConfig }) => {
     const [amount, setAmount] = useState<string>("");
     const [pendingShow, setPendingShow] = useState<boolean>(false);
@@ -75,7 +50,7 @@ const IckbWithDraw: React.FC<{ walletConfig: WalletConfig }> = ({ walletConfig }
         try {
 
             const cccTx = ccc.Transaction.fromLumosSkeleton(txInfo.tx);
-           
+
             txHash = await signerCcc.sendTransaction(cccTx);
             console.log(txHash)
             progressId = await showNotification("progress", `Deposit in progress!`);
@@ -107,47 +82,8 @@ const IckbWithDraw: React.FC<{ walletConfig: WalletConfig }> = ({ walletConfig }
         setAmount(e.target.value)
     }, [])
 
-    const [sortedTable, setSortedTable, dir, setDir, key, setKey] = UseSorter<
-        SorterObj
-    >(pendingIckbs);
-    const handleOnClick = (
-        currentHead:Column
-    ) => {
-        const currentSortDir =
-            dir?.valueOf() === SortDirection.Ascending.valueOf()
-                ? SortDirection.Descending
-                : SortDirection.Ascending;
 
-        if (dir === undefined) {
-            setDir(SortDirection.Ascending);
-        } else {
-            setDir(currentSortDir);
-        }
-        if (currentHead) {
-            setKey(currentHead.key as keyof SorterObj);
-        }
-    };
-    const Arrow = (props: ArrowProps) => {
-        if (props.sortDir !== undefined && props.active) {
-            return SortDirection.Ascending.valueOf() === props.sortDir.valueOf() ? (
-                <div className="flex flex-col">
-                    <ChevronUp color="rgba(255,255,255,0.4)" size={12} />
-                    <ChevronDown color="rgba(255,255,255,1)" size={12} />
-                </div>
-            ) : (
-                <div className="flex flex-col">
-                    <ChevronUp color="rgba(255,255,255,1)" size={12} />
-                    <ChevronDown color="rgba(255,255,255,0.4)" size={12} />
-                </div>
-                // <AArrowUp />
-            );
-        }
-        return (<div className="flex flex-col">
-            <ChevronUp color="rgba(255,255,255,0.4)" size={12} />
-            <ChevronDown color="rgba(255,255,255,0.4)" size={12} />
-        </div>);
-    };
-    const togglePendingShow = ()=>{
+    const togglePendingShow = () => {
         setPendingShow(!pendingShow)
     }
     return (
@@ -211,41 +147,14 @@ const IckbWithDraw: React.FC<{ walletConfig: WalletConfig }> = ({ walletConfig }
 
             </button>
             <div className="mt-8 w-full">
-                <div className="flex items-center" onClick={togglePendingShow}> 
-                    {pendingShow?<ChevronUp color="rgba(255,255,255,1)" size={18} />:<ChevronDown color="rgba(255,255,255,1)" size={18} />}
+                <div className="flex items-center" onClick={togglePendingShow}>
+                    {pendingShow ? <ChevronUp color="rgba(255,255,255,1)" size={18} /> : <ChevronDown color="rgba(255,255,255,1)" size={18} />}
                     Pending iCKB Details</div>
-                {pendingShow&&<>
-                {columns&&columns.length>0?<table className="w-full mt-4 table-auto">
-                    <thead className="border border-t-0 border-l-0	border-r-0 border-gray-500">
-                        <tr>
-                            {columns.map((c, index) => {
-                                return (
-                                    <th key={index} className="text-body-2  text-left p-2 cursor-pointer"  onClick={()=>handleOnClick(c)}>
-                                   
-                                        <div  className="w-full flex items-center justify-between ">
-                                            <span className="text-[rgba(255,255,255,0.7)]">{c.name}</span>
-                                            <Arrow sortDir={dir} active={c.key === key} />
-                                        </div>
-                                    </th>
-                                );
-                            })}
-                        </tr>
-                    </thead>
-                    {/* Apply the table body props */}
-                    <tbody>
-                        {sortedTable.map((c, index) => {
-                            return (
-                                <tr key={index}>
-                                    <td className="text-body-2  text-left p-2 ">{c.amount}</td>
-                                    <td className="text-body-2  text-left p-2 ">{new Date(c.daterequested).toLocaleDateString()}</td>
-                                    <td className="text-body-2  text-left p-2 "><ClipLoader className="mr-2" size={16} color="#00FAED" />{calculateDaysDifference(c.daterequested,c.remainingtime)} hours left</td>
-                                </tr>
-                            );
-                        })}
-                    </tbody>
-                </table>:<p>You don’t have any pending iCKB </p>}
-                
-                
+                {pendingShow && <>
+                    {pendingIckbs && pendingIckbs.length > 0 ?
+                        <IckbPendingDetail columns={pendingIckbs} /> : <p>You don’t have any pending iCKB </p>}
+
+
                 </>}
             </div>
         </>
