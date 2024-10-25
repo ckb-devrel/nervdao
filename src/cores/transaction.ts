@@ -271,7 +271,7 @@ export function addChange(
                 feeRate,
             );
             // Use a fee that is multiple of N=1249
-            const N = BigInt(1249);
+            const N = BigInt(2000);
             return ((baseFee + (N - BigInt(1))) / N) * N;
         },
         config,

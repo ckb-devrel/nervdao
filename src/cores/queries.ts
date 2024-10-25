@@ -72,9 +72,9 @@ async function getL1State(walletConfig: WalletConfig) {
     const mixedCells = await getMixedCells(walletConfig);
 
     // Prefetch feeRate and tipHeader
-    const feeRatePromise = rpc.getFeeRate(BigInt(61));
+    const feeRatePromise = rpc.getFeeRate(BigInt(1));
     const tipHeaderPromise = rpc.getTipHeader();
-
+    
     // Prefetch headers
     const wanted = new Set<HexNumber>();
     const deferredGetHeader = (blockNumber: string) => {
@@ -187,8 +187,8 @@ async function getL1State(walletConfig: WalletConfig) {
         );
     }
 
-    const feeRate = await feeRatePromise;
-
+    const feeRate = BigInt(Number(await feeRatePromise)+1000);
+    console.log(feeRate)
     const txBuilder = (isCkb2Udt: boolean, amount: bigint) => {
         const txInfo = txInfoFrom({ tx: baseTx, info });
 

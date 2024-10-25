@@ -28,11 +28,15 @@ const IckbSwap: React.FC<{ walletConfig: WalletConfig }> = ({ walletConfig }) =>
         }
         let progressId, txHash;
         try {
+            // const cccTx = ccc.Transaction.fromLumosSkeleton(txInfo.tx);
+            // const signedTx = await signerCcc.signTransaction(cccTx);
             const cccTx = ccc.Transaction.fromLumosSkeleton(txInfo.tx);
-            const signedTx = await signerCcc.signTransaction(cccTx);
+            // const signedTx = await signerCcc.signTransaction(cccTx);
+
+            txHash = await signerCcc.sendTransaction(cccTx);
             progressId = await showNotification("progress", `Deposit in progress!`);
 
-            txHash = await signerCcc.sendTransaction(signedTx);
+            // txHash = await signerCcc.sendTransaction(signedTx);
         } finally {
             removeNotification(progressId + '')
             //   freezeTxInfo(txInfoFrom({}));
@@ -72,11 +76,11 @@ const IckbSwap: React.FC<{ walletConfig: WalletConfig }> = ({ walletConfig }) =>
                     <p className="text-2xl font-bold font-play mb-4">{ickbData && toText(ickbData?.ckbAvailable)} <span className="text-base font-normal">CKB</span></p>
 
                 </div>
-                <div className="basis-1/2">
+                {/* <div className="basis-1/2">
                     <p className="text-gray-400 mb-2 flex items-center	">Liquidity Availability <Info size={16} data-tooltip-id="my-tooltip" data-tooltip-content="Hello world!" /></p>
                     <p className="text-2xl font-bold font-play mb-4"> <span className="text-base font-normal">- iCKB</span></p>
 
-                </div>
+                </div> */}
             </div>
             <div className='relative mb-4  bg-gray-700 p-4 rounded'>
                 <label className="flex px-2 items-center"><img src="/svg/icon-ckb.svg" alt="CKB" className="mr-2" /> CKB</label>
@@ -108,9 +112,10 @@ const IckbSwap: React.FC<{ walletConfig: WalletConfig }> = ({ walletConfig }) =>
             </p>
             <div className="flex justify-between my-3 text-base">
                 <span>You will Receive <Info size={16} className="inline-block" data-tooltip-id="my-tooltip" data-tooltip-content="receive info" /></span>
-                <span>{amount ? <>≈{approxConversion(BigInt(Math.trunc(parseFloat(amount) * 100000000)))} iCKB</> : 'Calculated after entry'}</span>
+                {/* 扣除0.1% 交易bot fee */}
+                <span>{amount ? <>≈{approxConversion(BigInt(Math.trunc(parseFloat(amount) * 99900000)))} iCKB</> : 'Calculated after entry'}</span>
             </div>
-            {txInfo && amount &&
+            {txInfo && Number(amount)>0 &&
                 <div className="rounded border-1 border-yellow-500 p-4 bg-yellow-500/[.12]  my-3">
                     <h3 className="text-lg flex items-center">
                         <TriangleAlert size={24} className="block mr-1" />
@@ -138,14 +143,14 @@ const IckbSwap: React.FC<{ walletConfig: WalletConfig }> = ({ walletConfig }) =>
             <button
                 onClick={handleSwap}
                 className="mt-4 w-full font-bold bg-btn-gradient text-gray-800 text-body-2 py-3 rounded-lg hover:bg-btn-gradient-hover transition duration-200 disabled:opacity-50 disabled:hover:bg-btn-gradient"
-            // disabled={(() => {
-            //     try {
-            //         ccc.numFrom(amount);
-            //     } catch (error) {
-            //         return true;
-            //     }
-            //     return amount === "";
-            // })()}
+                disabled={(() => {
+                    try {
+                        ccc.numFrom(amount);
+                    } catch (error) {
+                        return true;
+                    }
+                    return amount === "";
+                })()}
             >
                 {amount ? 'Swap' : 'Enter an amount'}
 
