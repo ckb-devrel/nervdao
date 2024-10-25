@@ -4,11 +4,10 @@ import { useNotification } from "@/context/NotificationProvider";
 import { ckb2Ickb } from "@ickb/v1-core";
 import { Info, ArrowDown, TriangleAlert } from "lucide-react";
 import { toText } from "@/utils/stringUtils";
-
 import { type WalletConfig } from "@/cores/config";
 import { useQuery } from "@tanstack/react-query";
 import { l1StateOptions } from "@/cores/queries";
-import { JsonRpcTransformers } from "@ckb-ccc/core/advanced";
+
 
 const IckbSwap: React.FC<{ walletConfig: WalletConfig }> = ({ walletConfig }) => {
     const [amount, setAmount] = useState<string>("");
