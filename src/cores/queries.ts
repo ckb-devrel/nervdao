@@ -10,6 +10,7 @@ import { queryOptions } from "@tanstack/react-query";
 import {
     CKB,
     I8Header,
+    Uint128,
     capacitySifter,
     ckbDelta,
     hex,
@@ -24,6 +25,7 @@ import {
     ickbLogicScript,
     ickbPoolSifter,
     ickbSifter,
+    ickbUdtType,
     limitOrderScript,
     orderSifter,
     ownedOwnerScript,
@@ -35,10 +37,12 @@ import {
 import { addChange, base, convert } from "./transaction";
 import type { Cell, Header, HexNumber, Transaction } from "@ckb-lumos/base";
 import { parseAbsoluteEpochSince } from "@ckb-lumos/base/lib/since";
-import {type WalletConfig } from "./config";
+import { type WalletConfig } from "./config";
 
-export function l1StateOptions(walletConfig:WalletConfig,isFrozen: boolean) {
-    
+const depositUsedCapacity = BigInt(82) * CKB;
+
+export function l1StateOptions(walletConfig: WalletConfig, isFrozen: boolean) {
+
     // const walletConfig = getWalletConfig();
     return queryOptions({
         retry: true,
@@ -55,6 +59,9 @@ export function l1StateOptions(walletConfig:WalletConfig,isFrozen: boolean) {
             }
         },
         placeholderData: {
+            ickbUdtPoolBalance: BigInt(-1),
+            ickbDaoBalance: BigInt(-1),
+            myOrders: [],
             ckbBalance: BigInt(-1),
             ickbUdtBalance: BigInt(-1),
             ckbAvailable: BigInt(6) * CKB * CKB,
@@ -74,7 +81,7 @@ async function getL1State(walletConfig: WalletConfig) {
     // Prefetch feeRate and tipHeader
     const feeRatePromise = rpc.getFeeRate(BigInt(1));
     const tipHeaderPromise = rpc.getTipHeader();
-    
+
     // Prefetch headers
     const wanted = new Set<HexNumber>();
     const deferredGetHeader = (blockNumber: string) => {
@@ -111,6 +118,8 @@ async function getL1State(walletConfig: WalletConfig) {
         (blockNumber) => headers.get(blockNumber)!,
         config,
     );
+    // Calculate iCKB pool total balance
+    const ickbDaoBalance = pool.map(cell => BigInt(cell.cellOutput.capacity) - depositUsedCapacity).reduce((a, b) => a + b, BigInt(0));
 
     const tipHeader = I8Header.from(await tipHeaderPromise);
     // Partition between ripe and non ripe withdrawal requests
@@ -187,7 +196,7 @@ async function getL1State(walletConfig: WalletConfig) {
         );
     }
 
-    const feeRate = BigInt(Number(await feeRatePromise)+1000);
+    const feeRate = BigInt(Number(await feeRatePromise) + 1000);
     console.log(feeRate)
     const txBuilder = (isCkb2Udt: boolean, amount: bigint) => {
         const txInfo = txInfoFrom({ tx: baseTx, info });
@@ -208,10 +217,16 @@ async function getL1State(walletConfig: WalletConfig) {
             return addChange(txInfo, feeRate, walletConfig);
         }
 
-        return txInfoFrom({ info, error: "Nothing to convert"});
+        return txInfoFrom({ info, error: "Nothing to convert" });
     };
 
+    // Calculate total ickb udt liquidity
+    const ickbUdtPoolBalance = await getTotalUdtCapacity(walletConfig);
+
     return {
+        ickbDaoBalance,
+        ickbUdtPoolBalance,
+        myOrders,
         ckbBalance,
         ickbUdtBalance,
         ckbAvailable,
@@ -220,6 +235,29 @@ async function getL1State(walletConfig: WalletConfig) {
         txBuilder,
         hasMatchable,
     };
+}
+
+async function getTotalUdtCapacity(walletConfig: WalletConfig): Promise<bigint> {
+    const { rpc, config } = walletConfig;
+    const udtType = ickbUdtType(config);
+    let cursor = "0x";
+    let udtCapacity = BigInt(0);
+    while (true) {
+        const result = await rpc.getCells({
+            script: udtType,
+            scriptType: "type",
+            scriptSearchMode: "exact",
+            withData: true,
+        }, "desc", BigInt(50), cursor);
+        if (result.objects.length === 0) {
+            break;
+        }
+        cursor = result.lastCursor;
+        result.objects.forEach(cell => {
+            udtCapacity += Uint128.unpack(cell.outputData.slice(0, 2 + 16 * 2));
+        })
+    }
+    return udtCapacity;
 }
 
 async function getMixedCells(walletConfig: WalletConfig) {
