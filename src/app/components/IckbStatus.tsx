@@ -71,7 +71,7 @@ const IckbStatus: React.FC<{ walletConfig: WalletConfig }> = ({ walletConfig }) 
             <span>Total Liquidity</span>
           </div>
           <div className="flex justify-between items-center mt-1 font-play text-white text-lg font-bold">
-            <span>{ickbData?ccc.fixedPointToString(ickbData.ickbDaoBalance):'-'} CKB</span>
+            <span>{ickbData?parseFloat((Number(ickbData.ickbUdtPoolBalance)/100000000).toString()).toFixed(2):'-'} iCKB</span>
           </div>
         </div>
         <div className="bg-gray-800 relative rounded-lg p-3 pr-5 mb-2 w-[30%]">
@@ -79,7 +79,7 @@ const IckbStatus: React.FC<{ walletConfig: WalletConfig }> = ({ walletConfig }) 
             <span>Pool Balance <Info size={16} className="inline-block" data-tooltip-id="status-tooltip" data-tooltip-content="Pool Balance" /></span>
           </div>
           <div className="flex justify-between items-center mt-1 font-play text-white text-lg font-bold">
-            <span>{ickbData?toText(ickbData.ickbUdtPoolBalance):'-'} CKB</span>
+            <span>{ickbData?parseFloat((Number(ickbData.ickbDaoBalance)/100000000).toString()).toFixed(2):'-'} CKB</span>
           </div>
         </div>
         <div className="bg-gray-800 relative rounded-lg p-3 pr-5 mb-2 w-[30%]">

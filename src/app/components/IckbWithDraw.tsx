@@ -94,20 +94,14 @@ const IckbWithDraw: React.FC<{ walletConfig: WalletConfig }> = ({ walletConfig }
         const refresh = async () => {
             const hexArray: Set<HexNumber> = new Set();
 
-            if(ickbData&&ickbData.myOrders[0].master.blockNumber){
+            if(ickbData&&ickbData.myOrders.length>0&&ickbData.myOrders[0].master.blockNumber){
                 hexArray.add(ickbData.myOrders[0].master.blockNumber)
                 const header = await getHeadersByNumber(hexArray,walletConfig)
                 let timer =header.get(ickbData.myOrders[0].master.blockNumber)?.timestamp;
                 timer&&console.log(parseInt(timer,16))
-                
             }
-          
-        
         };
-    
-       
         refresh();
-       
       }, [ickbData]);
     return (
         <>

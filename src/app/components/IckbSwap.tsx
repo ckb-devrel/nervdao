@@ -1,4 +1,4 @@
-import React, { useCallback,  useState } from "react";
+import React, { useCallback,  useEffect,  useState } from "react";
 import { ccc } from "@ckb-ccc/connector-react";
 import { useNotification } from "@/context/NotificationProvider";
 import { ckb2Ickb } from "@ickb/v1-core";
@@ -11,11 +11,11 @@ import { l1StateOptions } from "@/cores/queries";
 
 const IckbSwap: React.FC<{ walletConfig: WalletConfig }> = ({ walletConfig }) => {
     const [amount, setAmount] = useState<string>("");
+    const [balance, setBalance] = useState<string>("");
     const { data: ickbData } = useQuery(
         l1StateOptions(walletConfig, false),
     );
     const txInfo =ickbData? ickbData?.txBuilder(true, ccc.fixedPointFrom(amount)):null;
-    console.log(txInfo)
     const signerCcc = ccc.useSigner();
 
     const { showNotification, removeNotification } = useNotification();
@@ -66,14 +66,22 @@ const IckbSwap: React.FC<{ walletConfig: WalletConfig }> = ({ walletConfig }) =>
     const handleAmountChange = useCallback((e: { target: { value: React.SetStateAction<string>; }; }) => {
         setAmount(e.target.value)
     }, [])
-
+    useEffect(() => {
+        (async () => {
+          if (!signerCcc) return;
+          const balance = await signerCcc.getBalance();
+        //   parseFloat((Number(balance)/100000000).toString()).toFixed(2)
+          setBalance(ccc.fixedPointToString(balance));
+        })();
+      }, [signerCcc]);
 
     return (
         <>
             <div className="flex flex-row font-play mb-4 mt-8 text-left">
                 <div className="basis-1/2">
                     <p className="text-gray-400 mb-2">CKB Balance</p>
-                    <p className="text-2xl font-bold font-play mb-4">{ickbData ? toText(ickbData?.ckbAvailable):"-"} <span className="text-base font-normal">CKB</span></p>
+                    {/* <p className="text-2xl font-bold font-play mb-4">{ickbData ? toText(ickbData?.ckbAvailable):"-"} <span className="text-base font-normal">CKB</span></p> */}
+                    <p className="text-2xl font-bold font-play mb-4">{balance} <span className="text-base font-normal">CKB</span></p>
 
                 </div>
                 {/* <div className="basis-1/2">
