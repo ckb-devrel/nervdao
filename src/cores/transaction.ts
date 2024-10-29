@@ -38,6 +38,7 @@ import {
 } from "./utils";
 import { ckbSoftCapPerDeposit } from "@ickb/v1-core";
 import { WalletConfig } from "./config.js";
+import { ChevronsRightLeft } from "lucide-react";
 
 export function base({
     capacities,
@@ -107,7 +108,6 @@ export function convert(
     if (txInfo.error !== "") {
         return txInfo;
     }
-
     const ickbPool: MyExtendedDeposit[] = [];
     if (!isCkb2Udt) {
         // Filter deposits
@@ -118,14 +118,15 @@ export function convert(
                 continue;
             }
             ickbCumulative = c;
+            console.log(Object.freeze({ ...d, ickbCumulative }))
             ickbPool.push(Object.freeze({ ...d, ickbCumulative }));
+            
             if (ickbPool.length >= 30) {
                 break;
             }
         }
     }
     Object.freeze(ickbPool);
-
     const { ckbMultiplier, udtMultiplier } = ickbExchangeRatio(tipHeader);
     const ratio: OrderRatio = {
         ckbMultiplier,
@@ -276,7 +277,7 @@ export function addChange(
         },
         config,
     ));
-
+    console.log(freeIckbUdt)
     if (freeCkb < BigInt(0)) {
         return txInfoFrom({ info, error: "Not enough CKB" });
     }

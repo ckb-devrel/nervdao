@@ -39,7 +39,7 @@ const IckbWithDraw: React.FC<{ walletConfig: WalletConfig }> = ({ walletConfig }
     const { data: ickbData} = useQuery(
         l1StateOptions(walletConfig, false),
     );
-    const txInfo = ickbData?.txBuilder(true, ccc.fixedPointFrom(amount));
+    const txInfo = ickbData?.txBuilder(false, ccc.fixedPointFrom(amount));
    
     const signerCcc = ccc.useSigner();
     // const pendingIckbs = ickbData?ickbData.myOrders;

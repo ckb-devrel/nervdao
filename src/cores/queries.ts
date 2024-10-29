@@ -198,9 +198,9 @@ async function getL1State(walletConfig: WalletConfig) {
     }
 
     const feeRate = BigInt(Number(await feeRatePromise) + 1000);
-    console.log(feeRate)
     const txBuilder = (isCkb2Udt: boolean, amount: bigint) => {
         const txInfo = txInfoFrom({ tx: baseTx, info });
+        
         if (amount > BigInt(0)) {
             return convert(
                 txInfo,

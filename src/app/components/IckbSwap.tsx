@@ -14,13 +14,17 @@ const IckbSwap: React.FC<{ walletConfig: WalletConfig }> = ({ walletConfig }) =>
     const { data: ickbData } = useQuery(
         l1StateOptions(walletConfig, false),
     );
-    const txInfo = ickbData?.txBuilder(false, ccc.fixedPointFrom(amount));
-    // console.log(txInfo)
+    const txInfo =ickbData? ickbData?.txBuilder(true, ccc.fixedPointFrom(amount)):null;
+    console.log(txInfo)
     const signerCcc = ccc.useSigner();
 
     const { showNotification, removeNotification } = useNotification();
     async function handleSwap() {
         if (!txInfo || !signerCcc) {
+            return
+        }
+        if(txInfo.error){
+            showNotification("error", txInfo.error);
             return
         }
         let progressId, txHash;
