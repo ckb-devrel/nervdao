@@ -1,35 +1,13 @@
-import React, { useEffect, useState } from "react";
-
+import React, { useState } from "react";
 import { Tooltip } from "react-tooltip";
-import { ccc } from "@ckb-ccc/connector-react";
-
 import IckbSwap from "./IckbSwap";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { setupWalletConfig, type WalletConfig } from "@/cores/config";
+import { type WalletConfig } from "@/cores/config";
 import IckbWithDraw from "./IckbWithDraw";
 
-const IckbForm: React.FC = () => {
+const IckbForm:   React.FC<{ walletConfig: WalletConfig }> = ({ walletConfig }) => {
     const [status, setStatus] = useState<string>("swap");
-    const [walletConfig, setWalletConfig] = useState<WalletConfig>();
-    const queryClient = new QueryClient()
-    const signer = ccc.useSigner()
-    useEffect(() => {
-        if (!signer) return;
-
-        (async () => {
-            const walletConfig = await setupWalletConfig(signer)
-
-            const setupConfig = {
-                ...walletConfig,
-                queryClient: queryClient
-            }
-            //@ts-expect-error '0xstring&&string'
-            setWalletConfig(setupConfig)
-
-        })();
-    }, [signer]);
     return (
-        <QueryClientProvider client={queryClient}>
+       <>
             {walletConfig &&
                 <div className="bg-gray-900 rounded-lg p-6">
                     <div className="flex flex-row font-play mb-4 mt-4 border border-[#777] rounded-lg text-center">
@@ -39,7 +17,7 @@ const IckbForm: React.FC = () => {
                     {status === 'swap' ? <IckbSwap walletConfig={walletConfig} /> : <IckbWithDraw walletConfig={walletConfig} />}
                     <Tooltip id="my-tooltip" />
                 </div>}
-        </QueryClientProvider>
+        </>
     );
 };
 

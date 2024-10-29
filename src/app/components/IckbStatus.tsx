@@ -4,11 +4,18 @@ import React, { useEffect, useState } from "react";
 // import ReactApexChart from "react-apexcharts";
 import { ccc } from "@ckb-ccc/connector-react";
 import SkeletonLoader from "./SkeletonLoader";
+import { useQuery } from "@tanstack/react-query";
+import { WalletConfig } from "@/cores/config";
+import { l1StateOptions } from "@/cores/queries";
+import { toText } from "@/cores/utils";
 
-const IckbStatus: React.FC = () => {
+const IckbStatus: React.FC<{ walletConfig: WalletConfig }> = ({ walletConfig }) => {
   const [apy, setApy] = useState("-");
   const [isLoadingBalance, setIsLoadingBalance] = useState(true);
   const [balance, setBalance] = useState<string>("");
+  const { data: ickbData } = useQuery(
+    l1StateOptions(walletConfig, false),
+  );
 
   const signer = ccc.useSigner();
   useEffect(() => {
@@ -64,7 +71,7 @@ const IckbStatus: React.FC = () => {
             <span>Total Liquidity</span>
           </div>
           <div className="flex justify-between items-center mt-1 font-play text-white text-lg font-bold">
-            <span>{balance}</span>
+            <span>{ickbData?ccc.fixedPointToString(ickbData.ickbDaoBalance):'-'} CKB</span>
           </div>
         </div>
         <div className="bg-gray-800 relative rounded-lg p-3 pr-5 mb-2 w-[30%]">
@@ -72,7 +79,7 @@ const IckbStatus: React.FC = () => {
             <span>Pool Balance <Info size={16} className="inline-block" data-tooltip-id="status-tooltip" data-tooltip-content="Pool Balance" /></span>
           </div>
           <div className="flex justify-between items-center mt-1 font-play text-white text-lg font-bold">
-            <span>150,000  CKB</span>
+            <span>{ickbData?toText(ickbData.ickbUdtPoolBalance):'-'} CKB</span>
           </div>
         </div>
         <div className="bg-gray-800 relative rounded-lg p-3 pr-5 mb-2 w-[30%]">

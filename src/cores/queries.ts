@@ -52,6 +52,7 @@ export function l1StateOptions(walletConfig: WalletConfig, isFrozen: boolean) {
         queryFn: async () => {
             try {
                 const data = await getL1State(walletConfig);
+                console.log(data)
                 return data
             } catch (e) {
                 console.log(e);
@@ -240,20 +241,21 @@ async function getL1State(walletConfig: WalletConfig) {
 async function getTotalUdtCapacity(walletConfig: WalletConfig): Promise<bigint> {
     const { rpc, config } = walletConfig;
     const udtType = ickbUdtType(config);
-    let cursor = "0x";
+    let cursor = undefined;
     let udtCapacity = BigInt(0);
     while (true) {
-        const result = await rpc.getCells({
+        const result:any = await rpc.getCells({
             script: udtType,
             scriptType: "type",
             scriptSearchMode: "exact",
             withData: true,
-        }, "desc", BigInt(50), cursor);
+        }, "desc", BigInt(50),cursor);
         if (result.objects.length === 0) {
             break;
         }
+        
         cursor = result.lastCursor;
-        result.objects.forEach(cell => {
+        result.objects.forEach((cell: { outputData: string | any[]; }) => {
             udtCapacity += Uint128.unpack(cell.outputData.slice(0, 2 + 16 * 2));
         })
     }
@@ -330,7 +332,7 @@ async function getTxsOutputs(
     return frozenResult;
 }
 
-async function getHeadersByNumber(
+export async function getHeadersByNumber(
     wanted: Set<HexNumber>,
     walletConfig: WalletConfig,
 ) {

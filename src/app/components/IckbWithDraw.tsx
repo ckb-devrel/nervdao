@@ -1,4 +1,4 @@
-import React, { useCallback,  useState } from "react";
+import React, { useCallback,  useEffect,  useState } from "react";
 import { ccc } from "@ckb-ccc/connector-react";
 import { useNotification } from "@/context/NotificationProvider";
 import { ickb2Ckb } from "@ickb/v1-core";
@@ -6,9 +6,10 @@ import { Info, TriangleAlert, ChevronDown, ChevronUp } from "lucide-react";
 import { toText } from "@/utils/stringUtils";
 import { type WalletConfig } from "@/cores/config";
 import { useQuery } from "@tanstack/react-query";
-import { l1StateOptions } from "@/cores/queries";
+import { getHeadersByNumber, l1StateOptions } from "@/cores/queries";
 import IckbPendingDetail from "./IckbPendingDetail";
 import { SorterObj } from "@/hooks/UseSorter";
+import { HexNumber } from "@ckb-lumos/base";
 
 
 const pendingIckbs: SorterObj[] = [
@@ -28,7 +29,10 @@ const pendingIckbs: SorterObj[] = [
         remainingtime: 1735740003500
     },
 ];
-
+//@ts-ignore
+// BigInt.prototype['toJSON'] = function () { 
+//     return this.toString()
+//   }
 const IckbWithDraw: React.FC<{ walletConfig: WalletConfig }> = ({ walletConfig }) => {
     const [amount, setAmount] = useState<string>("");
     const [pendingShow, setPendingShow] = useState<boolean>(false);
@@ -36,8 +40,9 @@ const IckbWithDraw: React.FC<{ walletConfig: WalletConfig }> = ({ walletConfig }
         l1StateOptions(walletConfig, false),
     );
     const txInfo = ickbData?.txBuilder(true, ccc.fixedPointFrom(amount));
+   
     const signerCcc = ccc.useSigner();
-
+    // const pendingIckbs = ickbData?ickbData.myOrders;
     const { showNotification, removeNotification } = useNotification();
     async function handleWithDraw() {
         if (!txInfo || !signerCcc) {
@@ -82,6 +87,28 @@ const IckbWithDraw: React.FC<{ walletConfig: WalletConfig }> = ({ walletConfig }
     const togglePendingShow = () => {
         setPendingShow(!pendingShow)
     }
+    useEffect(() => {
+        if (!ickbData) {
+          return;
+        }
+        const refresh = async () => {
+            const hexArray: Set<HexNumber> = new Set();
+
+            if(ickbData&&ickbData.myOrders[0].master.blockNumber){
+                hexArray.add(ickbData.myOrders[0].master.blockNumber)
+                const header = await getHeadersByNumber(hexArray,walletConfig)
+                let timer =header.get(ickbData.myOrders[0].master.blockNumber)?.timestamp;
+                timer&&console.log(parseInt(timer,16))
+                
+            }
+          
+        
+        };
+    
+       
+        refresh();
+       
+      }, [ickbData]);
     return (
         <>
             <div className="flex flex-row font-play mb-4 mt-8 text-left">
