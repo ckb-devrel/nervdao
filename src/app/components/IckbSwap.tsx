@@ -84,10 +84,10 @@ const IckbSwap: React.FC<{ walletConfig: WalletConfig }> = ({ walletConfig }) =>
                     <p className="text-2xl font-bold font-play mb-4">{balance} <span className="text-base font-normal">CKB</span></p>
 
                 </div>
+             
                 {/* <div className="basis-1/2">
-                    <p className="text-gray-400 mb-2 flex items-center	">Liquidity Availability <Info size={16} data-tooltip-id="my-tooltip" data-tooltip-content="Hello world!" /></p>
+                    <p className="text-gray-400 mb-2 flex items-center"><span className="w-2 h-2 bg-yellow-500 mr-2"></span>Pending iCKB</p>
                     <p className="text-2xl font-bold font-play mb-4"> <span className="text-base font-normal">- iCKB</span></p>
-
                 </div> */}
             </div>
             <div className='relative mb-4  bg-gray-700 p-4 rounded'>

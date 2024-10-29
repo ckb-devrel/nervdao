@@ -1,41 +1,17 @@
-import React, { useCallback,  useEffect,  useState } from "react";
+import React, { useCallback,   useState } from "react";
 import { ccc } from "@ckb-ccc/connector-react";
 import { useNotification } from "@/context/NotificationProvider";
 import { ickb2Ckb } from "@ickb/v1-core";
-import { Info, TriangleAlert, ChevronDown, ChevronUp } from "lucide-react";
+import { Info, TriangleAlert} from "lucide-react";
 import { toText } from "@/utils/stringUtils";
 import { type WalletConfig } from "@/cores/config";
 import { useQuery } from "@tanstack/react-query";
-import { getHeadersByNumber, l1StateOptions } from "@/cores/queries";
-import IckbPendingDetail from "./IckbPendingDetail";
-import { SorterObj } from "@/hooks/UseSorter";
-import { HexNumber } from "@ckb-lumos/base";
+import {l1StateOptions } from "@/cores/queries";
 
 
-const pendingIckbs: SorterObj[] = [
-    {
-        amount: 9999,
-        daterequested: 1729790007500,
-        remainingtime: 1729760007500
-    },
-    {
-        amount: 9998,
-        daterequested: 1729750006500,
-        remainingtime: 1729750006500
-    },
-    {
-        amount: 9997,
-        daterequested: 1729790003500,
-        remainingtime: 1735740003500
-    },
-];
-//@ts-ignore
-// BigInt.prototype['toJSON'] = function () { 
-//     return this.toString()
-//   }
 const IckbWithDraw: React.FC<{ walletConfig: WalletConfig }> = ({ walletConfig }) => {
     const [amount, setAmount] = useState<string>("");
-    const [pendingShow, setPendingShow] = useState<boolean>(false);
+    // const [pendingShow, setPendingShow] = useState<boolean>(false);
     const { data: ickbData} = useQuery(
         l1StateOptions(walletConfig, false),
     );
@@ -84,25 +60,10 @@ const IckbWithDraw: React.FC<{ walletConfig: WalletConfig }> = ({ walletConfig }
     }, [])
 
 
-    const togglePendingShow = () => {
-        setPendingShow(!pendingShow)
-    }
-    useEffect(() => {
-        if (!ickbData) {
-          return;
-        }
-        const refresh = async () => {
-            const hexArray: Set<HexNumber> = new Set();
-
-            if(ickbData&&ickbData.myOrders.length>0&&ickbData.myOrders[0].master.blockNumber){
-                hexArray.add(ickbData.myOrders[0].master.blockNumber)
-                const header = await getHeadersByNumber(hexArray,walletConfig)
-                let timer =header.get(ickbData.myOrders[0].master.blockNumber)?.timestamp;
-                timer&&console.log(parseInt(timer,16))
-            }
-        };
-        refresh();
-      }, [ickbData]);
+    // const togglePendingShow = () => {
+    //     setPendingShow(!pendingShow)
+    // }
+   
     return (
         <>
             <div className="flex flex-row font-play mb-4 mt-8 text-left">
@@ -111,10 +72,10 @@ const IckbWithDraw: React.FC<{ walletConfig: WalletConfig }> = ({ walletConfig }
                     <p className="text-2xl font-bold font-play mb-4">{ickbData? toText(ickbData?.ickbUdtAvailable):'-'} <span className="text-base font-normal">iCKB</span></p>
 
                 </div>
-                <div className="basis-1/2">
+                {/* <div className="basis-1/2">
                     <p className="text-gray-400 mb-2 flex items-center"><span className="w-2 h-2 bg-yellow-500 mr-2"></span>Pending iCKB</p>
                     <p className="text-2xl font-bold font-play mb-4"> <span className="text-base font-normal">- iCKB</span></p>
-                </div>
+                </div> */}
             </div>
             <div className='relative mb-4 flex'>
                 {/* <label className="flex px-2 items-center"><img src="/svg/icon-ckb.svg" alt="CKB" className="mr-2" /> CKB</label> */}
@@ -163,7 +124,7 @@ const IckbWithDraw: React.FC<{ walletConfig: WalletConfig }> = ({ walletConfig }
                 {amount ? 'WithDraw' : 'Enter an amount'}
 
             </button>
-            <div className="mt-8 w-full">
+            {/* <div className="mt-8 w-full">
                 <div className="flex items-center" onClick={togglePendingShow}>
                     {pendingShow ? <ChevronUp color="rgba(255,255,255,1)" size={18} /> : <ChevronDown color="rgba(255,255,255,1)" size={18} />}
                     Pending iCKB Details</div>
@@ -173,7 +134,7 @@ const IckbWithDraw: React.FC<{ walletConfig: WalletConfig }> = ({ walletConfig }
 
 
                 </>}
-            </div>
+            </div> */}
         </>
     );
 };

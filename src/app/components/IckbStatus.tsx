@@ -7,12 +7,10 @@ import SkeletonLoader from "./SkeletonLoader";
 import { useQuery } from "@tanstack/react-query";
 import { WalletConfig } from "@/cores/config";
 import { l1StateOptions } from "@/cores/queries";
-import { toText } from "@/cores/utils";
 
 const IckbStatus: React.FC<{ walletConfig: WalletConfig }> = ({ walletConfig }) => {
   const [apy, setApy] = useState("-");
   const [isLoadingBalance, setIsLoadingBalance] = useState(true);
-  const [balance, setBalance] = useState<string>("");
   const { data: ickbData } = useQuery(
     l1StateOptions(walletConfig, false),
   );
@@ -24,14 +22,12 @@ const IckbStatus: React.FC<{ walletConfig: WalletConfig }> = ({ walletConfig }) 
     }
     const refresh = async () => {
       try {
-        const bal = await signer.getBalance();
         const tip = await signer.client.getTipHeader();
         // 75600 blocks equals about 7 days
         const past = await signer.client.getHeaderByNumber(
           ccc.numMax(tip.number - ccc.numFrom("75600"), 1)
         );
         if (past) {
-          setBalance(ccc.fixedPointToString(bal));
           const times =
             (ccc.numFrom(365 * 24 * 60 * 60 * 1000) * ccc.fixedPointFrom(1)) /
             (tip.timestamp - past.timestamp);

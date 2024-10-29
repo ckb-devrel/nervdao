@@ -38,7 +38,7 @@ import {
 } from "./utils";
 import { ckbSoftCapPerDeposit } from "@ickb/v1-core";
 import { WalletConfig } from "./config.js";
-import { ChevronsRightLeft } from "lucide-react";
+// import { ChevronsRightLeft } from "lucide-react";
 
 export function base({
     capacities,
