@@ -201,7 +201,6 @@ async function getL1State(walletConfig: WalletConfig) {
     console.log(feeRate)
     const txBuilder = (isCkb2Udt: boolean, amount: bigint) => {
         const txInfo = txInfoFrom({ tx: baseTx, info });
-
         if (amount > BigInt(0)) {
             return convert(
                 txInfo,
@@ -244,16 +243,16 @@ async function getTotalUdtCapacity(walletConfig: WalletConfig): Promise<bigint> 
     let cursor = undefined;
     let udtCapacity = BigInt(0);
     while (true) {
-        const result:any = await rpc.getCells({
+        const result: any = await rpc.getCells({
             script: udtType,
             scriptType: "type",
             scriptSearchMode: "exact",
             withData: true,
-        }, "desc", BigInt(50),cursor);
+        }, "desc", BigInt(50), cursor);
         if (result.objects.length === 0) {
             break;
         }
-        
+
         cursor = result.lastCursor;
         result.objects.forEach((cell: { outputData: string | any[]; }) => {
             udtCapacity += Uint128.unpack(cell.outputData.slice(0, 2 + 16 * 2));

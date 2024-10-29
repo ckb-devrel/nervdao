@@ -18,7 +18,15 @@ const WalletConfig: WalletConfig | undefined = undefined;
 export async function setupWalletConfig(signer: ccc.Signer) {
     const chain = signer.client.addressPrefix === "ckb" ? "mainnet" : "testnet";
     const chainConfig = await chainConfigFrom(chain, undefined, true, getIckbScriptConfigs);
-    const signerAddress = await signer.getRecommendedAddressObj();
+    const addresses = await signer.getAddressObjs();
+    let signerAddress = addresses[0];
+    for (const address of addresses) {
+        const balance = await signer.client.getBalance([address.script]);
+        if (balance > 0) {
+            signerAddress = address;
+            break;
+        }
+    }
     const signerLock = I8Script.from({
         ...i8ScriptPadding,
         ...signerAddress.script,
