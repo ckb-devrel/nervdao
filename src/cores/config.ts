@@ -13,9 +13,9 @@ export interface WalletConfig extends ChainConfig {
     queryClient: QueryClient;
 }
 
-const WalletConfig: WalletConfig | undefined = undefined;
+let WalletConfig: WalletConfig | undefined = undefined;
 
-export async function setupWalletConfig(signer: ccc.Signer) {
+export async function setupWalletConfig(signer: ccc.Signer,queryClient: QueryClient) {
     const chain = signer.client.addressPrefix === "ckb" ? "mainnet" : "testnet";
     const chainConfig = await chainConfigFrom(chain, undefined, true, getIckbScriptConfigs);
     const addresses = await signer.getAddressObjs();
@@ -32,22 +32,27 @@ export async function setupWalletConfig(signer: ccc.Signer) {
         ...signerAddress.script,
 
     });
-    return {
+   
+    WalletConfig = {
         ...chainConfig,
+         // @ts-expect-error '0xstring&&string'
         address: signerAddress.toString(),
         accountLock: signerLock,
         expander: lockExpanderFrom(signerLock),
         addPlaceholders: (tx: helpers.TransactionSkeletonType) => tx,
+         // @ts-expect-error '0xstring&&string'
         signer: async (tx: helpers.TransactionSkeletonType) => {
             const cccTx = ccc.Transaction.fromLumosSkeleton(tx);
             return await signer.signTransaction(cccTx);
-        }
+        },
+        queryClient:queryClient
     }
+    return WalletConfig
 }
 
 export function getWalletConfig(): WalletConfig {
     if (!WalletConfig) {
-
+        
         throw new Error("please call `setupWalletConfig` at first");
     }
     return WalletConfig;

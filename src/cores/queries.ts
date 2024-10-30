@@ -37,17 +37,19 @@ import {
 import { addChange, base, convert } from "./transaction";
 import type { Cell, Header, HexNumber, Transaction } from "@ckb-lumos/base";
 import { parseAbsoluteEpochSince } from "@ckb-lumos/base/lib/since";
-import { type WalletConfig } from "./config";
+import { getWalletConfig, type WalletConfig } from "./config";
 
 const depositUsedCapacity = BigInt(82) * CKB;
 
-export function l1StateOptions(walletConfig: WalletConfig, isFrozen: boolean) {
-
-    // const walletConfig = getWalletConfig();
+export function l1StateOptions(isFrozen: boolean) {
+    const walletConfig = getWalletConfig();
+    
     return queryOptions({
         retry: true,
-        // refetchInterval: 1000,
-        staleTime: 10000,
+        refetchInterval: 5000,
+        refetchOnMount:true,
+        refetchIntervalInBackground:false,
+        // staleTime: 10000,
         queryKey: ["l1State"],
         queryFn: async () => {
             try {
