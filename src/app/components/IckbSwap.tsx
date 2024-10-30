@@ -4,17 +4,14 @@ import { useNotification } from "@/context/NotificationProvider";
 import { ckb2Ickb } from "@ickb/v1-core";
 import { Info, ArrowDown, TriangleAlert } from "lucide-react";
 import { toText } from "@/utils/stringUtils";
-import { type WalletConfig } from "@/cores/config";
-import { useQuery } from "@tanstack/react-query";
-import { l1StateOptions } from "@/cores/queries";
+
+import { IckbDateType } from "@/cores/utils";
 
 
-const IckbSwap: React.FC<{ walletConfig: WalletConfig }> = ({ walletConfig }) => {
+const IckbSwap: React.FC<{ ickbData:IckbDateType,onUpdate:VoidFunction }> = ({ ickbData,onUpdate }) => {
     const [amount, setAmount] = useState<string>("");
     const [balance, setBalance] = useState<string>("");
-    const { data: ickbData } = useQuery(
-        l1StateOptions(walletConfig, false),
-    );
+   
     const txInfo =ickbData? ickbData?.txBuilder(true, ccc.fixedPointFrom(amount)):null;
     const signerCcc = ccc.useSigner();
 
@@ -41,6 +38,7 @@ const IckbSwap: React.FC<{ walletConfig: WalletConfig }> = ({ walletConfig }) =>
         } finally {
             removeNotification(progressId + '')
             //   freezeTxInfo(txInfoFrom({}));
+            onUpdate()
             setAmount("")
             showNotification("success", `Deposit Success: ${txHash}`);
 

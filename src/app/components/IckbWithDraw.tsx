@@ -10,7 +10,7 @@ import {l1StateOptions } from "@/cores/queries";
 import { IckbDateType } from "@/cores/utils";
 
 
-const IckbWithDraw: React.FC<{ ickbData:IckbDateType }> = ({ ickbData }) => {
+const IckbWithDraw: React.FC<{ ickbData:IckbDateType ,onUpdate:VoidFunction}> = ({ ickbData,onUpdate }) => {
     const [amount, setAmount] = useState<string>("");
     // const [pendingShow, setPendingShow] = useState<boolean>(false);
   
@@ -33,6 +33,7 @@ const IckbWithDraw: React.FC<{ ickbData:IckbDateType }> = ({ ickbData }) => {
 
         } finally {
             setAmount('')
+            onUpdate()
             removeNotification(progressId + '')
             showNotification("success", `Withdraw Success: ${txHash}`);
         }

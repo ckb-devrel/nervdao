@@ -73,11 +73,14 @@ import { l1StateOptions } from "@/cores/queries";
 
 const IckbForm: React.FC<{ walletConfig: WalletConfig }> = ({ walletConfig }) => {
     const [status, setStatus] = useState<string>("swap");
-    const { data: ickbData } = useQuery(
+    const { data: ickbData ,refetch} = useQuery(
         l1StateOptions(!walletConfig.chain),
         
     );
-
+    const handleChildEvent = ()=>{
+        refetch()
+    }
+    console.log(ickbData)
     return (
         <>
             {ickbData && <>
@@ -87,7 +90,7 @@ const IckbForm: React.FC<{ walletConfig: WalletConfig }> = ({ walletConfig }) =>
                             <div className={`basis-1/2 py-4 rounded-l-lg cursor-pointer  ${status === 'swap' && 'bg-cyan-500 text-gray-800 font-bold'}`} onClick={() => setStatus('swap')}>Swap</div>
                             <div className={`basis-1/2 py-4 rounded-r-lg cursor-pointer  ${status === 'withdraw' && 'bg-cyan-500 text-gray-800 font-bold'}`} onClick={() => setStatus('withdraw')}>Withdraw</div>
                         </div>
-                        {status === 'swap' ? <IckbSwap ickbData={ickbData} /> : <IckbWithDraw ickbData={ickbData} />}
+                        {status === 'swap' ? <IckbSwap ickbData={ickbData}  onUpdate={handleChildEvent} /> : <IckbWithDraw  onUpdate={handleChildEvent} ickbData={ickbData} />}
                     </div>
                 </div>
                 <div className="flex-1 flex-row">
