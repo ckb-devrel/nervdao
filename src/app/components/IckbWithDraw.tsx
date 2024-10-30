@@ -7,14 +7,13 @@ import { toText } from "@/utils/stringUtils";
 import { type WalletConfig } from "@/cores/config";
 import { useQuery } from "@tanstack/react-query";
 import {l1StateOptions } from "@/cores/queries";
+import { IckbDateType } from "@/cores/utils";
 
 
-const IckbWithDraw: React.FC<{ walletConfig: WalletConfig }> = ({ walletConfig }) => {
+const IckbWithDraw: React.FC<{ ickbData:IckbDateType }> = ({ ickbData }) => {
     const [amount, setAmount] = useState<string>("");
     // const [pendingShow, setPendingShow] = useState<boolean>(false);
-    const { data: ickbData} = useQuery(
-        l1StateOptions(walletConfig, false),
-    );
+  
     const txInfo = ickbData?.txBuilder(false, ccc.fixedPointFrom(amount));
    
     const signerCcc = ccc.useSigner();

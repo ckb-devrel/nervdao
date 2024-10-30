@@ -15,10 +15,23 @@ import {
     type I8Header,
 } from "@ickb/lumos-utils";
 import { parseEpoch, type EpochSinceValue } from "@ckb-lumos/base/lib/since";
+import { MyOrder } from "@ickb/v1-core";
 
 export interface RootConfig extends ChainConfig {
     queryClient: QueryClient;
 }
+export type  IckbDateType ={
+    ickbDaoBalance: bigint;
+    ickbUdtPoolBalance: bigint;
+    myOrders: MyOrder[];
+    ckbBalance: bigint;
+    ickbUdtBalance: bigint;
+    ckbAvailable: bigint;
+    ickbUdtAvailable: bigint;
+    tipHeader: Readonly<I8Header>;
+    txBuilder: (isCkb2Udt: boolean, amount: bigint) => Readonly<TxInfo>;
+    hasMatchable: boolean;
+}|undefined
 
 export function symbol2Direction(s: string) {
     return s === "C";

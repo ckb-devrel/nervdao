@@ -277,7 +277,6 @@ export function addChange(
         },
         config,
     ));
-    console.log(freeIckbUdt)
     if (freeCkb < BigInt(0)) {
         return txInfoFrom({ info, error: "Not enough CKB" });
     }

@@ -1,17 +1,10 @@
 import { WalletConfig } from "@/cores/config";
-import { l1StateOptions } from "@/cores/queries";
-import { useQuery } from "@tanstack/react-query";
 import React from "react";
-
 import { IckbOrderItem } from "./IckbOrderItem";
 import { toText } from "@/utils/stringUtils";
+import { IckbDateType } from "@/cores/utils";
 
-const IckbRecentOrders: React.FC<{ walletConfig: WalletConfig }> = ({ walletConfig }) => {
-
-    const { data: ickbData } = useQuery(
-        l1StateOptions(walletConfig, false),
-    );
-
+const IckbRecentOrders: React.FC<{ walletConfig: WalletConfig ,ickbData:IckbDateType }> = ({ walletConfig ,ickbData}) => {
     return (
         <>
             <div className="bg-gray-900 rounded-lg p-4 flex flex-col flex-grow">
@@ -19,25 +12,22 @@ const IckbRecentOrders: React.FC<{ walletConfig: WalletConfig }> = ({ walletConf
                 <div>
                     {(ickbData && ickbData.myOrders.length) ? ickbData.myOrders.map((item, index) => {
                         return (
-                            <IckbOrderItem 
-                            walletConfig={walletConfig} 
-                            key={index} 
-                            item={
-                                { 
-                                    total: item.info.absTotal,
-                                    progress: item.info.absProgress,
-                                    blockNumber: item.master.blockNumber, 
-                                    isCkb2Udt: item.info.isCkb2Udt,
-                                    pendingIckb:toText(item.info.udtAmount),
-                                    pendingCkb:toText(item.info.ckbUnoccupied)
+                            <IckbOrderItem
+                                walletConfig={walletConfig}
+                                key={index}
+                                item={
+                                    {
+                                        total: item.info.absTotal,
+                                        progress: item.info.absProgress,
+                                        blockNumber: item.master.blockNumber,
+                                        isCkb2Udt: item.info.isCkb2Udt,
+                                        pendingIckb: toText(item.info.udtAmount),
+                                        pendingCkb: toText(item.info.ckbUnoccupied)
+                                    }
                                 }
-                            }
                             />
                         )
-                    }):'No Recent Orders'}
-
-
-
+                    }) : 'No Recent orders'}
                 </div>
             </div>
         </>

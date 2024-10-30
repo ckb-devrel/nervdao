@@ -46,13 +46,12 @@ export function l1StateOptions(walletConfig: WalletConfig, isFrozen: boolean) {
     // const walletConfig = getWalletConfig();
     return queryOptions({
         retry: true,
-        // refetchInterval: ({ state }) => 6 * (state.data?.hasMatchable ? 1 : 10),
+        // refetchInterval: 1000,
         staleTime: 10000,
-        queryKey: [walletConfig.chain, walletConfig.address, "l1State"],
+        queryKey: ["l1State"],
         queryFn: async () => {
             try {
                 const data = await getL1State(walletConfig);
-                console.log(data)
                 return data
             } catch (e) {
                 console.log(e);

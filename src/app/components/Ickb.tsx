@@ -6,6 +6,7 @@ import { ccc } from "@ckb-ccc/connector-react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { setupWalletConfig, type WalletConfig } from "@/cores/config";
 import IckbRecentOrders from "./IckbRecentOrders";
+import { Tooltip } from "react-tooltip";
 
 const Ickb: React.FC = () => {
   const [walletConfig, setWalletConfig] = useState<WalletConfig>();
@@ -25,19 +26,18 @@ const Ickb: React.FC = () => {
       setWalletConfig(setupConfig)
 
     })();
-  }, [signer]);
+  }, [signer, walletConfig, queryClient]);
+
   return (
     <QueryClientProvider client={queryClient}>
-      {walletConfig &&
-        <div className="flex flex-col flex-grow lg:flex-row lg:items-stretch gap-6">
-          <div className="space-y-6 flex flex-col flex-1">
-            <IckbForm  walletConfig={walletConfig}  />
-          </div>
-          <div className="flex-1 flex-row">
-            <IckbStatus  walletConfig={walletConfig}  />
-            <IckbRecentOrders walletConfig={walletConfig}  />
-          </div>
-        </div>}
+
+      <div className="flex flex-col flex-grow lg:flex-row lg:items-stretch gap-6">
+        
+          {walletConfig && <IckbForm walletConfig={walletConfig} />}
+        
+      </div>
+      <Tooltip id="my-tooltip" />
+
     </QueryClientProvider>
   );
 };

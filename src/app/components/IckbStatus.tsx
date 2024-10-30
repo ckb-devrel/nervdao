@@ -4,16 +4,13 @@ import React, { useEffect, useState } from "react";
 // import ReactApexChart from "react-apexcharts";
 import { ccc } from "@ckb-ccc/connector-react";
 import SkeletonLoader from "./SkeletonLoader";
-import { useQuery } from "@tanstack/react-query";
-import { WalletConfig } from "@/cores/config";
-import { l1StateOptions } from "@/cores/queries";
+import { IckbDateType } from "@/cores/utils";
 
-const IckbStatus: React.FC<{ walletConfig: WalletConfig }> = ({ walletConfig }) => {
+
+const IckbStatus: React.FC<{ ickbData:IckbDateType }> = ({ ickbData }) => {
   const [apy, setApy] = useState("-");
   const [isLoadingBalance, setIsLoadingBalance] = useState(true);
-  const { data: ickbData } = useQuery(
-    l1StateOptions(walletConfig, false),
-  );
+ 
 
   const signer = ccc.useSigner();
   useEffect(() => {
