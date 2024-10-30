@@ -16,7 +16,6 @@ interface IckbOrderItemItemProps {
         pendingCkb?: string | undefined;
     }
 }
-
 export function IckbOrderItem({
     walletConfig, item
 }: IckbOrderItemItemProps) {
@@ -34,14 +33,10 @@ export function IckbOrderItem({
         };
         refresh();
     }, [item, walletConfig]);
-
-
-
-
     return (
         <div className="flex items-center justify-between py-2">
             <div className="flex items-center">
-                <div className={item.isCkb2Udt ? "bg-cyan-600 " : "bg-green-600 " + "rounded-full p-2 mr-3"}>
+                <div className={item.isCkb2Udt ? "bg-cyan-600 rounded-full p-2 mr-3" : "bg-green-600 rounded-full p-2 mr-3"}>
                     {item.isCkb2Udt ? <Download className="w-4 h-4" /> : <ArrowUp className="w-4 h-4" />}
 
                 </div>

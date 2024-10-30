@@ -17,7 +17,7 @@ const IckbRecentOrders: React.FC<{ walletConfig: WalletConfig }> = ({ walletConf
             <div className="bg-gray-900 rounded-lg p-4 flex flex-col flex-grow">
                 <h3 className="text-xl font-play font-bold mb-4">Recent Orders</h3>
                 <div>
-                    {ickbData && ickbData.myOrders.length && ickbData.myOrders.map((item, index) => {
+                    {(ickbData && ickbData.myOrders.length) ? ickbData.myOrders.map((item, index) => {
                         return (
                             <IckbOrderItem 
                             walletConfig={walletConfig} 
@@ -34,7 +34,7 @@ const IckbRecentOrders: React.FC<{ walletConfig: WalletConfig }> = ({ walletConf
                             }
                             />
                         )
-                    })}
+                    }):'No Recent Orders'}
 
 
 
