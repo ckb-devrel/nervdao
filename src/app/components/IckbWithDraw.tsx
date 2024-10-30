@@ -4,9 +4,6 @@ import { useNotification } from "@/context/NotificationProvider";
 import { ickb2Ckb } from "@ickb/v1-core";
 import { Info, TriangleAlert} from "lucide-react";
 import { toText } from "@/utils/stringUtils";
-import { type WalletConfig } from "@/cores/config";
-import { useQuery } from "@tanstack/react-query";
-import {l1StateOptions } from "@/cores/queries";
 import { IckbDateType } from "@/cores/utils";
 
 

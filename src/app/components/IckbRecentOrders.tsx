@@ -1,7 +1,6 @@
 import { WalletConfig } from "@/cores/config";
 import React from "react";
 import { IckbOrderItem } from "./IckbOrderItem";
-import { toText } from "@/utils/stringUtils";
 import { IckbDateType } from "@/cores/utils";
 
 const IckbRecentOrders: React.FC<{ walletConfig: WalletConfig ,ickbData:IckbDateType }> = ({ walletConfig ,ickbData}) => {
