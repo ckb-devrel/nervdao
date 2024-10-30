@@ -46,7 +46,7 @@ export function l1StateOptions(isFrozen: boolean) {
     
     return queryOptions({
         retry: true,
-        refetchInterval: 5000,
+        refetchInterval: 15000,
         refetchOnWindowFocus:true,
         refetchOnMount:true,
         refetchIntervalInBackground:false,

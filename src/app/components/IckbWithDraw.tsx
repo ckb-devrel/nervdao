@@ -25,17 +25,16 @@ const IckbWithDraw: React.FC<{ ickbData:IckbDateType ,onUpdate:VoidFunction}> = 
         }
         let progressId, txHash
         try {
-
             const cccTx = ccc.Transaction.fromLumosSkeleton(txInfo.tx);
-
             txHash = await signerCcc.sendTransaction(cccTx);
             progressId = await showNotification("progress", `Deposit in progress!`);
-
-        } finally {
-            setAmount('')
             onUpdate()
+            showNotification("success", `Deposit Success: ${txHash}`);
+        }catch(error){
+            setAmount("")
+        }finally {
             removeNotification(progressId + '')
-            showNotification("success", `Withdraw Success: ${txHash}`);
+            setAmount("")
         }
     }
 
@@ -59,18 +58,12 @@ const IckbWithDraw: React.FC<{ ickbData:IckbDateType ,onUpdate:VoidFunction}> = 
         setAmount(e.target.value)
     }, [])
 
-
-    // const togglePendingShow = () => {
-    //     setPendingShow(!pendingShow)
-    // }
-   
     return (
         <>
             <div className="flex flex-row font-play mb-4 mt-8 text-left">
                 <div className="basis-1/2">
                     <p className="text-gray-400 mb-2 flex items-center"><span className="w-2 h-2 bg-green-500 mr-2"></span>Withdrawable iCKB</p>
                     <p className="text-2xl font-bold font-play mb-4">{ickbData? toText(ickbData?.ickbUdtAvailable):'-'} <span className="text-base font-normal">iCKB</span></p>
-
                 </div>
                 {/* <div className="basis-1/2">
                     <p className="text-gray-400 mb-2 flex items-center"><span className="w-2 h-2 bg-yellow-500 mr-2"></span>Pending iCKB</p>

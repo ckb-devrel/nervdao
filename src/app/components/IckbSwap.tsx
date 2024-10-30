@@ -14,7 +14,7 @@ const IckbSwap: React.FC<{ ickbData:IckbDateType,onUpdate:VoidFunction }> = ({ i
    
     const txInfo =ickbData? ickbData?.txBuilder(true, ccc.fixedPointFrom(amount)):null;
     const signerCcc = ccc.useSigner();
-
+    console.log(ickbData)
     const { showNotification, removeNotification } = useNotification();
     async function handleSwap() {
         if (!txInfo || !signerCcc) {
@@ -33,15 +33,14 @@ const IckbSwap: React.FC<{ ickbData:IckbDateType,onUpdate:VoidFunction }> = ({ i
 
             txHash = await signerCcc.sendTransaction(cccTx);
             progressId = await showNotification("progress", `Deposit in progress!`);
-
-            // txHash = await signerCcc.sendTransaction(signedTx);
-        } finally {
-            removeNotification(progressId + '')
             //   freezeTxInfo(txInfoFrom({}));
             onUpdate()
-            setAmount("")
             showNotification("success", `Deposit Success: ${txHash}`);
-
+        }catch(error){
+            setAmount("")
+        }finally {
+            removeNotification(progressId + '')
+            setAmount("")
         }
     }
 

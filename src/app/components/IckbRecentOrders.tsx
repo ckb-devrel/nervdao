@@ -21,8 +21,6 @@ const IckbRecentOrders: React.FC<{ walletConfig: WalletConfig ,ickbData:IckbDate
                                         progress: item.info.absProgress,
                                         blockNumber: item.master.blockNumber,
                                         isCkb2Udt: item.info.isCkb2Udt,
-                                        pendingIckb: toText(item.info.udtAmount),
-                                        pendingCkb: toText(item.info.ckbUnoccupied)
                                     }
                                 }
                             />
