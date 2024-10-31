@@ -1,3 +1,7 @@
+import {
+  CKB,
+  
+} from "@ickb/lumos-utils";
 export function truncateString(str: string, frontChars: number, endChars: number): string {
   if (str.length <= frontChars + endChars) {
     return str;
@@ -15,4 +19,14 @@ export function formatBalance(balanceStr: string): string {
     return '0.00';
   }
   return number.toFixed(2);
+}
+export function toText(n: bigint) {
+  return String(n / CKB) + String(Number(n % CKB) / Number(CKB)).slice(1);
+}
+
+export function toBigInt(text: string) {
+  const [decimal, ...fractionals] = text.split(".");
+  return BigInt(
+    (decimal ?? "0") + ((fractionals ?? []).join("") + "00000000").slice(0, 8),
+  );
 }
