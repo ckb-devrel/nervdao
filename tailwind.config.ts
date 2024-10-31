@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import type { PluginAPI } from 'tailwindcss/types/config'
 
 const config: Config = {
   content: [
@@ -222,6 +223,22 @@ const config: Config = {
     "text-purple-400",
     "text-cyan-400",
   ],
-  plugins: [],
+  plugins: [
+    function ({ addUtilities }: PluginAPI) {
+      addUtilities({
+        //@ts-expect-error tailwind type
+        '.no-arrows': {
+          /* Styles to remove arrows in various browsers */
+          '&::-webkit-inner-spin-button, &::-webkit-outer-spin-button': {
+            '-webkit-appearance': 'none',
+            margin: 0,
+          },
+          '&::-moz-focus-inner': {
+            border: 0,
+          },
+        },
+      });
+    },
+  ],
 };
 export default config;

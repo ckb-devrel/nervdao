@@ -1,4 +1,4 @@
-import React, { useCallback,   useState } from "react";
+import React, {  useState } from "react";
 import { ccc } from "@ckb-ccc/connector-react";
 import { useNotification } from "@/context/NotificationProvider";
 import { ickb2Ckb } from "@ickb/v1-core";
@@ -11,7 +11,7 @@ const IckbWithDraw: React.FC<{ ickbData:IckbDateType ,onUpdate:VoidFunction}> = 
     const [amount, setAmount] = useState<string>("");
     // const [pendingShow, setPendingShow] = useState<boolean>(false);
   
-    const txInfo = ickbData?.txBuilder(false, ccc.fixedPointFrom(amount));
+    const txInfo =(ickbData&&amount.length>0)? ickbData?.txBuilder(false, ccc.fixedPointFrom(amount)):null;
    
     const signerCcc = ccc.useSigner();
     // const pendingIckbs = ickbData?ickbData.myOrders;
@@ -51,16 +51,20 @@ const IckbWithDraw: React.FC<{ ickbData:IckbDateType ,onUpdate:VoidFunction}> = 
         if (!ickbData) return;
         setAmount(ccc.fixedPointToString(ickbData?.ickbUdtAvailable));
     };
-    const handleAmountChange = useCallback((e: { target: { value: React.SetStateAction<string>; }; }) => {
+    const handleAmountChange =(e: { target: { value: React.SetStateAction<string>; }; }) => {
+      
+        if(!/^-?\d+(\.\d+)?$/.test(e.target.value+'')){
+            return
+        }
         setAmount(e.target.value)
-    }, [])
+    }
 
     return (
         <>
             <div className="flex flex-row font-play mb-4 mt-8 text-left">
                 <div className="basis-1/2">
                     <p className="text-gray-400 mb-2 flex items-center"><span className="w-2 h-2 bg-green-500 mr-2"></span>Withdrawable iCKB</p>
-                    <p className="text-2xl font-bold font-play mb-4">{ickbData? toText(ickbData?.ickbUdtAvailable):'-'} <span className="text-base font-normal">iCKB</span></p>
+                    <p className="text-2xl font-bold font-play mb-4">{(ickbData&&ickbData.ckbAvailable!==BigInt('30000000000000000'))? toText(ickbData?.ickbUdtAvailable):'-'} <span className="text-base font-normal">iCKB</span></p>
                 </div>
                 {/* <div className="basis-1/2">
                     <p className="text-gray-400 mb-2 flex items-center"><span className="w-2 h-2 bg-yellow-500 mr-2"></span>Pending iCKB</p>
@@ -69,8 +73,8 @@ const IckbWithDraw: React.FC<{ ickbData:IckbDateType ,onUpdate:VoidFunction}> = 
             </div>
             <div className='relative mb-4 flex'>
                 {/* <label className="flex px-2 items-center"><img src="/svg/icon-ckb.svg" alt="CKB" className="mr-2" /> CKB</label> */}
-                <input className="w-full text-left rounded border  border-[#777] bg-gray-700  hover:border-cyan-500 focus:border-cyan-500  text-lg p-3 mt-1 pr-16 pl-14"
-                    type="text"
+                <input className="w-full text-left rounded border no-arrows  border-[#777] bg-gray-700  hover:border-cyan-500 focus:border-cyan-500  text-lg p-3 mt-1 pr-16 pl-14"
+                    type="number"
                     value={amount}
                     onChange={handleAmountChange}
                     placeholder="0" />
@@ -85,7 +89,7 @@ const IckbWithDraw: React.FC<{ ickbData:IckbDateType ,onUpdate:VoidFunction}> = 
             </p>
             <div className="flex justify-between my-3 text-base">
                 <span>You will Receive <Info size={16} className="inline-block" data-tooltip-id="my-tooltip" data-tooltip-content="receive info" /></span>
-                <span>{amount ? <>≈{approxConversion(BigInt(Math.trunc(parseFloat(amount) * 100000000)))} iCKB</> : 'Calculated after entry'}</span>
+                <span>{amount ? <>≈{approxConversion(BigInt(Math.trunc(parseFloat(amount) * 100000000)))} CKB</> : 'Calculated after entry'}</span>
             </div>
             {txInfo && Number(amount) > 0 &&
                 <div className="rounded border-1 border-yellow-500 p-4 bg-yellow-500/[.12]  my-3">

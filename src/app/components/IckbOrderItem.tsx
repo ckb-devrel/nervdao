@@ -19,7 +19,6 @@ export function IckbOrderItem({
     walletConfig, item
 }: IckbOrderItemItemProps) {
     const [orderDate, setOrderDate] = useState<string>('')
-    console.log(item)
     useEffect(() => {
         const refresh = async () => {
             const hexArray: Set<HexNumber> = new Set();

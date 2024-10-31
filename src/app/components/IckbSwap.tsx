@@ -1,4 +1,4 @@
-import React, { useCallback,  useEffect,  useState } from "react";
+import React, {  useState } from "react";
 import { ccc } from "@ckb-ccc/connector-react";
 import { useNotification } from "@/context/NotificationProvider";
 import { ckb2Ickb } from "@ickb/v1-core";
@@ -10,9 +10,8 @@ import { IckbDateType } from "@/cores/utils";
 
 const IckbSwap: React.FC<{ ickbData:IckbDateType,onUpdate:VoidFunction }> = ({ ickbData,onUpdate }) => {
     const [amount, setAmount] = useState<string>("");
-    const [balance, setBalance] = useState<string>("");
-   
-    const txInfo =ickbData? ickbData?.txBuilder(true, ccc.fixedPointFrom(amount)):null;
+    // const [balance, setBalance] = useState<string>("");
+    const txInfo =(ickbData&&amount.length>0)? ickbData?.txBuilder(true, ccc.fixedPointFrom(amount)):null;
     const signerCcc = ccc.useSigner();
     console.log(ickbData)
     const { showNotification, removeNotification } = useNotification();
@@ -60,25 +59,27 @@ const IckbSwap: React.FC<{ ickbData:IckbDateType,onUpdate:VoidFunction }> = ({ i
         if (!ickbData) return;
         setAmount(ccc.fixedPointToString(ickbData?.ckbAvailable));
     };
-    const handleAmountChange = useCallback((e: { target: { value: React.SetStateAction<string>; }; }) => {
+    const handleAmountChange = (e: { target: { value: React.SetStateAction<string>; }; }) => {
+        
+      
         setAmount(e.target.value)
-    }, [])
-    useEffect(() => {
-        (async () => {
-          if (!signerCcc) return;
-          const balance = await signerCcc.getBalance();
-        //   parseFloat((Number(balance)/100000000).toString()).toFixed(2)
-          setBalance(ccc.fixedPointToString(balance));
-        })();
-      }, [signerCcc]);
+    }
+    // useEffect(() => {
+    //     (async () => {
+    //       if (!signerCcc) return;
+    //       const balance = await signerCcc.getBalance();
+    //     //   parseFloat((Number(balance)/100000000).toString()).toFixed(2)
+    //       setBalance(ccc.fixedPointToString(balance));
+    //     })();
+    //   }, [signerCcc]);
 
     return (
         <>
             <div className="flex flex-row font-play mb-4 mt-8 text-left">
                 <div className="basis-1/2">
                     <p className="text-gray-400 mb-2">CKB Balance</p>
-                    {/* <p className="text-2xl font-bold font-play mb-4">{ickbData ? toText(ickbData?.ckbAvailable):"-"} <span className="text-base font-normal">CKB</span></p> */}
-                    <p className="text-2xl font-bold font-play mb-4">{balance} <span className="text-base font-normal">CKB</span></p>
+                    <p className="text-2xl font-bold font-play mb-4">{(ickbData&&ickbData.ckbAvailable!==BigInt('60000000000000000'))? toText(ickbData?.ckbAvailable):"-"} <span className="text-base font-normal">CKB</span></p>
+                    {/* <p className="text-2xl font-bold font-play mb-4">{balance} <span className="text-base font-normal">CKB</span></p> */}
 
                 </div>
              
@@ -89,8 +90,8 @@ const IckbSwap: React.FC<{ ickbData:IckbDateType,onUpdate:VoidFunction }> = ({ i
             </div>
             <div className='relative mb-4  bg-gray-700 p-4 rounded'>
                 <label className="flex px-2 items-center"><img src="/svg/icon-ckb.svg" alt="CKB" className="mr-2" /> CKB</label>
-                <input className="w-full text-left border-none hover:border-none focus:border-none bg-gray-700  text-lg p-3 mt-1 pr-16"
-                    type="text"
+                <input className="w-full text-left no-arrows border-none hover:border-none  focus:border-none bg-gray-700  text-lg p-3 mt-1 pr-16"
+                    type="number"
                     value={amount}
                     onChange={handleAmountChange}
                     placeholder="0" />
