@@ -88,7 +88,7 @@ const IckbWithDraw: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }>
             pending += ickbData.myOrders[0].info.isCkb2Udt ? Number(item.info.absProgress / CKB / CKB) : 0;
             (item.info.absTotal === item.info.absProgress) ? (canMelt = true) : (canMelt = false)
         })
-        setCanMelt(canMelt)
+        setCanMelt(canMelt&&ickbData.myOrders[0].info.isCkb2Udt)
         setPendingBalance(toText(BigInt(pending))||'-');
 
     }, [ickbData]);
@@ -101,7 +101,7 @@ const IckbWithDraw: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }>
                 </div>
                 <div className="basis-1/2">
                     <p className="text-gray-400 mb-2 flex items-center">
-                        <span className={canMelt ? "w-2 h-2 bg-yellow-500 mr-2" : "w-2 h-2 bg-green-500 mr-2"}></span>
+                        <span className={ "w-2 h-2 bg-yellow-500 mr-2"}></span>
                         Pending
                     </p>
                     <p className="text-2xl font-bold font-play mb-4 flex  items-center">
