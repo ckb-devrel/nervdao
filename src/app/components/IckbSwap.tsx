@@ -1,25 +1,26 @@
-import React, {  useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ccc } from "@ckb-ccc/connector-react";
 import { useNotification } from "@/context/NotificationProvider";
-import { ckb2Ickb } from "@ickb/v1-core";
+import { ckb2Ickb, MyOrder } from "@ickb/v1-core";
 import { Info, ArrowDown, TriangleAlert } from "lucide-react";
 import { toText } from "@/utils/stringUtils";
-
 import { IckbDateType } from "@/cores/utils";
+import { CKB } from "@ickb/lumos-utils";
+import { callMelt } from "@/cores/queries";
 
 
-const IckbSwap: React.FC<{ ickbData:IckbDateType,onUpdate:VoidFunction }> = ({ ickbData,onUpdate }) => {
+const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = ({ ickbData, onUpdate }) => {
     const [amount, setAmount] = useState<string>("");
-    // const [balance, setBalance] = useState<string>("");
-    const txInfo =(ickbData&&amount.length>0)? ickbData?.txBuilder(true, ccc.fixedPointFrom(amount)):null;
+    const [pendingBalance, setPendingBalance] = useState<string>("");
+    const txInfo = (ickbData && amount.length > 0) ? ickbData?.txBuilder(true, ccc.fixedPointFrom(amount)) : null;
     const signerCcc = ccc.useSigner();
-    console.log(ickbData)
+    const [canMelt, setCanMelt] = useState<boolean>(false);
     const { showNotification, removeNotification } = useNotification();
     async function handleSwap() {
         if (!txInfo || !signerCcc) {
             return
         }
-        if(txInfo.error){
+        if (txInfo.error) {
             showNotification("error", txInfo.error);
             return
         }
@@ -35,9 +36,9 @@ const IckbSwap: React.FC<{ ickbData:IckbDateType,onUpdate:VoidFunction }> = ({ i
             //   freezeTxInfo(txInfoFrom({}));
             onUpdate()
             showNotification("success", `Deposit Success: ${txHash}`);
-        }catch(error){
+        } catch (error) {
             setAmount("")
-        }finally {
+        } finally {
             removeNotification(progressId + '')
             setAmount("")
         }
@@ -60,33 +61,70 @@ const IckbSwap: React.FC<{ ickbData:IckbDateType,onUpdate:VoidFunction }> = ({ i
         setAmount(ccc.fixedPointToString(ickbData?.ckbAvailable));
     };
     const handleAmountChange = (e: { target: { value: React.SetStateAction<string>; }; }) => {
-        
-      
+
+
         setAmount(e.target.value)
     }
-    // useEffect(() => {
-    //     (async () => {
-    //       if (!signerCcc) return;
-    //       const balance = await signerCcc.getBalance();
-    //     //   parseFloat((Number(balance)/100000000).toString()).toFixed(2)
-    //       setBalance(ccc.fixedPointToString(balance));
-    //     })();
-    //   }, [signerCcc]);
+    const handleMelt = async (orders: MyOrder[]) => {
+        const txMelt = await callMelt(orders)
+        if (!txMelt || !signerCcc) {
+            return
+        }
+        let progressId, txHash
+        try {
+            const cccTx = ccc.Transaction.fromLumosSkeleton(txMelt.tx);
+            txHash = await signerCcc.sendTransaction(cccTx);
+            progressId = await showNotification("progress", `Melt in progress!`);
+            onUpdate()
+            showNotification("success", `Melt Success: ${txHash}`);
+        } catch (error) {
+            showNotification("error", `${error}`);
+        } finally {
+            removeNotification(progressId + '')
+        }
+    }
+    useEffect(() => {
+        if (!ickbData || ickbData?.myOrders.length < 1) return;
+        let pending = 0;
+        let canMelt = false
+        ickbData.myOrders.map(item => {
+            pending += ickbData.myOrders[0].info.isCkb2Udt ? Number(item.info.absProgress / CKB / CKB) : 0;
+            (item.info.absTotal === item.info.absProgress) ? (canMelt = true) : (canMelt = false)
+        })
+        setCanMelt(canMelt)
+        setPendingBalance(toText(BigInt(pending)) || '-');
+
+    }, [ickbData]);
 
     return (
         <>
             <div className="flex flex-row font-play mb-4 mt-8 text-left">
                 <div className="basis-1/2">
-                    <p className="text-gray-400 mb-2">CKB Balance</p>
-                    <p className="text-2xl font-bold font-play mb-4">{(ickbData&&ickbData.ckbAvailable!==BigInt('60000000000000000'))? toText(ickbData?.ckbAvailable):"-"} <span className="text-base font-normal">CKB</span></p>
+                    <p className="text-gray-400 mb-2 flex items-center"><span className="w-2 h-2 bg-green-500 mr-2"></span>CKB Available <Info size={16} className="inline-block" data-tooltip-id="my-tooltip" data-tooltip-html="<div>Ckb Balance minus the the CKB locked in Withdrawal requests not yet mature <br />and minus 1000 CKB</div>" /></p>
+                    <p className="text-2xl font-bold font-play mb-4">{(ickbData && ickbData.ckbAvailable !== BigInt('60000000000000000')) ? toText(ickbData?.ckbAvailable) : "-"} <span className="text-base font-normal">CKB</span></p>
                     {/* <p className="text-2xl font-bold font-play mb-4">{balance} <span className="text-base font-normal">CKB</span></p> */}
 
                 </div>
-             
-                {/* <div className="basis-1/2">
-                    <p className="text-gray-400 mb-2 flex items-center"><span className="w-2 h-2 bg-yellow-500 mr-2"></span>Pending iCKB</p>
-                    <p className="text-2xl font-bold font-play mb-4"> <span className="text-base font-normal">- iCKB</span></p>
-                </div> */}
+                <div className="basis-1/2">
+                    <p className="text-gray-400 mb-2 flex items-center">
+                        <span className={canMelt ? "w-2 h-2 bg-green-500 mr-2" : "w-2 h-2 bg-yellow-500 mr-2"}></span>
+                        Pending
+                    </p>
+                    <p className="text-2xl font-bold font-play mb-4 flex  items-center">
+                        <span>
+                            {pendingBalance} <span className="text-base font-normal">CKB</span>
+                        </span>
+                        {ickbData && canMelt &&
+                            <button
+                                className="font-bold ml-2 bg-btn-gradient text-gray-800 text-body-2 py-1 px-2 rounded-lg hover:bg-btn-gradient-hover transition duration-200 disabled:opacity-50 disabled:hover:bg-btn-gradient"
+                                onClick={() => handleMelt(ickbData.myOrders)}
+                            >
+                                Melt
+                            </button>
+                        }
+                    </p>
+                </div>
+
             </div>
             <div className='relative mb-4  bg-gray-700 p-4 rounded'>
                 <label className="flex px-2 items-center"><img src="/svg/icon-ckb.svg" alt="CKB" className="mr-2" /> CKB</label>
@@ -121,7 +159,7 @@ const IckbSwap: React.FC<{ ickbData:IckbDateType,onUpdate:VoidFunction }> = ({ i
                 {/* 扣除0.1% 交易bot fee */}
                 <span>{amount ? <>≈{approxConversion(BigInt(Math.trunc(parseFloat(amount) * 99900000)))} iCKB</> : 'Calculated after entry'}</span>
             </div>
-            {txInfo && Number(amount)>0 &&
+            {txInfo && Number(amount) > 0 &&
                 <div className="rounded border-1 border-yellow-500 p-4 bg-yellow-500/[.12]  my-3">
                     <h3 className="text-lg flex items-center">
                         <TriangleAlert size={24} className="block mr-1" />

@@ -310,5 +310,6 @@ export function meltOrder(myOrders: MyOrder[], feeRate: bigint, walletConfig: Wa
     let tx = helpers.TransactionSkeleton();
     tx = orderMelt(tx, myOrders);
     const txInfo = txInfoFrom({ tx, info });
+    debugger
     return addChange(txInfo, feeRate, walletConfig);
 }

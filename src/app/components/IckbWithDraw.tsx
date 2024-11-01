@@ -1,18 +1,22 @@
-import React, {  useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ccc } from "@ckb-ccc/connector-react";
 import { useNotification } from "@/context/NotificationProvider";
-import { ickb2Ckb } from "@ickb/v1-core";
-import { Info, TriangleAlert} from "lucide-react";
+import { ickb2Ckb, MyOrder } from "@ickb/v1-core";
+import { Info, TriangleAlert } from "lucide-react";
 import { toText } from "@/utils/stringUtils";
 import { IckbDateType } from "@/cores/utils";
+import { CKB } from "@ickb/lumos-utils";
+import { callMelt } from "@/cores/queries";
 
 
-const IckbWithDraw: React.FC<{ ickbData:IckbDateType ,onUpdate:VoidFunction}> = ({ ickbData,onUpdate }) => {
+const IckbWithDraw: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = ({ ickbData, onUpdate }) => {
     const [amount, setAmount] = useState<string>("");
     // const [pendingShow, setPendingShow] = useState<boolean>(false);
-  
-    const txInfo =(ickbData&&amount.length>0)? ickbData?.txBuilder(false, ccc.fixedPointFrom(amount)):null;
-   
+    const [pendingBalance, setPendingBalance] = useState<string>("-");
+    const [canMelt, setCanMelt] = useState<boolean>(false);
+
+    const txInfo = (ickbData && amount.length > 0) ? ickbData?.txBuilder(false, ccc.fixedPointFrom(amount)) : null;
+
     const signerCcc = ccc.useSigner();
     // const pendingIckbs = ickbData?ickbData.myOrders;
     const { showNotification, removeNotification } = useNotification();
@@ -27,9 +31,9 @@ const IckbWithDraw: React.FC<{ ickbData:IckbDateType ,onUpdate:VoidFunction}> = 
             progressId = await showNotification("progress", `Deposit in progress!`);
             onUpdate()
             showNotification("success", `Deposit Success: ${txHash}`);
-        }catch(error){
+        } catch (error) {
             setAmount("")
-        }finally {
+        } finally {
             removeNotification(progressId + '')
             setAmount("")
         }
@@ -51,25 +55,69 @@ const IckbWithDraw: React.FC<{ ickbData:IckbDateType ,onUpdate:VoidFunction}> = 
         if (!ickbData) return;
         setAmount(ccc.fixedPointToString(ickbData?.ickbUdtAvailable));
     };
-    const handleAmountChange =(e: { target: { value: React.SetStateAction<string>; }; }) => {
-      
-        if(!/^-?\d+(\.\d+)?$/.test(e.target.value+'')){
+    const handleAmountChange = (e: { target: { value: React.SetStateAction<string>; }; }) => {
+
+        if (!/^-?\d+(\.\d+)?$/.test(e.target.value + '')) {
             return
         }
         setAmount(e.target.value)
     }
+    const handleMelt = async (orders: MyOrder[]) => {
+        const txMelt = await callMelt(orders)
+        if (!txMelt || !signerCcc) {
+            return
+        }
+        let progressId, txHash
+        try {
+            const cccTx = ccc.Transaction.fromLumosSkeleton(txMelt.tx);
+            txHash = await signerCcc.sendTransaction(cccTx);
+            progressId = await showNotification("progress", `Melt in progress!`);
+            onUpdate()
+            showNotification("success", `Melt Success: ${txHash}`);
+        } catch (error) {
+            showNotification("error", `${error}`);
+        } finally {
+            removeNotification(progressId + '')
+        }
+    }
+    useEffect(() => {
+        if (!ickbData || ickbData?.myOrders.length < 1) return;
+        let pending = 0;
+        let canMelt = false
+        ickbData.myOrders.map(item => {
+            pending += ickbData.myOrders[0].info.isCkb2Udt ? Number(item.info.absProgress / CKB / CKB) : 0;
+            (item.info.absTotal === item.info.absProgress) ? (canMelt = true) : (canMelt = false)
+        })
+        setCanMelt(canMelt)
+        setPendingBalance(toText(BigInt(pending))||'-');
 
+    }, [ickbData]);
     return (
         <>
             <div className="flex flex-row font-play mb-4 mt-8 text-left">
                 <div className="basis-1/2">
                     <p className="text-gray-400 mb-2 flex items-center"><span className="w-2 h-2 bg-green-500 mr-2"></span>Withdrawable iCKB</p>
-                    <p className="text-2xl font-bold font-play mb-4">{(ickbData&&ickbData.ckbAvailable!==BigInt('30000000000000000'))? toText(ickbData?.ickbUdtAvailable):'-'} <span className="text-base font-normal">iCKB</span></p>
+                    <p className="text-2xl font-bold font-play mb-4">{(ickbData && ickbData.ckbAvailable !== BigInt('30000000000000000')) ? toText(ickbData?.ickbUdtAvailable) : '-'} <span className="text-base font-normal">iCKB</span></p>
                 </div>
-                {/* <div className="basis-1/2">
-                    <p className="text-gray-400 mb-2 flex items-center"><span className="w-2 h-2 bg-yellow-500 mr-2"></span>Pending iCKB</p>
-                    <p className="text-2xl font-bold font-play mb-4"> <span className="text-base font-normal">- iCKB</span></p>
-                </div> */}
+                <div className="basis-1/2">
+                    <p className="text-gray-400 mb-2 flex items-center">
+                        <span className={canMelt ? "w-2 h-2 bg-yellow-500 mr-2" : "w-2 h-2 bg-green-500 mr-2"}></span>
+                        Pending
+                    </p>
+                    <p className="text-2xl font-bold font-play mb-4 flex  items-center">
+                        <span>
+                            {pendingBalance} <span className="text-base font-normal">iCKB</span>
+                        </span>
+                        {ickbData && canMelt &&
+                            <button
+                                className="font-bold ml-2 bg-btn-gradient text-gray-800 text-body-2 py-1 px-2 rounded-lg hover:bg-btn-gradient-hover transition duration-200 disabled:opacity-50 disabled:hover:bg-btn-gradient"
+                                onClick={() => handleMelt(ickbData.myOrders)}
+                            >
+                                Melt
+                            </button>
+                        }
+                    </p>
+                </div>
             </div>
             <div className='relative mb-4 flex'>
                 {/* <label className="flex px-2 items-center"><img src="/svg/icon-ckb.svg" alt="CKB" className="mr-2" /> CKB</label> */}

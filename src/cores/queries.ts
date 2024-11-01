@@ -27,6 +27,7 @@ import {
     ickbSifter,
     ickbUdtType,
     limitOrderScript,
+    MyOrder,
     orderSifter,
     ownedOwnerScript,
 } from "@ickb/v1-core";
@@ -34,7 +35,7 @@ import {
     maxWaitTime,
     txInfoFrom,
 } from "./utils";
-import { addChange, base, convert } from "./transaction";
+import { addChange, base, convert, meltOrder } from "./transaction";
 import type { Cell, Header, HexNumber, Transaction } from "@ckb-lumos/base";
 import { parseAbsoluteEpochSince } from "@ckb-lumos/base/lib/since";
 import { getWalletConfig, type WalletConfig } from "./config";
@@ -238,6 +239,13 @@ async function getL1State(walletConfig: WalletConfig) {
         txBuilder,
         hasMatchable,
     };
+}
+export async function callMelt(myOrders:MyOrder[]){
+    const walletConfig = getWalletConfig();
+    const {rpc} = walletConfig
+    const feeRatePromise = rpc.getFeeRate(BigInt(1));
+    const feeRate = BigInt(Number(await feeRatePromise) + 1000);
+    return meltOrder(myOrders,feeRate,walletConfig)
 }
 
 async function getTotalUdtCapacity(walletConfig: WalletConfig): Promise<bigint> {
