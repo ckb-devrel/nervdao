@@ -43,13 +43,13 @@ const depositUsedCapacity = BigInt(82) * CKB;
 
 export function l1StateOptions(isFrozen: boolean) {
     const walletConfig = getWalletConfig();
-    
+
     return queryOptions({
         retry: true,
         refetchInterval: 15000,
-        refetchOnWindowFocus:true,
-        refetchOnMount:true,
-        refetchIntervalInBackground:false,
+        refetchOnWindowFocus: true,
+        refetchOnMount: true,
+        refetchIntervalInBackground: false,
         // staleTime: 10000,
         queryKey: ["l1State"],
         queryFn: async () => {
@@ -66,7 +66,7 @@ export function l1StateOptions(isFrozen: boolean) {
             ickbDaoBalance: BigInt(-1),
             myOrders: [],
             ckbBalance: BigInt(-1),
-            ickbUdtBalance: BigInt(-1),
+            ickbRealUdtBalance: BigInt(-1),
             ckbAvailable: BigInt(6) * CKB * CKB,
             ickbUdtAvailable: BigInt(3) * CKB * CKB,
             tipHeader: headerPlaceholder,
@@ -202,7 +202,7 @@ async function getL1State(walletConfig: WalletConfig) {
     const feeRate = BigInt(Number(await feeRatePromise) + 1000);
     const txBuilder = (isCkb2Udt: boolean, amount: bigint) => {
         const txInfo = txInfoFrom({ tx: baseTx, info });
-        
+
         if (amount > BigInt(0)) {
             return convert(
                 txInfo,
@@ -222,15 +222,16 @@ async function getL1State(walletConfig: WalletConfig) {
         return txInfoFrom({ info, error: "Nothing to convert" });
     };
 
-    // Calculate total ickb udt liquidity
+    // Calculate total and real ickb udt liquidity
     const ickbUdtPoolBalance = await getTotalUdtCapacity(walletConfig);
+    const ickbRealUdtBalance = await getUserUdtBalance(walletConfig);
 
     return {
         ickbDaoBalance,
         ickbUdtPoolBalance,
         myOrders,
         ckbBalance,
-        ickbUdtBalance,
+        ickbRealUdtBalance,
         ckbAvailable,
         ickbUdtAvailable,
         tipHeader,
@@ -251,6 +252,35 @@ async function getTotalUdtCapacity(walletConfig: WalletConfig): Promise<bigint> 
             scriptType: "type",
             scriptSearchMode: "exact",
             withData: true,
+        }, "desc", BigInt(50), cursor);
+        if (result.objects.length === 0) {
+            break;
+        }
+
+        cursor = result.lastCursor;
+        //@ts-expect-error 未指定type
+        result.objects.forEach((cell: { outputData; }) => {
+            udtCapacity += Uint128.unpack(cell.outputData.slice(0, 2 + 16 * 2));
+        })
+    }
+    return udtCapacity;
+}
+
+async function getUserUdtBalance(walletConfig: WalletConfig): Promise<bigint> {
+    const { rpc, config, accountLock } = walletConfig;
+    const udtType = ickbUdtType(config);
+    let cursor = undefined;
+    let udtCapacity = BigInt(0);
+    while (true) {
+        //@ts-expect-error 未指定type
+        const result = await rpc.getCells({
+            script: udtType,
+            scriptType: "type",
+            scriptSearchMode: "exact",
+            withData: true,
+            filter: {
+                script: accountLock,
+            }
         }, "desc", BigInt(50), cursor);
         if (result.objects.length === 0) {
             break;
