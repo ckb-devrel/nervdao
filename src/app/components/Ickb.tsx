@@ -10,12 +10,12 @@ const Ickb: React.FC = () => {
   const queryClient = new QueryClient()
   const signer = ccc.useSigner()
   useEffect(() => {
-    if (!signer) return;
+    if (!signer||!queryClient) return;
     (async () => {
       const walletConfig = await setupWalletConfig(signer,queryClient)
       setWalletConfig(walletConfig)
     })();
-  }, [queryClient]);
+  }, []);
   return (
     <QueryClientProvider client={queryClient}>
 

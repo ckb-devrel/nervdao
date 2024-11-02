@@ -25,12 +25,13 @@ export type  IckbDateType ={
     ickbUdtPoolBalance: bigint;
     myOrders: MyOrder[];
     ckbBalance: bigint;
-    ickbUdtBalance: bigint;
     ckbAvailable: bigint;
     ickbUdtAvailable: bigint;
+    ickbRealUdtBalance:bigint;
     tipHeader: Readonly<I8Header>;
     txBuilder: (isCkb2Udt: boolean, amount: bigint) => Readonly<TxInfo>;
     hasMatchable: boolean;
+
 }|undefined
 
 export function symbol2Direction(s: string) {

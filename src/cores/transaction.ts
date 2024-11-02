@@ -11,6 +11,7 @@ import {
     addCkbChange,
     binarySearch,
     calculateTxFee,
+    CKB,
     txSize,
     type I8Cell,
     type I8Header,
@@ -120,7 +121,7 @@ export function convert(
             ickbCumulative = c;
             console.log(Object.freeze({ ...d, ickbCumulative }))
             ickbPool.push(Object.freeze({ ...d, ickbCumulative }));
-            
+
             if (ickbPool.length >= 30) {
                 break;
             }
@@ -171,7 +172,7 @@ function convertAttempt(
     walletConfig: WalletConfig,
 ) {
     let { tx, info } = txInfo;
-    const {error} = txInfo
+    const { error } = txInfo
     if (error !== "") {
         return txInfo;
     }
@@ -252,7 +253,7 @@ export function addChange(
     walletConfig: WalletConfig,
 ) {
     let { tx, info } = txInfo;
-    const {error} = txInfo
+    const { error } = txInfo
     if (error !== "") {
         return txInfo;
     }
@@ -260,9 +261,9 @@ export function addChange(
     const { accountLock, addPlaceholders, config } = walletConfig;
     // eslint-disable-next-line
     let txFee, freeCkb, freeIckbUdt;
-        // eslint-disable-next-line
+    // eslint-disable-next-line
     ({ tx, freeIckbUdt } = addIckbUdtChange(tx, accountLock, config));
-        // eslint-disable-next-line
+    // eslint-disable-next-line
     ({ tx, txFee, freeCkb } = addCkbChange(
         tx,
         accountLock,
@@ -295,4 +296,20 @@ export function addChange(
     info = info.concat([`Paying a Network Fee of ${toText(txFee)} CKB`]);
 
     return txInfoFrom({ tx, info });
+}
+
+export function meltOrder(myOrders: MyOrder[], feeRate: bigint, walletConfig: WalletConfig): TxInfo {
+    const validOrders = myOrders.filter((o) => o.info.absProgress === o.info.absTotal);
+    const info = validOrders.map((o) => {
+        if (o.info.isCkb2Udt) {
+            return `Extract ${toText(o.info.absTotal / CKB)} iCKB from order`;
+        } else {
+            return `Extract ${toText(o.info.absTotal / CKB)} CKB from order`;
+        }
+    });
+    let tx = helpers.TransactionSkeleton();
+    tx = orderMelt(tx, myOrders);
+    const txInfo = txInfoFrom({ tx, info });
+    debugger
+    return addChange(txInfo, feeRate, walletConfig);
 }

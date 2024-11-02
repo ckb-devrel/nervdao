@@ -3651,6 +3651,11 @@ svg.select.js@^3.0.1:
   dependencies:
     svg.js "^2.6.5"
 
+tailwindcss-pseudo-elements@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/tailwindcss-pseudo-elements/-/tailwindcss-pseudo-elements-2.0.0.tgz#778a29b9aafeef89fe2e22efe047ae56822627a3"
+  integrity sha512-cbnF8Rg1tJjsgrUK1sLt/TNAea9zKNhWGTI5NtKxZ8WhYjHCMAGOjaHg+iql8UlXaW1U9jPeyJsGlQsLGrbomQ==
+
 tailwindcss@^3.4.1:
   version "3.4.13"
   resolved "https://registry.npmjs.org/tailwindcss/-/tailwindcss-3.4.13.tgz"

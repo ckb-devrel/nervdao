@@ -22,9 +22,10 @@
     "next": "14.2.10",
     "react": "^18",
     "react-dom": "^18",
+    "react-loader-spinner": "^6.1.6",
     "react-spinners": "^0.14.1",
     "react-tooltip": "^5.28.0",
-    "react-loader-spinner": "^6.1.6"
+    "tailwindcss-pseudo-elements": "^2.0.0"
   },
   "devDependencies": {
     "@types/node": "^20",
