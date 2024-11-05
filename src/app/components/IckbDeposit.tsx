@@ -12,6 +12,8 @@ import { callMelt } from "@/cores/queries";
 const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = ({ ickbData, onUpdate }) => {
     const [amount, setAmount] = useState<string>("");
     const [pendingBalance, setPendingBalance] = useState<string>("");
+    const [meltTBC, setMeltTBC] = useState<boolean>(false);
+    const [transTBC, setTransTBC] = useState<boolean>(false);
     const txInfo = (ickbData && amount.length > 0) ? ickbData?.txBuilder(true, ccc.fixedPointFrom(amount)) : null;
     const signerCcc = ccc.useSigner();
     const [canMelt, setCanMelt] = useState<boolean>(false);
@@ -25,20 +27,23 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
             return
         }
         let progressId, txHash;
+        setTransTBC(true)
         try {
-            // const cccTx = ccc.Transaction.fromLumosSkeleton(txInfo.tx);
-            // const signedTx = await signerCcc.signTransaction(cccTx);
             const cccTx = ccc.Transaction.fromLumosSkeleton(txInfo.tx);
-            // const signedTx = await signerCcc.signTransaction(cccTx);
-
             txHash = await signerCcc.sendTransaction(cccTx);
             progressId = await showNotification("progress", `Deposit in progress!`);
-            //   freezeTxInfo(txInfoFrom({}));
+            
+            await signerCcc.client.waitTransaction(txHash)
+
             onUpdate()
             showNotification("success", `Deposit Success: ${txHash}`);
         } catch (error) {
+            setTransTBC(false)
+            
             setAmount("")
         } finally {
+            setTransTBC(false)
+
             removeNotification(progressId + '')
             setAmount("")
         }
@@ -70,17 +75,26 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
         if (!txMelt || !signerCcc) {
             return
         }
-        let progressId, txHash
+        let progressId, txHash;
+        setMeltTBC(true)
         try {
             const cccTx = ccc.Transaction.fromLumosSkeleton(txMelt.tx);
             txHash = await signerCcc.sendTransaction(cccTx);
             progressId = await showNotification("progress", `Melt in progress!`);
+
+            await signerCcc.client.waitTransaction(txHash)
+            removeNotification(progressId + '')
+
             onUpdate()
+            // setMeltTBC(false)
             showNotification("success", `Melt Success: ${txHash}`);
         } catch (error) {
             showNotification("error", `${error}`);
+
         } finally {
             removeNotification(progressId + '')
+            setMeltTBC(false)
+
         }
     }
     useEffect(() => {
@@ -101,7 +115,7 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
             <div className="flex flex-row font-play mb-4 mt-8 text-left">
                 <div className="basis-1/2">
                     <p className="text-gray-400 mb-2 flex items-center"><span className="w-2 h-2 bg-green-500 mr-2"></span>CKB Available <Info size={16} className="inline-block" data-tooltip-id="my-tooltip" data-tooltip-html="<div>Ckb Balance minus the the CKB locked in Withdrawal requests not yet mature <br />and minus 1000 CKB</div>" /></p>
-                    <p className="text-2xl font-bold font-play mb-4">{(ickbData && ickbData.ckbAvailable !== BigInt('60000000000000000')) ? toText(ickbData?.ckbAvailable) : "-"} <span className="text-base font-normal">CKB</span></p>
+                    <p className="text-2xl font-bold font-play mb-4">{(ickbData && ickbData.ckbAvailable !== BigInt(6)*CKB*CKB) ? toText(ickbData?.ckbAvailable) : "-"} <span className="text-base font-normal">CKB</span></p>
                     {/* <p className="text-2xl font-bold font-play mb-4">{balance} <span className="text-base font-normal">CKB</span></p> */}
 
                 </div>
@@ -118,6 +132,7 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
                             <button
                                 className="font-bold ml-2 bg-btn-gradient text-gray-800 text-body-2 py-1 px-2 rounded-lg hover:bg-btn-gradient-hover transition duration-200 disabled:opacity-50 disabled:hover:bg-btn-gradient"
                                 onClick={() => handleMelt(ickbData.myOrders)}
+                                disabled={!meltTBC}
                             >
                                 Melt
                             </button>
@@ -136,7 +151,7 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
                 <span className="absolute right-4 bottom-2 p-3 flex items-center text-teal-500 cursor-pointer" onClick={handleMax}>
                     MAX
                 </span>
-                <div className="absolute bottom-[-30px] w-full text-center left-0 z-[100]"><div className="rounded-full bg-gray-500 p-1 inline-block"><ArrowDown className="inline-block" size={36} /></div></div>
+                <div className="absolute bottom-[-30px] w-full text-center left-0 z-50"><div className="rounded-full bg-gray-500 p-1 inline-block"><ArrowDown className="inline-block" size={36} /></div></div>
             </div>
             <div className='relative mb-4  bg-gray-700 p-4 rounded'>
                 <label htmlFor="ickb" className="flex items-center px-2">
@@ -194,11 +209,13 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
                         return true;
                     }
                     return amount === "";
-                })()}
+                })()||transTBC}
             >
                 {amount ? 'Swap' : 'Enter an amount'}
 
-            </button></>
+            </button>
+            
+            </>
     );
 };
 

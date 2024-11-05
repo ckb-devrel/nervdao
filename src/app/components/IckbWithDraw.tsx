@@ -11,10 +11,10 @@ import { callMelt } from "@/cores/queries";
 
 const IckbWithDraw: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = ({ ickbData, onUpdate }) => {
     const [amount, setAmount] = useState<string>("");
-    // const [pendingShow, setPendingShow] = useState<boolean>(false);
     const [pendingBalance, setPendingBalance] = useState<string>("-");
     const [canMelt, setCanMelt] = useState<boolean>(false);
-
+    const [meltTBC, setMeltTBC] = useState<boolean>(false);
+    const [transTBC, setTransTBC] = useState<boolean>(false);
     const txInfo = (ickbData && amount.length > 0) ? ickbData?.txBuilder(false, ccc.fixedPointFrom(amount)) : null;
 
     const signerCcc = ccc.useSigner();
@@ -28,14 +28,17 @@ const IckbWithDraw: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }>
         try {
             const cccTx = ccc.Transaction.fromLumosSkeleton(txInfo.tx);
             txHash = await signerCcc.sendTransaction(cccTx);
-            progressId = await showNotification("progress", `Deposit in progress!`);
+            setTransTBC(true)
+            progressId = await showNotification("progress", `WithDraw in progress!`);
+            await signerCcc.client.waitTransaction(txHash)
+            showNotification("success", `WithDraw Success: ${txHash}`);
             onUpdate()
-            showNotification("success", `Deposit Success: ${txHash}`);
         } catch (error) {
-            setAmount("")
+            showNotification("error", `WithDraw Error: ${error}`);
         } finally {
             removeNotification(progressId + '')
             setAmount("")
+            setTransTBC(false)
         }
     }
 
@@ -67,17 +70,26 @@ const IckbWithDraw: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }>
         if (!txMelt || !signerCcc) {
             return
         }
-        let progressId, txHash
+        let progressId, txHash;
+        setMeltTBC(true)
         try {
             const cccTx = ccc.Transaction.fromLumosSkeleton(txMelt.tx);
             txHash = await signerCcc.sendTransaction(cccTx);
             progressId = await showNotification("progress", `Melt in progress!`);
+
+            await signerCcc.client.waitTransaction(txHash)
+            removeNotification(progressId + '')
+
             onUpdate()
+            // setMeltTBC(false)
             showNotification("success", `Melt Success: ${txHash}`);
         } catch (error) {
             showNotification("error", `${error}`);
+
         } finally {
             removeNotification(progressId + '')
+            setMeltTBC(false)
+
         }
     }
     useEffect(() => {
@@ -97,7 +109,7 @@ const IckbWithDraw: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }>
             <div className="flex flex-row font-play mb-4 mt-8 text-left">
                 <div className="basis-1/2">
                     <p className="text-gray-400 mb-2 flex items-center"><span className="w-2 h-2 bg-green-500 mr-2"></span>Withdrawable iCKB</p>
-                    <p className="text-2xl font-bold font-play mb-4">{(ickbData && ickbData.ckbAvailable !== BigInt('30000000000000000')) ? toText(ickbData?.ickbUdtAvailable) : '-'} <span className="text-base font-normal">iCKB</span></p>
+                    <p className="text-2xl font-bold font-play mb-4">{(ickbData && ickbData.ckbAvailable !== BigInt(3)*CKB*CKB) ? toText(ickbData?.ickbUdtAvailable) : '-'} <span className="text-base font-normal">iCKB</span></p>
                 </div>
                 <div className="basis-1/2">
                     <p className="text-gray-400 mb-2 flex items-center">
@@ -161,7 +173,7 @@ const IckbWithDraw: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }>
                         return true;
                     }
                     return amount === "";
-                })()}
+                })()||transTBC}
             >
                 {amount ? 'WithDraw' : 'Enter an amount'}
 
