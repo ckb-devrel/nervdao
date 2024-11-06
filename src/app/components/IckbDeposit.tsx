@@ -7,17 +7,21 @@ import { toText } from "@/utils/stringUtils";
 import { IckbDateType } from "@/cores/utils";
 import { CKB } from "@ickb/lumos-utils";
 import { callMelt } from "@/cores/queries";
+import { TailSpin } from "react-loader-spinner";
 
 
 const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = ({ ickbData, onUpdate }) => {
     const [amount, setAmount] = useState<string>("");
-    const [pendingBalance, setPendingBalance] = useState<string>("");
+    const [pendingBalance, setPendingBalance] = useState<string>("0");
     const [meltTBC, setMeltTBC] = useState<boolean>(false);
     const [transTBC, setTransTBC] = useState<boolean>(false);
     const txInfo = (ickbData && amount.length > 0) ? ickbData?.txBuilder(true, ccc.fixedPointFrom(amount)) : null;
     const signerCcc = ccc.useSigner();
     const [canMelt, setCanMelt] = useState<boolean>(false);
     const { showNotification, removeNotification } = useNotification();
+    const [balance, setBalance] = useState<BigInt>(BigInt(0));
+    const [depositPending, setDepositPending] = useState<boolean>(false);
+
     async function handleSwap() {
         if (!txInfo || !signerCcc) {
             return
@@ -32,18 +36,16 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
             const cccTx = ccc.Transaction.fromLumosSkeleton(txInfo.tx);
             txHash = await signerCcc.sendTransaction(cccTx);
             progressId = await showNotification("progress", `Deposit in progress!`);
-            
+            setDepositPending(true)
             await signerCcc.client.waitTransaction(txHash)
-
             onUpdate()
             showNotification("success", `Deposit Success: ${txHash}`);
         } catch (error) {
-            setTransTBC(false)
-            
-            setAmount("")
+            showNotification("error", `${error}`);
+
         } finally {
             setTransTBC(false)
-
+            setDepositPending(false)
             removeNotification(progressId + '')
             setAmount("")
         }
@@ -61,9 +63,10 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
         return `${toText(convertedAmount)}`;
     }
 
-    const handleMax = async () => {
-        if (!ickbData) return;
-        setAmount(ccc.fixedPointToString(ickbData?.ckbAvailable));
+    const handleMax = () => {
+        if (!balance) return;
+        // console.log(Number(balance) - 1000 * Number(CKB))
+        setAmount(ccc.fixedPointToString(Number(balance) - 1000));
     };
     const handleAmountChange = (e: { target: { value: React.SetStateAction<string>; }; }) => {
 
@@ -102,26 +105,38 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
         let pending = 0;
         let canMelt = false
         ickbData.myOrders.map(item => {
-            pending += ickbData.myOrders[0].info.isCkb2Udt ? 0:Number(item.info.absProgress / CKB / CKB) ;
+            pending += ickbData.myOrders[0].info.isCkb2Udt ? 0 : Number(item.info.absProgress / CKB / CKB);
             (item.info.absTotal === item.info.absProgress) ? (canMelt = true) : (canMelt = false)
         })
-        setCanMelt(canMelt&&!ickbData.myOrders[0].info.isCkb2Udt)
+        setCanMelt(canMelt && !ickbData.myOrders[0].info.isCkb2Udt)
         setPendingBalance(toText(BigInt(pending)) || '-');
-
-    }, [ickbData]);
-
+        (async () => {
+            if (!signerCcc) return;
+            const balance = await signerCcc.getBalance();
+            if (balance > 0 && pending > 0) {
+                setBalance(balance - BigInt(pending));
+            }
+        })();
+    }, [ickbData, signerCcc, meltTBC]);
+    // useEffect(() => {
+    //     (async () => {
+    //         if (!signerCcc) return;
+    //         const balance = await signerCcc.getBalance();
+    //         setBalance(balance / BigInt(CKB));
+    //     })();
+    // }, [signerCcc, ickbData, pendingBalance]);
     return (
         <>
             <div className="flex flex-row font-play mb-4 mt-8 text-left">
                 <div className="basis-1/2">
-                    <p className="text-gray-400 mb-2 flex items-center"><span className="w-2 h-2 bg-green-500 mr-2"></span>CKB Available <Info size={16} className="inline-block" data-tooltip-id="my-tooltip" data-tooltip-html="<div>Ckb Balance minus the the CKB locked in Withdrawal requests not yet mature <br />and minus 1000 CKB</div>" /></p>
-                    <p className="text-2xl font-bold font-play mb-4">{(ickbData && ickbData.ckbAvailable !== BigInt(6)*CKB*CKB) ? toText(ickbData?.ckbAvailable) : "-"} <span className="text-base font-normal">CKB</span></p>
-                    {/* <p className="text-2xl font-bold font-play mb-4">{balance} <span className="text-base font-normal">CKB</span></p> */}
+                    <p className="text-gray-400 mb-2 flex items-center"><span className="w-2 h-2 bg-green-500 mr-2"></span>CKB Available </p>
+                    {/* <p className="text-2xl font-bold font-play mb-4">{(ickbData && ickbData.ckbAvailable !== BigInt(6)*CKB*CKB) ? toText(ickbData?.ckbAvailable) : "-"} <span className="text-base font-normal">CKB</span></p> */}
+                    <p className="text-2xl font-bold font-play mb-4">{balance ? ccc.fixedPointToString(ccc.fixedPointFrom(balance.toString())) : '-'} <span className="text-base font-normal">CKB</span></p>
 
                 </div>
                 <div className="basis-1/2">
                     <p className="text-gray-400 mb-2 flex items-center">
-                        <span className={ "w-2 h-2 bg-yellow-500 mr-2"}></span>
+                        <span className={"w-2 h-2 bg-yellow-500 mr-2"}></span>
                         Pending
                     </p>
                     <p className="text-2xl font-bold font-play mb-4 flex  items-center">
@@ -132,14 +147,13 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
                             <button
                                 className="font-bold ml-2 bg-btn-gradient text-gray-800 text-body-2 py-1 px-2 rounded-lg hover:bg-btn-gradient-hover transition duration-200 disabled:opacity-50 disabled:hover:bg-btn-gradient"
                                 onClick={() => handleMelt(ickbData.myOrders)}
-                                disabled={!meltTBC}
+                                disabled={meltTBC}
                             >
                                 Melt
                             </button>
                         }
                     </p>
                 </div>
-
             </div>
             <div className='relative mb-4  bg-gray-700 p-4 rounded'>
                 <label className="flex px-2 items-center"><img src="/svg/icon-ckb.svg" alt="CKB" className="mr-2" /> CKB</label>
@@ -149,7 +163,7 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
                     onChange={handleAmountChange}
                     placeholder="0" />
                 <span className="absolute right-4 bottom-2 p-3 flex items-center text-teal-500 cursor-pointer" onClick={handleMax}>
-                    MAX
+                    MAX <Info size={16} className="inline-block ml-2" data-tooltip-id="my-tooltip" data-tooltip-html="<div>Ckb Balance minus 1000 CKB </div>" />
                 </span>
                 <div className="absolute bottom-[-30px] w-full text-center left-0 z-50"><div className="rounded-full bg-gray-500 p-1 inline-block"><ArrowDown className="inline-block" size={36} /></div></div>
             </div>
@@ -209,13 +223,25 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
                         return true;
                     }
                     return amount === "";
-                })()||transTBC}
+                })() || transTBC}
             >
-                {amount ? 'Swap' : 'Enter an amount'}
+                {transTBC ? (<>
+                    <TailSpin
+                        height="20"
+                        width="20"
+                        color="#333333"
+                        ariaLabel="tail-spin-loading"
+                        radius="1"
+                        wrapperStyle={{ 'display': 'inline-block', 'marginRight': '10px' }}
+                        wrapperClass="inline-block"
+                    /> {depositPending ? 'pending' : 'To be confirmed'}
+                </>) :
 
+                    <>{amount ? 'Swap' : 'Enter an amount'}
+                    </>}
             </button>
-            
-            </>
+
+        </>
     );
 };
 
