@@ -29,8 +29,8 @@ const IckbWithDraw: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }>
             const cccTx = ccc.Transaction.fromLumosSkeleton(txInfo.tx);
             txHash = await signerCcc.sendTransaction(cccTx);
             setTransTBC(true)
-            progressId = await showNotification("progress", `WithDraw in progress!`);
-            await signerCcc.client.waitTransaction(txHash)
+            progressId = await showNotification("progress", `WithDraw in progress, wait for 60s`);
+            await signerCcc.client.waitTransaction(txHash, 0, 60000)
             showNotification("success", `WithDraw Success: ${txHash}`);
             onUpdate()
         } catch (error) {
@@ -60,9 +60,7 @@ const IckbWithDraw: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }>
     };
     const handleAmountChange = (e: { target: { value: React.SetStateAction<string>; }; }) => {
 
-        if (!/^-?\d+(\.\d+)?$/.test(e.target.value + '')) {
-            return
-        }
+
         setAmount(e.target.value)
     }
     const handleMelt = async (orders: MyOrder[]) => {
@@ -75,9 +73,9 @@ const IckbWithDraw: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }>
         try {
             const cccTx = ccc.Transaction.fromLumosSkeleton(txMelt.tx);
             txHash = await signerCcc.sendTransaction(cccTx);
-            progressId = await showNotification("progress", `Melt in progress!`);
+            progressId = await showNotification("progress", `Melt in progress, wait for 60s`);
 
-            await signerCcc.client.waitTransaction(txHash)
+            await signerCcc.client.waitTransaction(txHash, 0, 60000)
             removeNotification(progressId + '')
 
             onUpdate()
@@ -93,23 +91,26 @@ const IckbWithDraw: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }>
         }
     }
     useEffect(() => {
-        if (!ickbData || ickbData?.myOrders.length < 1) return;
+        if (!ickbData) return;
         let pending = 0;
         let canMelt = false
-        ickbData.myOrders.map(item => {
-            pending += ickbData.myOrders[0].info.isCkb2Udt ? Number(item.info.absProgress / CKB / CKB) : 0;
-            (item.info.absTotal === item.info.absProgress) ? (canMelt = true) : (canMelt = false)
-        })
+        if (ickbData.myOrders.length > 0) {
+            ickbData.myOrders.map(item => {
+                pending += ickbData.myOrders[0].info.isCkb2Udt ? Number(item.info.absProgress / CKB / CKB) : 0;
+                (item.info.absTotal === item.info.absProgress) ? (canMelt = true) : (canMelt = false)
+            })
+        }
         setCanMelt(canMelt && ickbData.myOrders[0].info.isCkb2Udt)
         setPendingBalance(toText(BigInt(pending)) || '-');
 
     }, [ickbData, meltTBC]);
+
     return (
         <>
             <div className="flex flex-row font-play mb-4 mt-8 text-left">
                 <div className="basis-1/2">
                     <p className="text-gray-400 mb-2 flex items-center"><span className="w-2 h-2 bg-green-500 mr-2"></span>Withdrawable iCKB</p>
-                    <p className="text-2xl font-bold font-play mb-4">{(ickbData && ickbData.ckbAvailable !== BigInt(3) * CKB * CKB) ? toText(ickbData?.ickbUdtAvailable) : '-'} <span className="text-base font-normal">iCKB</span></p>
+                    <p className="text-2xl font-bold font-play mb-4">{(ickbData && ickbData.ckbAvailable !== BigInt(3) * CKB * CKB) ? toText(ickbData?.ickbRealUdtBalance) : '-'} <span className="text-base font-normal">iCKB</span></p>
                 </div>
                 <div className="basis-1/2">
                     <p className="text-gray-400 mb-2 flex items-center">

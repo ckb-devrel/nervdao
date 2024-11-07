@@ -7,10 +7,10 @@ import SkeletonLoader from "./SkeletonLoader";
 import { IckbDateType } from "@/cores/utils";
 
 
-const IckbStatus: React.FC<{ ickbData:IckbDateType }> = ({ ickbData }) => {
+const IckbStatus: React.FC<{ ickbData: IckbDateType }> = ({ ickbData }) => {
   const [apy, setApy] = useState("-");
   const [isLoadingBalance, setIsLoadingBalance] = useState(true);
- 
+
 
   const signer = ccc.useSigner();
   useEffect(() => {
@@ -64,15 +64,15 @@ const IckbStatus: React.FC<{ ickbData:IckbDateType }> = ({ ickbData }) => {
             <span>Total Liquidity</span>
           </div>
           <div className="flex justify-between items-center mt-1 font-play text-white text-lg font-bold">
-            <span>{ickbData?parseFloat((Number(ickbData.ickbUdtPoolBalance)/100000000).toString()).toFixed(2):'-'} iCKB</span>
+            <span>{ickbData ? parseFloat((Number(ickbData.ickbUdtPoolBalance) / 100000000).toString()).toFixed(2) : '-'} iCKB</span>
           </div>
         </div>
         <div className="bg-gray-800 relative rounded-lg p-3 pr-5 mb-2 w-[30%]">
           <div className="flex justify-between items-center font-work-sans text-gray-400">
-            <span>Pool Balance <Info size={16} className="inline-block" data-tooltip-id="my-tooltip" data-tooltip-content="Pool Balance" /></span>
+            <span>Pool Balance <Info size={16} className="inline-block" data-tooltip-id="my-tooltip" data-tooltip-content="iCKB NervDao Balance" /></span>
           </div>
           <div className="flex justify-between items-center mt-1 font-play text-white text-lg font-bold">
-            <span>{ickbData?parseFloat((Number(ickbData.ickbDaoBalance)/100000000).toString()).toFixed(2):'-'} CKB</span>
+            <span>{ickbData ? parseFloat((Number(ickbData.ickbDaoBalance) / 100000000).toString()).toFixed(2) : '-'} CKB</span>
           </div>
         </div>
         <div className="bg-gray-800 relative rounded-lg p-3 pr-5 mb-2 w-[30%]">

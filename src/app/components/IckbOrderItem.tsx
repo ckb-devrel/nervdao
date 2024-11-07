@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { ArrowUp, Download,Info } from "lucide-react";
+import { ArrowUp, Download, Info } from "lucide-react";
 import { WalletConfig } from "@/cores/config";
 import { HexNumber } from "@ckb-lumos/base";
 import { getHeadersByNumber } from "@/cores/queries";
@@ -12,7 +12,7 @@ interface IckbOrderItemItemProps {
         progress: bigint;
         blockNumber: string | undefined;
         isCkb2Udt: boolean;
-       
+
     }
 }
 export function IckbOrderItem({
@@ -37,29 +37,29 @@ export function IckbOrderItem({
             <div className="flex items-center">
                 <div className={item.isCkb2Udt ? "bg-cyan-600 rounded-full p-2 mr-3" : "bg-green-600 rounded-full p-2 mr-3"}>
                     {item.isCkb2Udt ? <Download className="w-4 h-4" /> : <ArrowUp className="w-4 h-4" />}
-                   
+
                 </div>
                 <div>
-                    <p className="text-white font-work-sans text-body-2 flex items-center"> {item.isCkb2Udt ? "Swap to iCKB" : "Withdraw CKB"}  
-                     <a data-tooltip-id="my-tooltip" data-tooltip-content={item.isCkb2Udt?"需要等待做市商吃单":"余额会在下一次操作时自动提取"}>
-                        <Info className="w-4 h-4 cursor-pointer ml-2" />
-                    </a>
+                    <p className="text-white font-work-sans text-body-2 flex items-center"> {item.isCkb2Udt ? "Swap to iCKB" : "Withdraw CKB"}
+                        <a data-tooltip-id="my-tooltip" data-tooltip-content={item.isCkb2Udt ? "Should wait market maker to take" : "Automatically withdraw while in the next operation"}>
+                            <Info className="w-4 h-4 cursor-pointer ml-2" />
+                        </a>
                     </p>
                     <p className="text-gray-400 font-work-sans text-sm">{orderDate}</p>
                 </div>
             </div>
             <div className="text-white font-work-sans text-body-2 flex items-center" >
                 <div className="mr-4">
-                    <p className="text-gray-400">{(item.progress===item.total) ?'Complete':'Pending'}</p>
+                    <p className="text-gray-400">{(item.progress === item.total) ? 'Complete' : 'Pending'}</p>
                     {/* <p className="text-2xl font-bold font-play mb-4">{ickbData ? toText(ickbData?.ckbAvailable):"-"} <span className="text-base font-normal">CKB</span></p> */}
                     <p className="text-base font-bold font-play ">
-                        {parseFloat((Number(item.progress)/1000000000000000000000000).toString()).toFixed(2)} 
-                        / 
-                        {parseFloat((Number(item.total)/1000000000000000000000000).toString()).toFixed(2)} 
+                        {parseFloat((Number(item.progress) / 1000000000000000000000000).toString()).toFixed(2)}
+                        /
+                        {parseFloat((Number(item.total) / 1000000000000000000000000).toString()).toFixed(2)}
                         {item.isCkb2Udt ? 'iCKB' : 'CKB'}</p>
                 </div>
                 <CircularProgress
-                    percentage={Number(item.progress)/Number(item.total)*100}
+                    percentage={Number(item.progress) / Number(item.total) * 100}
                     size={48}
                     strokeWidth={3}
                     progressColor={'#3CFF97'}

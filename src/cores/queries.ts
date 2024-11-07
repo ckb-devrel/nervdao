@@ -225,7 +225,12 @@ async function getL1State(walletConfig: WalletConfig) {
 
     // Calculate total and real ickb udt liquidity
     const ickbUdtPoolBalance = await getTotalUdtCapacity(walletConfig);
-    const ickbRealUdtBalance = await getUserUdtBalance(walletConfig);
+    let ickbRealUdtBalance = ickbUdtAvailable;
+    myOrders.forEach((order) => {
+        if (order.info.isCkb2Udt) {
+            ickbRealUdtBalance -= order.info.absProgress / CKB / CKB;
+        }
+    });
 
     return {
         ickbDaoBalance,
@@ -240,12 +245,12 @@ async function getL1State(walletConfig: WalletConfig) {
         hasMatchable,
     };
 }
-export async function callMelt(myOrders:MyOrder[]){
+export async function callMelt(myOrders: MyOrder[]) {
     const walletConfig = getWalletConfig();
-    const {rpc} = walletConfig
+    const { rpc } = walletConfig
     const feeRatePromise = rpc.getFeeRate(BigInt(1));
     const feeRate = BigInt(Number(await feeRatePromise) + 1000);
-    return meltOrder(myOrders,feeRate,walletConfig)
+    return meltOrder(myOrders, feeRate, walletConfig)
 }
 
 async function getTotalUdtCapacity(walletConfig: WalletConfig): Promise<bigint> {

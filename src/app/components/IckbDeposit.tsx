@@ -20,6 +20,7 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
     const [canMelt, setCanMelt] = useState<boolean>(false);
     const { showNotification, removeNotification } = useNotification();
     const [balance, setBalance] = useState<BigInt>(BigInt(0));
+    const [balanceShow, setBalanceShow] = useState<string>("");
     const [depositPending, setDepositPending] = useState<boolean>(false);
 
     async function handleSwap() {
@@ -35,9 +36,9 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
         try {
             const cccTx = ccc.Transaction.fromLumosSkeleton(txInfo.tx);
             txHash = await signerCcc.sendTransaction(cccTx);
-            progressId = await showNotification("progress", `Deposit in progress!`);
+            progressId = await showNotification("progress", `Deposit in progress, wait for 60s`);
             setDepositPending(true)
-            await signerCcc.client.waitTransaction(txHash)
+            await signerCcc.client.waitTransaction(txHash, 0, 60000);
             onUpdate()
             showNotification("success", `Deposit Success: ${txHash}`);
         } catch (error) {
@@ -66,7 +67,8 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
     const handleMax = () => {
         if (!balance) return;
         // console.log(Number(balance) - 1000 * Number(CKB))
-        setAmount(ccc.fixedPointToString(Number(balance) - 1000));
+        console.log(ccc.fixedPointToString(Number(balance) - 1000 * Number(CKB)))
+        setAmount(ccc.fixedPointToString(BigInt(Number(balance) - 1000 * Number(CKB))));
     };
     const handleAmountChange = (e: { target: { value: React.SetStateAction<string>; }; }) => {
 
@@ -83,9 +85,9 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
         try {
             const cccTx = ccc.Transaction.fromLumosSkeleton(txMelt.tx);
             txHash = await signerCcc.sendTransaction(cccTx);
-            progressId = await showNotification("progress", `Melt in progress!`);
+            progressId = await showNotification("progress", `Melt in progress, wait for 60s`);
 
-            await signerCcc.client.waitTransaction(txHash)
+            await signerCcc.client.waitTransaction(txHash, 0, 60000)
             removeNotification(progressId + '')
 
             onUpdate()
@@ -101,21 +103,23 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
         }
     }
     useEffect(() => {
-        if (!ickbData || ickbData?.myOrders.length < 1) return;
+        if (!ickbData) return;
         let pending = 0;
-        let canMelt = false
-        ickbData.myOrders.map(item => {
-            pending += ickbData.myOrders[0].info.isCkb2Udt ? 0 : Number(item.info.absProgress / CKB / CKB);
-            (item.info.absTotal === item.info.absProgress) ? (canMelt = true) : (canMelt = false)
-        })
+        let canMelt = false;
+        if (ickbData.myOrders.length > 0) {
+            ickbData.myOrders.map(item => {
+                pending += ickbData.myOrders[0].info.isCkb2Udt ? 0 : Number(item.info.absProgress / CKB / CKB);
+                (item.info.absTotal === item.info.absProgress) ? (canMelt = true) : (canMelt = false)
+            })
+        }
+
         setCanMelt(canMelt && !ickbData.myOrders[0].info.isCkb2Udt)
         setPendingBalance(toText(BigInt(pending)) || '-');
         (async () => {
             if (!signerCcc) return;
             const balance = await signerCcc.getBalance();
-            if (balance > 0 && pending > 0) {
-                setBalance(balance - BigInt(pending));
-            }
+            setBalance(balance);
+            setBalanceShow(ccc.fixedPointToString(balance));
         })();
     }, [ickbData, signerCcc, meltTBC]);
     // useEffect(() => {
@@ -131,7 +135,7 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
                 <div className="basis-1/2">
                     <p className="text-gray-400 mb-2 flex items-center"><span className="w-2 h-2 bg-green-500 mr-2"></span>CKB Available </p>
                     {/* <p className="text-2xl font-bold font-play mb-4">{(ickbData && ickbData.ckbAvailable !== BigInt(6)*CKB*CKB) ? toText(ickbData?.ckbAvailable) : "-"} <span className="text-base font-normal">CKB</span></p> */}
-                    <p className="text-2xl font-bold font-play mb-4">{balance ? ccc.fixedPointToString(ccc.fixedPointFrom(balance.toString())) : '-'} <span className="text-base font-normal">CKB</span></p>
+                    <p className="text-2xl font-bold font-play mb-4">{balance ? balanceShow : '-'} <span className="text-base font-normal">CKB</span></p>
 
                 </div>
                 <div className="basis-1/2">
