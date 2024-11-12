@@ -4,6 +4,7 @@ import { WalletConfig } from "@/cores/config";
 import { HexNumber } from "@ckb-lumos/base";
 import { getHeadersByNumber } from "@/cores/queries";
 import CircularProgress from "./CircularProgress";
+import { CKB } from "@ickb/lumos-utils";
 
 interface IckbOrderItemItemProps {
     walletConfig: WalletConfig
@@ -12,7 +13,6 @@ interface IckbOrderItemItemProps {
         progress: bigint;
         blockNumber: string | undefined;
         isCkb2Udt: boolean;
-
     }
 }
 export function IckbOrderItem({
@@ -40,7 +40,7 @@ export function IckbOrderItem({
 
                 </div>
                 <div>
-                    <p className="text-white font-work-sans text-body-2 flex items-center"> {item.isCkb2Udt ? "Swap to iCKB" : "Withdraw CKB"}
+                    <p className="text-white font-work-sans text-body-2 flex items-center"> {item.isCkb2Udt ? "Swap CKB to iCKB" : "Withdraw CKB from iCKB"}
                         <a data-tooltip-id="my-tooltip" data-tooltip-content={item.isCkb2Udt ? "Should wait market maker to take" : "Automatically withdraw while in the next operation"}>
                             <Info className="w-4 h-4 cursor-pointer ml-2" />
                         </a>
@@ -53,10 +53,10 @@ export function IckbOrderItem({
                     <p className="text-gray-400">{(item.progress === item.total) ? 'Complete' : 'Pending'}</p>
                     {/* <p className="text-2xl font-bold font-play mb-4">{ickbData ? toText(ickbData?.ckbAvailable):"-"} <span className="text-base font-normal">CKB</span></p> */}
                     <p className="text-base font-bold font-play ">
-                        {parseFloat((Number(item.progress) / 1000000000000000000000000).toString()).toFixed(2)}
+                        {parseFloat((Number(item.progress / CKB)).toString()).toFixed(2)}
                         /
-                        {parseFloat((Number(item.total) / 1000000000000000000000000).toString()).toFixed(2)}
-                        {item.isCkb2Udt ? 'iCKB' : 'CKB'}</p>
+                        {parseFloat((Number(item.total / CKB)).toString()).toFixed(2)}
+                        {item.isCkb2Udt ? ' CKB' : ' iCKB'}</p>
                 </div>
                 <CircularProgress
                     percentage={Number(item.progress) / Number(item.total) * 100}

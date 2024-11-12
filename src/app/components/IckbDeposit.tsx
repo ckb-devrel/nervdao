@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { ccc } from "@ckb-ccc/connector-react";
 import { useNotification } from "@/context/NotificationProvider";
-import { ckb2Ickb, MyOrder } from "@ickb/v1-core";
+import { ckb2Ickb } from "@ickb/v1-core";
 import { Info, ArrowDown, TriangleAlert } from "lucide-react";
 import { toText } from "@/utils/stringUtils";
 import { IckbDateType } from "@/cores/utils";
 import { CKB } from "@ickb/lumos-utils";
-import { callMelt } from "@/cores/queries";
 import { TailSpin } from "react-loader-spinner";
 
 
@@ -15,7 +14,7 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
     const [pendingBalance, setPendingBalance] = useState<string>("0");
     const [meltTBC, setMeltTBC] = useState<boolean>(false);
     const [transTBC, setTransTBC] = useState<boolean>(false);
-    const txInfo = (ickbData && amount.length > 0) ? ickbData?.txBuilder(true, ccc.fixedPointFrom(amount)) : null;
+    const txInfo = (ickbData && amount.length > 0) ? ickbData?.txBuilder("ckb2ickb", ccc.fixedPointFrom(amount)) : null;
     const signerCcc = ccc.useSigner();
     const [canMelt, setCanMelt] = useState<boolean>(false);
     const { showNotification, removeNotification } = useNotification();
@@ -58,9 +57,9 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
         if (!ickbData?.tipHeader) {
             return
         }
-        let [convertedAmount] = [ckb2Ickb(amount, ickbData?.tipHeader)]
+        const [convertedAmount] = [ckb2Ickb(amount, ickbData?.tipHeader, false)]
         //Worst case scenario is a 0.1% fee for bot
-        convertedAmount -= convertedAmount / BigInt(1000);
+        // convertedAmount -= convertedAmount / BigInt(1000);
         return `${toText(convertedAmount)}`;
     }
 
@@ -68,15 +67,16 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
         if (!balance) return;
         // console.log(Number(balance) - 1000 * Number(CKB))
         console.log(ccc.fixedPointToString(Number(balance) - 1000 * Number(CKB)))
-        setAmount(ccc.fixedPointToString(BigInt(Number(balance) - 1000 * Number(CKB))));
+        const maxBalance = BigInt(Number(balance) - 1000 * Number(CKB)) + (ickbData ? ickbData.ckbPendingBalance : BigInt(0));
+        setAmount(ccc.fixedPointToString(maxBalance));
     };
     const handleAmountChange = (e: { target: { value: React.SetStateAction<string>; }; }) => {
 
 
         setAmount(e.target.value)
     }
-    const handleMelt = async (orders: MyOrder[]) => {
-        const txMelt = await callMelt(orders)
+    const handleMelt = async () => {
+        const txMelt = ickbData?.txBuilder("melt", BigInt(0));
         if (!txMelt || !signerCcc) {
             return
         }
@@ -104,20 +104,13 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
     }
     useEffect(() => {
         if (!ickbData) return;
-        let pending = 0;
-        let canMelt = false;
-        if (ickbData.myOrders.length > 0) {
-            ickbData.myOrders.map(item => {
-                pending += ickbData.myOrders[0].info.isCkb2Udt ? 0 : Number(item.info.absProgress / CKB / CKB);
-                (item.info.absTotal === item.info.absProgress) ? (canMelt = true) : (canMelt = false)
-            })
-        }
-
-        setCanMelt(canMelt && !ickbData.myOrders[0].info.isCkb2Udt)
+        const canMelt = ickbData.ckbPendingBalance > BigInt(0);
+        const pending = ickbData.ckbPendingBalance;
+        setCanMelt(canMelt);
         setPendingBalance(toText(BigInt(pending)) || '-');
         (async () => {
             if (!signerCcc) return;
-            console.log(111,balance)
+            console.log(111, balance)
             const balanceCCC = await signerCcc.getBalance();
             setBalance(balanceCCC);
             setBalanceShow(ccc.fixedPointToString(balanceCCC));
@@ -151,7 +144,7 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
                         {ickbData && canMelt &&
                             <button
                                 className="font-bold ml-2 bg-btn-gradient text-gray-800 text-body-2 py-1 px-2 rounded-lg hover:bg-btn-gradient-hover transition duration-200 disabled:opacity-50 disabled:hover:bg-btn-gradient"
-                                onClick={() => handleMelt(ickbData.myOrders)}
+                                onClick={() => handleMelt()}
                                 disabled={meltTBC}
                             >
                                 Melt
@@ -179,19 +172,19 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
                 </label>
                 <input className="w-full text-left border-none hover:border-none focus:border-none bg-gray-700 text-lg mt-1 p-3 pr-16"
                     type="text"
-                    value={amount && approxConversion(BigInt(Math.trunc(parseFloat(amount) * 100000000)))}
+                    value={amount && approxConversion(BigInt(Math.trunc(parseFloat(amount) * Number(CKB))))}
                     id="ickb"
                     readOnly
                     placeholder="0" />
 
             </div>
             <p className="text-center text-large font-bold text-center text-cyan-500 mb-4 pb-2 ">
-                1 CKB ≈ {ickbData?.tipHeader && approxConversion(BigInt(1 * 100000000))}iCKB
+                1 CKB ≈ {ickbData?.tipHeader && approxConversion(CKB)}iCKB
             </p>
             <div className="flex justify-between my-3 text-base">
                 <span>You will Receive <Info size={16} className="inline-block" data-tooltip-id="my-tooltip" data-tooltip-content="receive info" /></span>
                 {/* 扣除0.1% 交易bot fee */}
-                <span>{amount ? <>≈{approxConversion(BigInt(Math.trunc(parseFloat(amount) * 99900000)))} iCKB</> : 'Calculated after entry'}</span>
+                <span>{amount ? <>≈{approxConversion(BigInt(Math.trunc(parseFloat(amount) * Number(CKB)/*99900000*/)))} iCKB</> : 'Calculated after entry'}</span>
             </div>
             {txInfo && Number(amount) > 0 &&
                 <div className="rounded border-1 border-yellow-500 p-4 bg-yellow-500/[.12]  my-3">
