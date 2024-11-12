@@ -9,33 +9,40 @@ import { helpers } from "@ckb-lumos/lumos";
 import { queryOptions } from "@tanstack/react-query";
 import {
     CKB,
+    ConfigAdapter,
+    I8Cell,
     I8Header,
     Uint128,
     capacitySifter,
     ckbDelta,
+    headerDeps,
     hex,
     maturityDiscriminator,
     max,
+    scriptEq,
     shuffle,
     since,
 } from "@ickb/lumos-utils";
 import {
     addWithdrawalRequestGroups,
+    ckb2Ickb,
     ickbDelta,
     ickbLogicScript,
     ickbPoolSifter,
     ickbSifter,
     ickbUdtType,
     limitOrderScript,
-    MyOrder,
     orderSifter,
     ownedOwnerScript,
+    ReceiptData,
 } from "@ickb/v1-core";
 import {
+    IckbDirection,
     maxWaitTime,
+    MyReceipt,
     txInfoFrom,
 } from "./utils";
-import { addChange, base, convert, meltOrder } from "./transaction";
+import { addChange, base, convert } from "./transaction";
 import type { Cell, Header, HexNumber, Transaction } from "@ckb-lumos/base";
 import { parseAbsoluteEpochSince } from "@ckb-lumos/base/lib/since";
 import { getWalletConfig, type WalletConfig } from "./config";
@@ -56,6 +63,7 @@ export function l1StateOptions(isFrozen: boolean) {
         queryFn: async () => {
             try {
                 const data = await getL1State(walletConfig);
+                console.log(data);
                 return data
             } catch (e) {
                 console.log(e);
@@ -66,8 +74,11 @@ export function l1StateOptions(isFrozen: boolean) {
             ickbUdtPoolBalance: BigInt(-1),
             ickbDaoBalance: BigInt(-1),
             myOrders: [],
+            myReceipts: [],
             ckbBalance: BigInt(-1),
             ickbRealUdtBalance: BigInt(-1),
+            ickbPendingBalance: BigInt(-1),
+            ckbPendingBalance: BigInt(-1),
             ckbAvailable: BigInt(6) * CKB * CKB,
             ickbUdtAvailable: BigInt(3) * CKB * CKB,
             tipHeader: headerPlaceholder,
@@ -171,6 +182,7 @@ async function getL1State(walletConfig: WalletConfig) {
         wrGroups: mature,
     });
 
+    const myReceipts = convertReceipts(receipts, config);
     const ickbUdtBalance = ickbDelta(baseTx, config);
     const ickbUdtAvailable = ickbUdtBalance;
 
@@ -201,22 +213,25 @@ async function getL1State(walletConfig: WalletConfig) {
     }
 
     const feeRate = BigInt(Number(await feeRatePromise) + 1000);
-    const txBuilder = (isCkb2Udt: boolean, amount: bigint) => {
+    const txBuilder = (direction: IckbDirection, amount: bigint) => {
         const txInfo = txInfoFrom({ tx: baseTx, info });
 
-        if (amount > BigInt(0)) {
-            return convert(
-                txInfo,
-                isCkb2Udt,
-                amount,
-                ickbPool,
-                tipHeader,
-                feeRate,
-                walletConfig,
-            );
+        if (direction === "ckb2ickb" || direction === "ickb2ckb") {
+            const isCkb2Udt = direction === "ckb2ickb";
+            if (amount > BigInt(0)) {
+                return convert(
+                    txInfo,
+                    isCkb2Udt,
+                    amount,
+                    ickbPool,
+                    tipHeader,
+                    feeRate,
+                    walletConfig,
+                );
+            }
         }
 
-        if (txConsumesIntermediate) {
+        if (txConsumesIntermediate || direction === "melt") {
             return addChange(txInfo, feeRate, walletConfig);
         }
 
@@ -228,29 +243,66 @@ async function getL1State(walletConfig: WalletConfig) {
     let ickbRealUdtBalance = ickbUdtAvailable;
     myOrders.forEach((order) => {
         if (order.info.isCkb2Udt) {
-            ickbRealUdtBalance -= order.info.absProgress / CKB / CKB;
+            const multiplier = order.info.ckbToUdt.udtMultiplier;
+            const ickbValue = order.info.absTotal / multiplier;
+            ickbRealUdtBalance -= ickbValue;
+        } else {
+            const multiplier = order.info.udtToCkb.udtMultiplier;
+            const ickbValue = (order.info.absTotal - order.info.absProgress) / multiplier;
+            ickbRealUdtBalance -= ickbValue;
         }
     });
+    myReceipts.forEach((receipt) => {
+        ickbRealUdtBalance -= receipt.ickbAmount;
+    });
+
+    // Calculate pending udt and ckb
+    let ckbPendingBalance = BigInt(0);
+    myOrders.forEach((item) => {
+        if (item.info.isUdt2Ckb && item.info.absTotal === item.info.absProgress) {
+            ckbPendingBalance += item.info.ckbAmount;
+        }
+    });
+    let ickbPendingBalance = BigInt(0);
+    myOrders.forEach((item) => {
+        if (item.info.isCkb2Udt && item.info.absTotal === item.info.absProgress) {
+            ickbPendingBalance += item.info.udtAmount;
+        }
+    })
 
     return {
         ickbDaoBalance,
         ickbUdtPoolBalance,
         myOrders,
+        myReceipts,
         ckbBalance,
         ickbRealUdtBalance,
         ckbAvailable,
+        ickbPendingBalance,
+        ckbPendingBalance,
         ickbUdtAvailable,
         tipHeader,
         txBuilder,
         hasMatchable,
     };
 }
-export async function callMelt(myOrders: MyOrder[]) {
-    const walletConfig = getWalletConfig();
-    const { rpc } = walletConfig
-    const feeRatePromise = rpc.getFeeRate(BigInt(1));
-    const feeRate = BigInt(Number(await feeRatePromise) + 1000);
-    return meltOrder(myOrders, feeRate, walletConfig)
+
+function convertReceipts(receipts: I8Cell[], config: ConfigAdapter): MyReceipt[] {
+    const ickbLogic = ickbLogicScript(config);
+    return receipts.filter((c) => {
+        return scriptEq(c.cellOutput.type, ickbLogic);
+    }).map((c) => {
+        const header = c.cellOutput.type![headerDeps][0];
+        const { depositQuantity: quantity, depositAmount: amount } =
+            ReceiptData.unpack(c.data);
+        const ickbValue = ckb2Ickb(amount, header, false) * BigInt(quantity);
+        return {
+            receiptCell: c,
+            depositQuantity: quantity,
+            depositAmount: amount,
+            ickbAmount: ickbValue,
+        }
+    });
 }
 
 async function getTotalUdtCapacity(walletConfig: WalletConfig): Promise<bigint> {

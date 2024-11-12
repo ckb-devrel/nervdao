@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { ccc } from "@ckb-ccc/connector-react";
 import { useNotification } from "@/context/NotificationProvider";
-import { ickb2Ckb, MyOrder } from "@ickb/v1-core";
+import { ickb2Ckb } from "@ickb/v1-core";
 import { Info, TriangleAlert } from "lucide-react";
 import { toText } from "@/utils/stringUtils";
 import { IckbDateType } from "@/cores/utils";
@@ -16,7 +16,7 @@ const IckbWithDraw: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }>
     const [canMelt, setCanMelt] = useState<boolean>(false);
     const [meltTBC, setMeltTBC] = useState<boolean>(false);
     const [transTBC, setTransTBC] = useState<boolean>(false);
-    const txInfo = (ickbData && amount.length > 0) ? ickbData?.txBuilder(false, ccc.fixedPointFrom(amount)) : null;
+    const txInfo = (ickbData && amount.length > 0) ? ickbData?.txBuilder("ickb2ckb", ccc.fixedPointFrom(amount)) : null;
     const [withdrawPending, setWithdrawPending] = useState<boolean>(false);
 
     const signerCcc = ccc.useSigner();
@@ -55,23 +55,22 @@ const IckbWithDraw: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }>
         if (!ickbData?.tipHeader) {
             return
         }
-        let [convertedAmount] = [ickb2Ckb(amount, ickbData?.tipHeader)]
+        const [convertedAmount] = [ickb2Ckb(amount, ickbData?.tipHeader, false)]
         //Worst case scenario is a 0.1% fee for bot
-        convertedAmount -= convertedAmount / BigInt(1000);
+        // convertedAmount -= convertedAmount / BigInt(1000);
         return `${toText(convertedAmount)}`;
     }
 
     const handleMax = async () => {
         if (!ickbData) return;
-        setAmount(ccc.fixedPointToString(ickbData?.ickbUdtAvailable));
+        const udtBalance = ickbData?.ickbRealUdtBalance + ickbData?.ickbPendingBalance;
+        setAmount(ccc.fixedPointToString(udtBalance));
     };
     const handleAmountChange = (e: { target: { value: React.SetStateAction<string>; }; }) => {
-
-
         setAmount(e.target.value)
     }
-    const handleMelt = async (orders: MyOrder[]) => {
-        const txMelt = await callMelt(orders)
+    const handleMelt = async () => {
+        const txMelt = ickbData?.txBuilder("melt", BigInt(0));
         if (!txMelt || !signerCcc) {
             return
         }
@@ -103,11 +102,19 @@ const IckbWithDraw: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }>
         let canMelt = false
         if (ickbData.myOrders.length > 0) {
             ickbData.myOrders.map(item => {
-                pending += ickbData.myOrders[0].info.isCkb2Udt ? Number(item.info.absProgress / CKB / CKB) : 0;
-                (item.info.absTotal === item.info.absProgress) ? (canMelt = true) : (canMelt = false)
+                if (item.info.isCkb2Udt && item.info.absTotal === item.info.absProgress) {
+                    pending += Number(item.info.udtAmount);
+                    canMelt = true;
+                }
             })
         }
-        setCanMelt(canMelt && ickbData.myOrders[0].info.isCkb2Udt)
+        if (ickbData.myReceipts.length > 0) {
+            canMelt = true;
+            ickbData.myReceipts.forEach((item) => {
+                pending += Number(item.ickbAmount);
+            });
+        }
+        setCanMelt(canMelt)
         setPendingBalance(toText(BigInt(pending)) || '-');
 
     }, [ickbData, meltTBC]);
@@ -131,7 +138,7 @@ const IckbWithDraw: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }>
                         {ickbData && canMelt &&
                             <button
                                 className="font-bold ml-2 bg-btn-gradient text-gray-800 text-body-2 py-1 px-2 rounded-lg hover:bg-btn-gradient-hover transition duration-200 disabled:opacity-50 disabled:hover:bg-btn-gradient"
-                                onClick={() => handleMelt(ickbData.myOrders)}
+                                onClick={() => handleMelt()}
                                 disabled={meltTBC}
                             >
                                 Melt
@@ -154,11 +161,11 @@ const IckbWithDraw: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }>
             </div>
 
             <p className="text-center text-large font-bold text-center text-cyan-500 mb-4 pb-2 ">
-                1 iCKB ≈ {ickbData?.tipHeader && approxConversion(BigInt(1 * 100000000))}CKB
+                1 iCKB ≈ {ickbData?.tipHeader && approxConversion(CKB)}CKB
             </p>
             <div className="flex justify-between my-3 text-base">
                 <span>You will Receive <Info size={16} className="inline-block" data-tooltip-id="my-tooltip" data-tooltip-content="receive info" /></span>
-                <span>{amount ? <>≈{approxConversion(BigInt(Math.trunc(parseFloat(amount) * 100000000)))} CKB</> : 'Calculated after entry'}</span>
+                <span>{amount ? <>≈{approxConversion(BigInt(Math.trunc(parseFloat(amount) * Number(CKB))))} CKB</> : 'Calculated after entry'}</span>
             </div>
             {txInfo && Number(amount) > 0 &&
                 <div className="rounded border-1 border-yellow-500 p-4 bg-yellow-500/[.12]  my-3">

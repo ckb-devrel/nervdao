@@ -10,6 +10,7 @@ import type { QueryClient } from "@tanstack/react-query";
 import {
     CKB,
     epochSinceCompare,
+    I8Cell,
     isPopulated,
     type ChainConfig,
     type I8Header,
@@ -20,19 +21,32 @@ import { MyOrder } from "@ickb/v1-core";
 export interface RootConfig extends ChainConfig {
     queryClient: QueryClient;
 }
-export type  IckbDateType ={
+
+export type IckbDateType = {
     ickbDaoBalance: bigint;
     ickbUdtPoolBalance: bigint;
     myOrders: MyOrder[];
+    myReceipts: MyReceipt[];
     ckbBalance: bigint;
+    ckbPendingBalance: bigint;
+    ickbPendingBalance: bigint;
     ckbAvailable: bigint;
     ickbUdtAvailable: bigint;
-    ickbRealUdtBalance:bigint;
+    ickbRealUdtBalance: bigint;
     tipHeader: Readonly<I8Header>;
-    txBuilder: (isCkb2Udt: boolean, amount: bigint) => Readonly<TxInfo>;
+    txBuilder: (direction: IckbDirection, amount: bigint) => Readonly<TxInfo>;
     hasMatchable: boolean;
 
-}|undefined
+} | undefined
+
+export type IckbDirection = "ckb2ickb" | "ickb2ckb" | "melt";
+
+export type MyReceipt = {
+    receiptCell: I8Cell;
+    depositQuantity: number;
+    depositAmount: bigint;
+    ickbAmount: bigint;
+}
 
 export function symbol2Direction(s: string) {
     return s === "C";
