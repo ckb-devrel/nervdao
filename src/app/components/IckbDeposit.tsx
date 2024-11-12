@@ -67,7 +67,6 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
     const handleMax = () => {
         if (!balance) return;
         // console.log(Number(balance) - 1000 * Number(CKB))
-        console.log(ccc.fixedPointToString(Number(balance) - 1000 * Number(CKB)))
         setAmount(ccc.fixedPointToString(BigInt(Number(balance) - 1000 * Number(CKB))));
     };
     const handleAmountChange = (e: { target: { value: React.SetStateAction<string>; }; }) => {
@@ -117,7 +116,6 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
         setPendingBalance(toText(BigInt(pending)) || '-');
         (async () => {
             if (!signerCcc) return;
-            console.log(111,balance)
             const balanceCCC = await signerCcc.getBalance();
             setBalance(balanceCCC);
             setBalanceShow(ccc.fixedPointToString(balanceCCC));
@@ -179,7 +177,7 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
                 </label>
                 <input className="w-full text-left border-none hover:border-none focus:border-none bg-gray-700 text-lg mt-1 p-3 pr-16"
                     type="text"
-                    value={amount && approxConversion(BigInt(Math.trunc(parseFloat(amount) * 100000000)))}
+                    value={amount && approxConversion(BigInt(Math.trunc(parseFloat(amount) * 99900000)))}
                     id="ickb"
                     readOnly
                     placeholder="0" />
@@ -221,14 +219,7 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
             <button
                 onClick={handleSwap}
                 className="mt-4 w-full font-bold bg-btn-gradient text-gray-800 text-body-2 py-3 rounded-lg hover:bg-btn-gradient-hover transition duration-200 disabled:opacity-50 disabled:hover:bg-btn-gradient"
-                disabled={(() => {
-                    try {
-                        ccc.numFrom(amount);
-                    } catch (error) {
-                        return true;
-                    }
-                    return amount === "";
-                })() || transTBC}
+                disabled={ transTBC}
             >
                 {transTBC ? (<>
                     <TailSpin

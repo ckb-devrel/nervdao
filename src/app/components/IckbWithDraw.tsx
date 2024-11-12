@@ -7,6 +7,7 @@ import { toText } from "@/utils/stringUtils";
 import { IckbDateType } from "@/cores/utils";
 import { CKB } from "@ickb/lumos-utils";
 import { callMelt } from "@/cores/queries";
+import { TailSpin } from "react-loader-spinner";
 
 
 const IckbWithDraw: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = ({ ickbData, onUpdate }) => {
@@ -16,10 +17,12 @@ const IckbWithDraw: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }>
     const [meltTBC, setMeltTBC] = useState<boolean>(false);
     const [transTBC, setTransTBC] = useState<boolean>(false);
     const txInfo = (ickbData && amount.length > 0) ? ickbData?.txBuilder(false, ccc.fixedPointFrom(amount)) : null;
+    const [withdrawPending, setWithdrawPending] = useState<boolean>(false);
 
     const signerCcc = ccc.useSigner();
     // const pendingIckbs = ickbData?ickbData.myOrders;
     const { showNotification, removeNotification } = useNotification();
+
     async function handleWithDraw() {
         if (!txInfo || !signerCcc) {
             return
@@ -30,6 +33,8 @@ const IckbWithDraw: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }>
             txHash = await signerCcc.sendTransaction(cccTx);
             setTransTBC(true)
             progressId = await showNotification("progress", `WithDraw in progress, wait for 60s`);
+            setWithdrawPending(true)
+
             await signerCcc.client.waitTransaction(txHash, 0, 60000)
             showNotification("success", `WithDraw Success: ${txHash}`);
             onUpdate()
@@ -39,6 +44,8 @@ const IckbWithDraw: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }>
             removeNotification(progressId + '')
             setAmount("")
             setTransTBC(false)
+            setWithdrawPending(false)
+
         }
     }
 
@@ -167,16 +174,23 @@ const IckbWithDraw: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }>
             <button
                 onClick={handleWithDraw}
                 className="mt-4 w-full font-bold bg-btn-gradient text-gray-800 text-body-2 py-3 rounded-lg hover:bg-btn-gradient-hover transition duration-200 disabled:opacity-50 disabled:hover:bg-btn-gradient"
-                disabled={(() => {
-                    try {
-                        ccc.numFrom(amount);
-                    } catch (error) {
-                        return true;
-                    }
-                    return amount === "";
-                })() || transTBC}
+                 disabled={ transTBC}
             >
-                {amount ? 'WithDraw' : 'Enter an amount'}
+                 {transTBC ? (<>
+                    <TailSpin
+                        height="20"
+                        width="20"
+                        color="#333333"
+                        ariaLabel="tail-spin-loading"
+                        radius="1"
+                        wrapperStyle={{ 'display': 'inline-block', 'marginRight': '10px' }}
+                        wrapperClass="inline-block"
+                    /> {withdrawPending ? 'pending' : 'To be confirmed'}
+                </>) :
+
+                    <>{amount ? 'WithDraw' : 'Enter an amount'}
+                    </>}
+               
 
             </button>
             {/* <div className="mt-8 w-full">
