@@ -19,7 +19,7 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
     const signerCcc = ccc.useSigner();
     const [canMelt, setCanMelt] = useState<boolean>(false);
     const { showNotification, removeNotification } = useNotification();
-    const [balance, setBalance] = useState<BigInt>(BigInt(0));
+    const [balance, setBalance] = useState<bigint>(BigInt(0));
     const [balanceShow, setBalanceShow] = useState<string>("");
     const [depositPending, setDepositPending] = useState<boolean>(false);
 

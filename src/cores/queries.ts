@@ -279,34 +279,34 @@ async function getTotalUdtCapacity(walletConfig: WalletConfig): Promise<bigint> 
     return udtCapacity;
 }
 
-async function getUserUdtBalance(walletConfig: WalletConfig): Promise<bigint> {
-    const { rpc, config, accountLock } = walletConfig;
-    const udtType = ickbUdtType(config);
-    let cursor = undefined;
-    let udtCapacity = BigInt(0);
-    while (true) {
-        //@ts-expect-error 未指定type
-        const result = await rpc.getCells({
-            script: udtType,
-            scriptType: "type",
-            scriptSearchMode: "exact",
-            withData: true,
-            filter: {
-                script: accountLock,
-            }
-        }, "desc", BigInt(50), cursor);
-        if (result.objects.length === 0) {
-            break;
-        }
+// async function getUserUdtBalance(walletConfig: WalletConfig): Promise<bigint> {
+//     const { rpc, config, accountLock } = walletConfig;
+//     const udtType = ickbUdtType(config);
+//     let cursor = undefined;
+//     let udtCapacity = BigInt(0);
+//     while (true) {
+//         //@ts-expect-error 未指定type
+//         const result = await rpc.getCells({
+//             script: udtType,
+//             scriptType: "type",
+//             scriptSearchMode: "exact",
+//             withData: true,
+//             filter: {
+//                 script: accountLock,
+//             }
+//         }, "desc", BigInt(50), cursor);
+//         if (result.objects.length === 0) {
+//             break;
+//         }
 
-        cursor = result.lastCursor;
-        //@ts-expect-error 未指定type
-        result.objects.forEach((cell: { outputData; }) => {
-            udtCapacity += Uint128.unpack(cell.outputData.slice(0, 2 + 16 * 2));
-        })
-    }
-    return udtCapacity;
-}
+//         cursor = result.lastCursor;
+//         //@ts-expect-error 未指定type
+//         result.objects.forEach((cell: { outputData; }) => {
+//             udtCapacity += Uint128.unpack(cell.outputData.slice(0, 2 + 16 * 2));
+//         })
+//     }
+//     return udtCapacity;
+// }
 
 async function getMixedCells(walletConfig: WalletConfig) {
     const { accountLock, config, rpc } = walletConfig;

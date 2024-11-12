@@ -61,7 +61,8 @@ function getNotificationIcon(type: string) {
 }
 
 const Notification: React.FC = () => {
-  const { notifications, removeNotification } = useNotification();
+  // const { notifications, removeNotification } = useNotification();
+  const { notifications } = useNotification();
 
   return (
     <div className="fixed top-4 right-8 z-50 flex flex-col gap-2 item-center">
