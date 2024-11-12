@@ -47,7 +47,7 @@ export function l1StateOptions(isFrozen: boolean) {
 
     return queryOptions({
         retry: true,
-        refetchInterval: 15000,
+        refetchInterval: 5000,
         refetchOnWindowFocus: true,
         refetchOnMount: true,
         refetchIntervalInBackground: false,
@@ -225,7 +225,12 @@ async function getL1State(walletConfig: WalletConfig) {
 
     // Calculate total and real ickb udt liquidity
     const ickbUdtPoolBalance = await getTotalUdtCapacity(walletConfig);
-    const ickbRealUdtBalance = await getUserUdtBalance(walletConfig);
+    let ickbRealUdtBalance = ickbUdtAvailable;
+    myOrders.forEach((order) => {
+        if (order.info.isCkb2Udt) {
+            ickbRealUdtBalance -= order.info.absProgress / CKB / CKB;
+        }
+    });
 
     return {
         ickbDaoBalance,
@@ -240,12 +245,12 @@ async function getL1State(walletConfig: WalletConfig) {
         hasMatchable,
     };
 }
-export async function callMelt(myOrders:MyOrder[]){
+export async function callMelt(myOrders: MyOrder[]) {
     const walletConfig = getWalletConfig();
-    const {rpc} = walletConfig
+    const { rpc } = walletConfig
     const feeRatePromise = rpc.getFeeRate(BigInt(1));
     const feeRate = BigInt(Number(await feeRatePromise) + 1000);
-    return meltOrder(myOrders,feeRate,walletConfig)
+    return meltOrder(myOrders, feeRate, walletConfig)
 }
 
 async function getTotalUdtCapacity(walletConfig: WalletConfig): Promise<bigint> {
@@ -274,34 +279,34 @@ async function getTotalUdtCapacity(walletConfig: WalletConfig): Promise<bigint> 
     return udtCapacity;
 }
 
-async function getUserUdtBalance(walletConfig: WalletConfig): Promise<bigint> {
-    const { rpc, config, accountLock } = walletConfig;
-    const udtType = ickbUdtType(config);
-    let cursor = undefined;
-    let udtCapacity = BigInt(0);
-    while (true) {
-        //@ts-expect-error 未指定type
-        const result = await rpc.getCells({
-            script: udtType,
-            scriptType: "type",
-            scriptSearchMode: "exact",
-            withData: true,
-            filter: {
-                script: accountLock,
-            }
-        }, "desc", BigInt(50), cursor);
-        if (result.objects.length === 0) {
-            break;
-        }
+// async function getUserUdtBalance(walletConfig: WalletConfig): Promise<bigint> {
+//     const { rpc, config, accountLock } = walletConfig;
+//     const udtType = ickbUdtType(config);
+//     let cursor = undefined;
+//     let udtCapacity = BigInt(0);
+//     while (true) {
+//         //@ts-expect-error 未指定type
+//         const result = await rpc.getCells({
+//             script: udtType,
+//             scriptType: "type",
+//             scriptSearchMode: "exact",
+//             withData: true,
+//             filter: {
+//                 script: accountLock,
+//             }
+//         }, "desc", BigInt(50), cursor);
+//         if (result.objects.length === 0) {
+//             break;
+//         }
 
-        cursor = result.lastCursor;
-        //@ts-expect-error 未指定type
-        result.objects.forEach((cell: { outputData; }) => {
-            udtCapacity += Uint128.unpack(cell.outputData.slice(0, 2 + 16 * 2));
-        })
-    }
-    return udtCapacity;
-}
+//         cursor = result.lastCursor;
+//         //@ts-expect-error 未指定type
+//         result.objects.forEach((cell: { outputData; }) => {
+//             udtCapacity += Uint128.unpack(cell.outputData.slice(0, 2 + 16 * 2));
+//         })
+//     }
+//     return udtCapacity;
+// }
 
 async function getMixedCells(walletConfig: WalletConfig) {
     const { accountLock, config, rpc } = walletConfig;

@@ -61,7 +61,8 @@ function getNotificationIcon(type: string) {
 }
 
 const Notification: React.FC = () => {
-  const { notifications, removeNotification } = useNotification();
+  // const { notifications, removeNotification } = useNotification();
+  const { notifications } = useNotification();
 
   return (
     <div className="fixed top-4 right-8 z-50 flex flex-col gap-2 item-center">
@@ -78,7 +79,8 @@ const Notification: React.FC = () => {
               style={style}
               className="px-3 py-2 text-xs gap-2 flex items-center rounded-lg shadow-lg w-64"
               layout
-              onClick={() => removeNotification(notification.id)}
+              // 屏蔽点击关闭
+              // onClick={() => removeNotification(notification.id)}
             >
               <div className="flex items-center justify-center">
                 {getNotificationIcon(notification.type)}
