@@ -33,6 +33,7 @@ import {
 } from "@ickb/v1-core";
 import {
     maxWaitTime,
+    MyReceipt,
     toText,
     txInfoFrom,
     type TxInfo,
@@ -190,7 +191,7 @@ function convertAttempt(
             tx = addReceiptDepositsChange(tx, accountLock, config);
             info = info.concat([]);
             info = info.concat([
-                `Creating ${quantity} standard deposit${quantity > 1 ? "s" : ""} ` +
+                `Creating ${quantity} standard deposit${quantity > 1 ? "s" : ""} (each amount is ${toText(depositAmount)} CKB) ` +
                 `and ${quantity > 1 ? "their" : "its"} Receipt`,
             ]);
         } else {
@@ -239,8 +240,8 @@ function convertAttempt(
             (amount * ratio.udtMultiplier) / ratio.ckbMultiplier;
         info = info.concat([
             `Creating a Limit Order for ${quantity > 0 ? "the remaining" : ""} ` +
-            `${toText(amount)} ${isCkb2Udt ? "CKB" : "iCKB"}, ` +
-            `offering a Fee of ${toText(fee)} CKB`,
+            `${toText(amount)} ${isCkb2Udt ? "CKB" : "iCKB"}. ` +
+            `Paying an extra Order Fee of ${toText(fee)} CKB`,
         ]);
     }
 
@@ -293,12 +294,13 @@ export function addChange(
         });
     }
 
-    info = info.concat([`Paying a Network Fee of ${toText(txFee)} CKB`]);
+    info = info.concat([`Paying an extra Network Fee of ${toText(txFee)} CKB`]);
 
     return txInfoFrom({ tx, info });
 }
 
-export function meltOrder(myOrders: MyOrder[], feeRate: bigint, walletConfig: WalletConfig): TxInfo {
+export function meltOrder(myOrders: MyOrder[], myReceipts: MyReceipt[], feeRate: bigint, walletConfig: WalletConfig): TxInfo {
+    console.log(myOrders, myReceipts);
     const validOrders = myOrders.filter((o) => o.info.absProgress === o.info.absTotal);
     const info = validOrders.map((o) => {
         if (o.info.isCkb2Udt) {
@@ -307,9 +309,16 @@ export function meltOrder(myOrders: MyOrder[], feeRate: bigint, walletConfig: Wa
             return `Extract ${toText(o.info.absTotal / CKB)} CKB from order`;
         }
     });
+    myReceipts.forEach((receipt) => {
+        const ckbValue = toText(receipt.depositAmount * BigInt(receipt.depositQuantity) / CKB);
+        const ickbValue = toText(receipt.ickbAmount);
+        info.push(`Convert ${ckbValue} CKB to ${ickbValue} iCKB from receipt`);
+    });
     let tx = helpers.TransactionSkeleton();
-    tx = orderMelt(tx, myOrders);
+    if (myOrders.length > 0) {
+        tx = orderMelt(tx, myOrders);
+    }
+    tx = addCells(tx, "append", myReceipts.map((r) => r.receiptCell), []);
     const txInfo = txInfoFrom({ tx, info });
-    debugger
     return addChange(txInfo, feeRate, walletConfig);
 }
