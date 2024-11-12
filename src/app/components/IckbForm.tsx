@@ -26,7 +26,8 @@ const IckbForm: React.FC<{ walletConfig: WalletConfig }> = ({ walletConfig }) =>
                             <div className={`basis-1/2 py-4 rounded-l-lg cursor-pointer  ${status === 'deposit' && 'bg-cyan-500 text-gray-800 font-bold'}`} onClick={() => setStatus('deposit')}>Deposit</div>
                             <div className={`basis-1/2 py-4 rounded-r-lg cursor-pointer  ${status === 'withdraw' && 'bg-cyan-500 text-gray-800 font-bold'}`} onClick={() => setStatus('withdraw')}>Withdraw</div>
                         </div>
-                        {status === 'deposit' ? <IckbDeposit ickbData={ickbData}  onUpdate={handleChildEvent} /> : <IckbWithDraw  onUpdate={handleChildEvent} ickbData={ickbData} />}
+                        <div className={status === 'deposit'?'block':'hidden'}><IckbDeposit ickbData={ickbData}  onUpdate={handleChildEvent} /></div>
+                        <div className={status !== 'deposit'?'block':'hidden'}><IckbWithDraw ickbData={ickbData}  onUpdate={handleChildEvent} /></div>
                     </div>
                 </div>
                 <div className="flex-1 flex-row">

@@ -117,9 +117,10 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
         setPendingBalance(toText(BigInt(pending)) || '-');
         (async () => {
             if (!signerCcc) return;
-            const balance = await signerCcc.getBalance();
-            setBalance(balance);
-            setBalanceShow(ccc.fixedPointToString(balance));
+            console.log(111,balance)
+            const balanceCCC = await signerCcc.getBalance();
+            setBalance(balanceCCC);
+            setBalanceShow(ccc.fixedPointToString(balanceCCC));
         })();
     }, [ickbData, signerCcc, meltTBC]);
     // useEffect(() => {
