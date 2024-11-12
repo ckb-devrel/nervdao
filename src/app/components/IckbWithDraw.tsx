@@ -6,7 +6,6 @@ import { Info, TriangleAlert } from "lucide-react";
 import { toText } from "@/utils/stringUtils";
 import { IckbDateType } from "@/cores/utils";
 import { CKB } from "@ickb/lumos-utils";
-import { callMelt } from "@/cores/queries";
 import { TailSpin } from "react-loader-spinner";
 
 
@@ -115,7 +114,7 @@ const IckbWithDraw: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }>
             });
         }
         setCanMelt(canMelt)
-        setPendingBalance(toText(BigInt(pending)) || '-');
+        pending>0?setPendingBalance(toText(BigInt(pending))):setPendingBalance('0');
 
     }, [ickbData, meltTBC]);
 

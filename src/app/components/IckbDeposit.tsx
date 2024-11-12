@@ -21,7 +21,6 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
     const [balance, setBalance] = useState<bigint>(BigInt(0));
     const [balanceShow, setBalanceShow] = useState<string>("");
     const [depositPending, setDepositPending] = useState<boolean>(false);
-
     async function handleSwap() {
         if (!txInfo || !signerCcc) {
             return
@@ -105,9 +104,10 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
     useEffect(() => {
         if (!ickbData) return;
         const canMelt = ickbData.ckbPendingBalance > BigInt(0);
-        const pending = ickbData.ckbPendingBalance;
+        ickbData.ckbPendingBalance>0?setPendingBalance(toText(BigInt(ickbData.ckbPendingBalance))):setPendingBalance('0');
         setCanMelt(canMelt);
-        setPendingBalance(toText(BigInt(pending)) || '-');
+
+        // setPendingBalance(toText(BigInt(pending)) || '-');
         (async () => {
             if (!signerCcc) return;
             const balanceCCC = await signerCcc.getBalance();
