@@ -59,7 +59,7 @@ export function IckbOrderItem({
                         {item.isCkb2Udt ? ' CKB' : ' iCKB'}</p>
                 </div>
                 <CircularProgress
-                    percentage={Number(item.progress) / Number(item.total) * 100}
+                    percentage={parseFloat(((Number(item.progress) / Number(item.total)) * 100).toFixed(2))}
                     size={48}
                     strokeWidth={3}
                     progressColor={'#3CFF97'}

@@ -104,7 +104,7 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
     useEffect(() => {
         if (!ickbData) return;
         const canMelt = ickbData.ckbPendingBalance > BigInt(0);
-        ickbData.ckbPendingBalance > 0 ? setPendingBalance(toText(BigInt(ickbData.ckbPendingBalance))) : setPendingBalance('0');
+        ickbData.ckbPendingBalance>0?setPendingBalance(toText(BigInt(ickbData.ckbPendingBalance))):setPendingBalance('0');
         setCanMelt(canMelt);
 
         // setPendingBalance(toText(BigInt(pending)) || '-');
@@ -134,7 +134,7 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
                 <div className="basis-1/2">
                     <p className="text-gray-400 mb-2 flex items-center">
                         <span className={"w-2 h-2 bg-yellow-500 mr-2"}></span>
-                        Pending
+                        Pending <Info size={16} className="ml-1 inline-block" data-tooltip-id="my-tooltip" data-tooltip-content="Including the capacity of cell occupation" />
                     </p>
                     <p className="text-2xl font-bold font-play mb-4 flex  items-center">
                         <span>
@@ -152,7 +152,7 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
                     </p>
                 </div>
             </div>
-            <div className='relative mb-4  bg-gray-700 p-4 rounded'>
+            {/* <div className='relative mb-4  bg-gray-700 p-4 rounded'>
                 <label className="flex px-2 items-center"><img src="/svg/icon-ckb.svg" alt="CKB" className="mr-2" /> CKB</label>
                 <input className="w-full text-left no-arrows border-none hover:border-none  focus:border-none bg-gray-700  text-lg p-3 mt-1 pr-16"
                     type="number"
@@ -160,23 +160,19 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
                     onChange={handleAmountChange}
                     placeholder="0" />
                 <span className="absolute right-4 bottom-2 p-3 flex items-center text-teal-500 cursor-pointer" onClick={handleMax}>
+                    MAX <Info size={16} className="inline-block ml-2" data-tooltip-id="my-tooltip" data-tooltip-html="<div>CKB Balance minus 1000 CKB </div>" />
+                </span>
+            </div> */}
+            <div className='relative mb-4 flex'>
+                <input className="w-full text-left rounded border no-arrows  border-[#777] bg-gray-700  hover:border-cyan-500 focus:border-cyan-500  text-lg p-3 mt-1 pr-16 pl-14"
+                    type="number"
+                    value={amount}
+                    onChange={handleAmountChange}
+                    placeholder="0" />
+                <img src="/svg/icon-ckb.svg" className="absolute left-4 top-[18px]" alt="CKB" />
+                <span className="absolute right-4 top-[10px] p-3 flex items-center text-teal-500 cursor-pointer" onClick={handleMax}>
                     MAX
                 </span>
-                <Info size={16} className="inline-block ml-2" data-tooltip-id="my-tooltip" data-tooltip-html="<div>Ckb Balance minus 1000 CKB </div>" />
-                <div className="absolute bottom-[-30px] w-full text-center left-0 z-50"><div className="rounded-full bg-gray-500 p-1 inline-block"><ArrowDown className="inline-block" size={36} /></div></div>
-            </div>
-            <div className='relative mb-4  bg-gray-700 p-4 rounded'>
-                <label htmlFor="ickb" className="flex items-center px-2">
-                    <img src="/svg/icon-ickb-1.svg" className="mr-2" alt="iCKB" />
-                    iCKB
-                </label>
-                <input className="w-full text-left border-none hover:border-none focus:border-none bg-gray-700 text-lg mt-1 p-3 pr-16"
-                    type="text"
-                    value={amount && approxConversion(BigInt(Math.trunc(parseFloat(amount) * Number(CKB))))}
-                    id="ickb"
-                    readOnly
-                    placeholder="0" />
-
             </div>
             <p className="text-center text-large font-bold text-center text-cyan-500 mb-4 pb-2 ">
                 1 CKB ≈ {ickbData?.tipHeader && approxConversion(CKB)}iCKB
@@ -184,7 +180,7 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
             <div className="flex justify-between my-3 text-base">
                 <span>You will Receive <Info size={16} className="inline-block" data-tooltip-id="my-tooltip" data-tooltip-content="receive info" /></span>
                 {/* 扣除0.1% 交易bot fee */}
-                <span>{amount ? <>≈{approxConversion(BigInt(Math.trunc(parseFloat(amount) * Number(CKB)/*99900000*/)))} iCKB</> : 'Calculated after entry'}</span>
+                <span>{amount ? <>≈{approxConversion(BigInt(Math.trunc(parseFloat(amount) * Number(CKB)/*99900000*/)))} iCKB</> : '0'}</span>
             </div>
             {txInfo && Number(amount) > 0 &&
                 <div className="rounded border-1 border-yellow-500 p-4 bg-yellow-500/[.12]  my-3">
@@ -198,23 +194,12 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
                             .join(". ")}
                     </p></div>
             }
-            {/* <div className="flex justify-between my-3 text-base">
-                <span>Transaction Fee <Info size={16} className="inline-block" data-tooltip-id="my-tooltip" data-tooltip-content="Transaction Fee info" /></span>
-                <span>{amount ? <>{transactionFee} CKB</> : 'Calculated after entry'}</span>
-            </div> */}
-            {/* <div className="flex justify-between my-3 text-base">
-                    <span>Additional Fee <Info size={16} className="inline-block" data-tooltip-id="my-tooltip" data-tooltip-content="Additional Fee info" /></span>
-                    <span>{amount ? <>{transactionFee} CKB</> : 'Calculated after entry'}</span>
-                </div>
-                <div className="flex justify-between my-3 text-base">
-                    <span>Completion time</span>
-                    <span>~5 days</span>
-                </div> */}
+          
 
             <button
                 onClick={handleSwap}
                 className="mt-4 w-full font-bold bg-btn-gradient text-gray-800 text-body-2 py-3 rounded-lg hover:bg-btn-gradient-hover transition duration-200 disabled:opacity-50 disabled:hover:bg-btn-gradient"
-                disabled={transTBC}
+                disabled={ transTBC}
             >
                 {transTBC ? (<>
                     <TailSpin
