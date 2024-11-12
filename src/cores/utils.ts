@@ -31,7 +31,7 @@ export type IckbDateType = {
     ckbPendingBalance: bigint;
     ickbPendingBalance: bigint;
     ckbAvailable: bigint;
-    ickbUdtAvailable: bigint;
+    ckbMaturity: Maturity;
     ickbRealUdtBalance: bigint;
     tipHeader: Readonly<I8Header>;
     txBuilder: (direction: IckbDirection, amount: bigint) => Readonly<TxInfo>;
@@ -46,6 +46,12 @@ export type MyReceipt = {
     depositQuantity: number;
     depositAmount: bigint;
     ickbAmount: bigint;
+}
+
+export type Maturity = {
+    progressCkb: bigint;
+    totalCkb: bigint;
+    maxWaitTime: string;
 }
 
 export function symbol2Direction(s: string) {

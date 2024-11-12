@@ -80,7 +80,11 @@ export function l1StateOptions(isFrozen: boolean) {
             ickbPendingBalance: BigInt(-1),
             ckbPendingBalance: BigInt(-1),
             ckbAvailable: BigInt(6) * CKB * CKB,
-            ickbUdtAvailable: BigInt(3) * CKB * CKB,
+            ckbMaturity: {
+                progressCkb: BigInt(0),
+                totalCkb: BigInt(0),
+                maxWaitTime: "0 minutes",
+            },
             tipHeader: headerPlaceholder,
             txBuilder: () => txInfoFrom({}),
             hasMatchable: false,
@@ -184,18 +188,18 @@ async function getL1State(walletConfig: WalletConfig) {
 
     const myReceipts = convertReceipts(receipts, config);
     const ickbUdtBalance = ickbDelta(baseTx, config);
-    const ickbUdtAvailable = ickbUdtBalance;
 
     let ckbBalance = ckbDelta(baseTx, config);
     const ckbAvailable = max((ckbBalance / CKB - BigInt(1000)) * CKB, BigInt(0));
     let info = baseInfo;
+    let wrWaitTime = "0 minutes";
     if (notMature.length > 0) {
         ckbBalance += ckbDelta(
             addWithdrawalRequestGroups(helpers.TransactionSkeleton(), notMature),
             config,
         );
 
-        const wrWaitTime = maxWaitTime(
+        wrWaitTime = maxWaitTime(
             notMature.map((g) =>
                 parseAbsoluteEpochSince(
                     g.ownedWithdrawalRequest.cellOutput.type![since],
@@ -240,7 +244,7 @@ async function getL1State(walletConfig: WalletConfig) {
 
     // Calculate total and real ickb udt liquidity
     const ickbUdtPoolBalance = await getTotalUdtCapacity(walletConfig);
-    let ickbRealUdtBalance = ickbUdtAvailable;
+    let ickbRealUdtBalance = ickbUdtBalance;
     myOrders.forEach((order) => {
         if (order.info.isCkb2Udt) {
             const multiplier = order.info.ckbToUdt.udtMultiplier;
@@ -263,12 +267,30 @@ async function getL1State(walletConfig: WalletConfig) {
             ckbPendingBalance += item.info.ckbAmount;
         }
     });
+    let maturityProgress = BigInt(0);
+    mature.forEach((item) => {
+        const maturedCkb = BigInt(parseInt(item.ownedWithdrawalRequest.cellOutput.capacity, 16));
+        maturityProgress += maturedCkb;
+        ckbPendingBalance += maturedCkb;
+    });
     let ickbPendingBalance = BigInt(0);
     myOrders.forEach((item) => {
         if (item.info.isCkb2Udt && item.info.absTotal === item.info.absProgress) {
             ickbPendingBalance += item.info.udtAmount;
         }
-    })
+    });
+
+    // Calculate maturity progress
+    let maturityTotal = maturityProgress;
+    notMature.forEach((item) => {
+        maturityTotal += BigInt(parseInt(item.ownedWithdrawalRequest.cellOutput.capacity, 16));
+    });
+    const ckbMaturity = {
+        progressCkb: maturityProgress,
+        totalCkb: maturityTotal,
+        maxWaitTime: wrWaitTime,
+    };
+    console.log("mature", mature, "noMature", notMature);
 
     return {
         ickbDaoBalance,
@@ -280,7 +302,7 @@ async function getL1State(walletConfig: WalletConfig) {
         ckbAvailable,
         ickbPendingBalance,
         ckbPendingBalance,
-        ickbUdtAvailable,
+        ckbMaturity,
         tipHeader,
         txBuilder,
         hasMatchable,
@@ -330,35 +352,6 @@ async function getTotalUdtCapacity(walletConfig: WalletConfig): Promise<bigint> 
     }
     return udtCapacity;
 }
-
-// async function getUserUdtBalance(walletConfig: WalletConfig): Promise<bigint> {
-//     const { rpc, config, accountLock } = walletConfig;
-//     const udtType = ickbUdtType(config);
-//     let cursor = undefined;
-//     let udtCapacity = BigInt(0);
-//     while (true) {
-//         //@ts-expect-error 未指定type
-//         const result = await rpc.getCells({
-//             script: udtType,
-//             scriptType: "type",
-//             scriptSearchMode: "exact",
-//             withData: true,
-//             filter: {
-//                 script: accountLock,
-//             }
-//         }, "desc", BigInt(50), cursor);
-//         if (result.objects.length === 0) {
-//             break;
-//         }
-
-//         cursor = result.lastCursor;
-//         //@ts-expect-error 未指定type
-//         result.objects.forEach((cell: { outputData; }) => {
-//             udtCapacity += Uint128.unpack(cell.outputData.slice(0, 2 + 16 * 2));
-//         })
-//     }
-//     return udtCapacity;
-// }
 
 async function getMixedCells(walletConfig: WalletConfig) {
     const { accountLock, config, rpc } = walletConfig;

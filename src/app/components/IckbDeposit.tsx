@@ -104,7 +104,7 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
     useEffect(() => {
         if (!ickbData) return;
         const canMelt = ickbData.ckbPendingBalance > BigInt(0);
-        ickbData.ckbPendingBalance>0?setPendingBalance(toText(BigInt(ickbData.ckbPendingBalance))):setPendingBalance('0');
+        ickbData.ckbPendingBalance > 0 ? setPendingBalance(toText(BigInt(ickbData.ckbPendingBalance))) : setPendingBalance('0');
         setCanMelt(canMelt);
 
         // setPendingBalance(toText(BigInt(pending)) || '-');
@@ -160,8 +160,9 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
                     onChange={handleAmountChange}
                     placeholder="0" />
                 <span className="absolute right-4 bottom-2 p-3 flex items-center text-teal-500 cursor-pointer" onClick={handleMax}>
-                    MAX <Info size={16} className="inline-block ml-2" data-tooltip-id="my-tooltip" data-tooltip-html="<div>Ckb Balance minus 1000 CKB </div>" />
+                    MAX
                 </span>
+                <Info size={16} className="inline-block ml-2" data-tooltip-id="my-tooltip" data-tooltip-html="<div>Ckb Balance minus 1000 CKB </div>" />
                 <div className="absolute bottom-[-30px] w-full text-center left-0 z-50"><div className="rounded-full bg-gray-500 p-1 inline-block"><ArrowDown className="inline-block" size={36} /></div></div>
             </div>
             <div className='relative mb-4  bg-gray-700 p-4 rounded'>
@@ -213,7 +214,7 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
             <button
                 onClick={handleSwap}
                 className="mt-4 w-full font-bold bg-btn-gradient text-gray-800 text-body-2 py-3 rounded-lg hover:bg-btn-gradient-hover transition duration-200 disabled:opacity-50 disabled:hover:bg-btn-gradient"
-                disabled={ transTBC}
+                disabled={transTBC}
             >
                 {transTBC ? (<>
                     <TailSpin
