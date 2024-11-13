@@ -154,7 +154,7 @@ const IckbWithDraw: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }>
                     onChange={handleAmountChange}
                     placeholder="0" />
                 <img src="/svg/icon-ickb-2.svg" className="absolute left-4 top-[18px]" alt="iCKB" />
-                <span className="absolute right-4 top-[10px] p-3 flex items-center text-teal-500 cursor-pointer" onClick={handleMax}>
+                <span className="absolute right-4 top-[8px] p-3 flex items-center text-teal-500 cursor-pointer" onClick={handleMax}>
                     MAX
                 </span>
             </div>
@@ -164,7 +164,7 @@ const IckbWithDraw: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }>
             </p>
             <div className="flex justify-between my-3 text-base">
                 <span>You will Receive <Info size={16} className="inline-block" data-tooltip-id="my-tooltip" data-tooltip-content="receive info" /></span>
-                <span>{amount ? <>≈{approxConversion(BigInt(Math.trunc(parseFloat(amount) * Number(CKB))))} CKB</> : 'Calculated after entry'}</span>
+                <span>{amount ? <>≈{approxConversion(BigInt(Math.trunc(parseFloat(amount) * Number(CKB))))} CKB</> : '0'}</span>
             </div>
             {txInfo && Number(amount) > 0 &&
                 <div className="rounded border-1 border-yellow-500 p-4 bg-yellow-500/[.12]  my-3">

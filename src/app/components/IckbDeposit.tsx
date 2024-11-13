@@ -64,9 +64,10 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
 
     const handleMax = () => {
         if (!balance) return;
+    
         // console.log(Number(balance) - 1000 * Number(CKB))
-        console.log(ccc.fixedPointToString(Number(balance) - 1000 * Number(CKB)))
-        const maxBalance = BigInt(Number(balance) - 1000 * Number(CKB)) + (ickbData ? ickbData.ckbPendingBalance : BigInt(0));
+        // const maxBalance = BigInt(Number(balance) - 1000 * Number(CKB)) + (ickbData ? ickbData.ckbPendingBalance : BigInt(0));
+        const maxBalance = balance + (ickbData ? ickbData.ckbPendingBalance : BigInt(0));
         setAmount(ccc.fixedPointToString(maxBalance));
     };
     const handleAmountChange = (e: { target: { value: React.SetStateAction<string>; }; }) => {
@@ -170,7 +171,7 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
                     onChange={handleAmountChange}
                     placeholder="0" />
                 <img src="/svg/icon-ckb.svg" className="absolute left-4 top-[18px]" alt="CKB" />
-                <span className="absolute right-4 top-[10px] p-3 flex items-center text-teal-500 cursor-pointer" onClick={handleMax}>
+                <span className="absolute right-4 top-[8px] p-3 flex items-center text-teal-500 cursor-pointer" onClick={handleMax}>
                     MAX
                 </span>
             </div>
