@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { ccc } from "@ckb-ccc/connector-react";
 import { useNotification } from "@/context/NotificationProvider";
-import { ckb2Ickb, MyOrder } from "@ickb/v1-core";
-import { Info, ArrowDown, TriangleAlert } from "lucide-react";
+import { ckb2Ickb } from "@ickb/v1-core";
+import { Info, TriangleAlert } from "lucide-react";
 import { toText } from "@/utils/stringUtils";
 import { IckbDateType } from "@/cores/utils";
 import { CKB } from "@ickb/lumos-utils";
-import { callMelt } from "@/cores/queries";
 import { TailSpin } from "react-loader-spinner";
 
 
@@ -15,14 +14,13 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
     const [pendingBalance, setPendingBalance] = useState<string>("0");
     const [meltTBC, setMeltTBC] = useState<boolean>(false);
     const [transTBC, setTransTBC] = useState<boolean>(false);
-    const txInfo = (ickbData && amount.length > 0) ? ickbData?.txBuilder(true, ccc.fixedPointFrom(amount)) : null;
+    const txInfo = (ickbData && amount.length > 0) ? ickbData?.txBuilder("ckb2ickb", ccc.fixedPointFrom(amount)) : null;
     const signerCcc = ccc.useSigner();
     const [canMelt, setCanMelt] = useState<boolean>(false);
     const { showNotification, removeNotification } = useNotification();
     const [balance, setBalance] = useState<bigint>(BigInt(0));
     const [balanceShow, setBalanceShow] = useState<string>("");
     const [depositPending, setDepositPending] = useState<boolean>(false);
-
     async function handleSwap() {
         if (!txInfo || !signerCcc) {
             return
@@ -58,25 +56,25 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
         if (!ickbData?.tipHeader) {
             return
         }
-        let [convertedAmount] = [ckb2Ickb(amount, ickbData?.tipHeader)]
+        const [convertedAmount] = [ckb2Ickb(amount, ickbData?.tipHeader, false)]
         //Worst case scenario is a 0.1% fee for bot
-        convertedAmount -= convertedAmount / BigInt(1000);
+        // convertedAmount -= convertedAmount / BigInt(1000);
         return `${toText(convertedAmount)}`;
     }
 
     const handleMax = () => {
         if (!balance) return;
+    
         // console.log(Number(balance) - 1000 * Number(CKB))
-        console.log(ccc.fixedPointToString(Number(balance) - 1000 * Number(CKB)))
-        setAmount(ccc.fixedPointToString(BigInt(Number(balance) - 1000 * Number(CKB))));
+        // const maxBalance = BigInt(Number(balance) - 1000 * Number(CKB)) + (ickbData ? ickbData.ckbPendingBalance : BigInt(0));
+        const maxBalance = balance + (ickbData ? ickbData.ckbPendingBalance : BigInt(0));
+        setAmount(ccc.fixedPointToString(maxBalance));
     };
     const handleAmountChange = (e: { target: { value: React.SetStateAction<string>; }; }) => {
-
-
         setAmount(e.target.value)
     }
-    const handleMelt = async (orders: MyOrder[]) => {
-        const txMelt = await callMelt(orders)
+    const handleMelt = async () => {
+        const txMelt = ickbData?.txBuilder("melt", BigInt(0));
         if (!txMelt || !signerCcc) {
             return
         }
@@ -104,20 +102,13 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
     }
     useEffect(() => {
         if (!ickbData) return;
-        let pending = 0;
-        let canMelt = false;
-        if (ickbData.myOrders.length > 0) {
-            ickbData.myOrders.map(item => {
-                pending += ickbData.myOrders[0].info.isCkb2Udt ? 0 : Number(item.info.absProgress / CKB / CKB);
-                (item.info.absTotal === item.info.absProgress) ? (canMelt = true) : (canMelt = false)
-            })
-        }
+        const canMelt = ickbData.ckbPendingBalance > BigInt(0);
+        ickbData.ckbPendingBalance > 0 ? setPendingBalance(toText(BigInt(ickbData.ckbPendingBalance))) : setPendingBalance('0');
+        setCanMelt(canMelt);
 
-        setCanMelt(canMelt && !ickbData.myOrders[0].info.isCkb2Udt)
-        setPendingBalance(toText(BigInt(pending)) || '-');
+        // setPendingBalance(toText(BigInt(pending)) || '-');
         (async () => {
             if (!signerCcc) return;
-            console.log(111,balance)
             const balanceCCC = await signerCcc.getBalance();
             setBalance(balanceCCC);
             setBalanceShow(ccc.fixedPointToString(balanceCCC));
@@ -142,7 +133,7 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
                 <div className="basis-1/2">
                     <p className="text-gray-400 mb-2 flex items-center">
                         <span className={"w-2 h-2 bg-yellow-500 mr-2"}></span>
-                        Pending
+                        Pending <Info size={16} className="ml-1 inline-block" data-tooltip-id="my-tooltip" data-tooltip-content="Including the capacity of cell occupation" />
                     </p>
                     <p className="text-2xl font-bold font-play mb-4 flex  items-center">
                         <span>
@@ -151,7 +142,7 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
                         {ickbData && canMelt &&
                             <button
                                 className="font-bold ml-2 bg-btn-gradient text-gray-800 text-body-2 py-1 px-2 rounded-lg hover:bg-btn-gradient-hover transition duration-200 disabled:opacity-50 disabled:hover:bg-btn-gradient"
-                                onClick={() => handleMelt(ickbData.myOrders)}
+                                onClick={() => handleMelt()}
                                 disabled={meltTBC}
                             >
                                 Melt
@@ -160,7 +151,7 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
                     </p>
                 </div>
             </div>
-            <div className='relative mb-4  bg-gray-700 p-4 rounded'>
+            {/* <div className='relative mb-4  bg-gray-700 p-4 rounded'>
                 <label className="flex px-2 items-center"><img src="/svg/icon-ckb.svg" alt="CKB" className="mr-2" /> CKB</label>
                 <input className="w-full text-left no-arrows border-none hover:border-none  focus:border-none bg-gray-700  text-lg p-3 mt-1 pr-16"
                     type="number"
@@ -168,30 +159,27 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
                     onChange={handleAmountChange}
                     placeholder="0" />
                 <span className="absolute right-4 bottom-2 p-3 flex items-center text-teal-500 cursor-pointer" onClick={handleMax}>
-                    MAX <Info size={16} className="inline-block ml-2" data-tooltip-id="my-tooltip" data-tooltip-html="<div>Ckb Balance minus 1000 CKB </div>" />
+                    MAX <Info size={16} className="inline-block ml-2" data-tooltip-id="my-tooltip" data-tooltip-html="<div>CKB Balance minus 1000 CKB </div>" />
                 </span>
-                <div className="absolute bottom-[-30px] w-full text-center left-0 z-50"><div className="rounded-full bg-gray-500 p-1 inline-block"><ArrowDown className="inline-block" size={36} /></div></div>
-            </div>
-            <div className='relative mb-4  bg-gray-700 p-4 rounded'>
-                <label htmlFor="ickb" className="flex items-center px-2">
-                    <img src="/svg/icon-ickb-1.svg" className="mr-2" alt="iCKB" />
-                    iCKB
-                </label>
-                <input className="w-full text-left border-none hover:border-none focus:border-none bg-gray-700 text-lg mt-1 p-3 pr-16"
-                    type="text"
-                    value={amount && approxConversion(BigInt(Math.trunc(parseFloat(amount) * 100000000)))}
-                    id="ickb"
-                    readOnly
+            </div> */}
+            <div className='relative mb-4 flex'>
+                <input className="w-full text-left rounded border no-arrows  border-[#777] bg-gray-700  hover:border-cyan-500 focus:border-cyan-500  text-lg p-3 mt-1 pr-16 pl-14"
+                    type="number"
+                    value={amount}
+                    onChange={handleAmountChange}
                     placeholder="0" />
-
+                <img src="/svg/icon-ckb.svg" className="absolute left-4 top-[18px]" alt="CKB" />
+                <span className="absolute right-4 top-[8px] p-3 flex items-center text-teal-500 cursor-pointer" onClick={handleMax}>
+                    MAX
+                </span>
             </div>
             <p className="text-center text-large font-bold text-center text-cyan-500 mb-4 pb-2 ">
-                1 CKB ≈ {ickbData?.tipHeader && approxConversion(BigInt(1 * 100000000))}iCKB
+                1 CKB ≈ {ickbData?.tipHeader && approxConversion(CKB)} iCKB
             </p>
             <div className="flex justify-between my-3 text-base">
-                <span>You will Receive <Info size={16} className="inline-block" data-tooltip-id="my-tooltip" data-tooltip-content="receive info" /></span>
+                <span>Receive </span>
                 {/* 扣除0.1% 交易bot fee */}
-                <span>{amount ? <>≈{approxConversion(BigInt(Math.trunc(parseFloat(amount) * 99900000)))} iCKB</> : 'Calculated after entry'}</span>
+                <span>{amount ? <>≈{approxConversion(BigInt(Math.trunc(parseFloat(amount) * Number(CKB)/*99900000*/)))} iCKB</> : '0 iCKB'}</span>
             </div>
             {txInfo && Number(amount) > 0 &&
                 <div className="rounded border-1 border-yellow-500 p-4 bg-yellow-500/[.12]  my-3">
@@ -205,30 +193,12 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
                             .join(". ")}
                     </p></div>
             }
-            {/* <div className="flex justify-between my-3 text-base">
-                <span>Transaction Fee <Info size={16} className="inline-block" data-tooltip-id="my-tooltip" data-tooltip-content="Transaction Fee info" /></span>
-                <span>{amount ? <>{transactionFee} CKB</> : 'Calculated after entry'}</span>
-            </div> */}
-            {/* <div className="flex justify-between my-3 text-base">
-                    <span>Additional Fee <Info size={16} className="inline-block" data-tooltip-id="my-tooltip" data-tooltip-content="Additional Fee info" /></span>
-                    <span>{amount ? <>{transactionFee} CKB</> : 'Calculated after entry'}</span>
-                </div>
-                <div className="flex justify-between my-3 text-base">
-                    <span>Completion time</span>
-                    <span>~5 days</span>
-                </div> */}
+
 
             <button
                 onClick={handleSwap}
                 className="mt-4 w-full font-bold bg-btn-gradient text-gray-800 text-body-2 py-3 rounded-lg hover:bg-btn-gradient-hover transition duration-200 disabled:opacity-50 disabled:hover:bg-btn-gradient"
-                disabled={(() => {
-                    try {
-                        ccc.numFrom(amount);
-                    } catch (error) {
-                        return true;
-                    }
-                    return amount === "";
-                })() || transTBC}
+                disabled={transTBC}
             >
                 {transTBC ? (<>
                     <TailSpin

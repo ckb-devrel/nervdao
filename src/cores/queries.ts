@@ -9,36 +9,46 @@ import { helpers } from "@ckb-lumos/lumos";
 import { queryOptions } from "@tanstack/react-query";
 import {
     CKB,
+    ConfigAdapter,
+    I8Cell,
     I8Header,
     Uint128,
     capacitySifter,
     ckbDelta,
+    headerDeps,
     hex,
     maturityDiscriminator,
     max,
+    scriptEq,
     shuffle,
     since,
 } from "@ickb/lumos-utils";
 import {
     addWithdrawalRequestGroups,
-    ickbDelta,
+    ckb2Ickb,
     ickbLogicScript,
     ickbPoolSifter,
     ickbSifter,
     ickbUdtType,
     limitOrderScript,
-    MyOrder,
     orderSifter,
     ownedOwnerScript,
+    ReceiptData,
 } from "@ickb/v1-core";
 import {
+    IckbDirection,
+    maturityWaitTime,
     maxWaitTime,
+    MyReceipt,
+    MyMaturity,
     txInfoFrom,
+    RecentOrder,
 } from "./utils";
-import { addChange, base, convert, meltOrder } from "./transaction";
+import { addChange, base, convert } from "./transaction";
 import type { Cell, Header, HexNumber, Transaction } from "@ckb-lumos/base";
 import { parseAbsoluteEpochSince } from "@ckb-lumos/base/lib/since";
 import { getWalletConfig, type WalletConfig } from "./config";
+import { ccc } from "@ckb-ccc/core";
 
 const depositUsedCapacity = BigInt(82) * CKB;
 
@@ -56,6 +66,7 @@ export function l1StateOptions(isFrozen: boolean) {
         queryFn: async () => {
             try {
                 const data = await getL1State(walletConfig);
+                console.log(data);
                 return data
             } catch (e) {
                 console.log(e);
@@ -66,10 +77,13 @@ export function l1StateOptions(isFrozen: boolean) {
             ickbUdtPoolBalance: BigInt(-1),
             ickbDaoBalance: BigInt(-1),
             myOrders: [],
+            myReceipts: [],
+            myMaturity: [],
             ckbBalance: BigInt(-1),
             ickbRealUdtBalance: BigInt(-1),
+            ickbPendingBalance: BigInt(-1),
+            ckbPendingBalance: BigInt(-1),
             ckbAvailable: BigInt(6) * CKB * CKB,
-            ickbUdtAvailable: BigInt(3) * CKB * CKB,
             tipHeader: headerPlaceholder,
             txBuilder: () => txInfoFrom({}),
             hasMatchable: false,
@@ -171,19 +185,20 @@ async function getL1State(walletConfig: WalletConfig) {
         wrGroups: mature,
     });
 
-    const ickbUdtBalance = ickbDelta(baseTx, config);
-    const ickbUdtAvailable = ickbUdtBalance;
+    const myReceipts = convertReceipts(receipts, config);
+    // const ickbUdtBalance = ickbDelta(baseTx, config);
 
     let ckbBalance = ckbDelta(baseTx, config);
     const ckbAvailable = max((ckbBalance / CKB - BigInt(1000)) * CKB, BigInt(0));
     let info = baseInfo;
+    let wrWaitTime = "0 minutes";
     if (notMature.length > 0) {
         ckbBalance += ckbDelta(
             addWithdrawalRequestGroups(helpers.TransactionSkeleton(), notMature),
             config,
         );
 
-        const wrWaitTime = maxWaitTime(
+        wrWaitTime = maxWaitTime(
             notMature.map((g) =>
                 parseAbsoluteEpochSince(
                     g.ownedWithdrawalRequest.cellOutput.type![since],
@@ -201,22 +216,25 @@ async function getL1State(walletConfig: WalletConfig) {
     }
 
     const feeRate = BigInt(Number(await feeRatePromise) + 1000);
-    const txBuilder = (isCkb2Udt: boolean, amount: bigint) => {
+    const txBuilder = (direction: IckbDirection, amount: bigint) => {
         const txInfo = txInfoFrom({ tx: baseTx, info });
 
-        if (amount > BigInt(0)) {
-            return convert(
-                txInfo,
-                isCkb2Udt,
-                amount,
-                ickbPool,
-                tipHeader,
-                feeRate,
-                walletConfig,
-            );
+        if (direction === "ckb2ickb" || direction === "ickb2ckb") {
+            const isCkb2Udt = direction === "ckb2ickb";
+            if (amount > BigInt(0)) {
+                return convert(
+                    txInfo,
+                    isCkb2Udt,
+                    amount,
+                    ickbPool,
+                    tipHeader,
+                    feeRate,
+                    walletConfig,
+                );
+            }
         }
 
-        if (txConsumesIntermediate) {
+        if (txConsumesIntermediate || direction === "melt") {
             return addChange(txInfo, feeRate, walletConfig);
         }
 
@@ -224,40 +242,89 @@ async function getL1State(walletConfig: WalletConfig) {
     };
 
     // Calculate total and real ickb udt liquidity
-    const ickbUdtPoolBalance = await getTotalUdtCapacity(walletConfig);
-    let ickbRealUdtBalance = ickbUdtAvailable;
-    myOrders.forEach((order) => {
-        if (order.info.isCkb2Udt) {
-            ickbRealUdtBalance -= order.info.absProgress / CKB / CKB;
+    const { poolBalance: ickbUdtPoolBalance, userBalance: ickbRealUdtBalance } = await getTotalUdtCapacity(walletConfig);
+
+    // Calculate pending udt and ckb, including matured
+    let ckbPendingBalance = BigInt(0);
+    myOrders.forEach((item) => {
+        if (item.info.isUdt2Ckb && item.info.absTotal === item.info.absProgress) {
+            ckbPendingBalance += item.info.ckbAmount;
         }
+    });
+    const myMaturity: MyMaturity[] = [];
+    mature.forEach((item) => {
+        const maturedCkb = BigInt(parseInt(item.ownedWithdrawalRequest.cellOutput.capacity, 16));
+        ckbPendingBalance += maturedCkb;
+        myMaturity.push({
+            daoCell: item.owner,
+            ckbAmount: maturedCkb,
+            waitTime: "matured",
+        })
+    });
+    let ickbPendingBalance = BigInt(0);
+    myOrders.forEach((item) => {
+        if (item.info.isCkb2Udt && item.info.absTotal === item.info.absProgress) {
+            ickbPendingBalance += item.info.udtAmount;
+        }
+    });
+
+    // Calculate not matured
+    notMature.forEach((item) => {
+        const notMaturedCkb = BigInt(parseInt(item.ownedWithdrawalRequest.cellOutput.capacity, 16));
+        const e = parseAbsoluteEpochSince(
+            item.ownedWithdrawalRequest.cellOutput.type![since],
+        );
+        myMaturity.push({
+            daoCell: item.owner,
+            ckbAmount: notMaturedCkb,
+            waitTime: maturityWaitTime(e, tipHeader)
+        });
     });
 
     return {
         ickbDaoBalance,
         ickbUdtPoolBalance,
         myOrders,
+        myReceipts,
+        myMaturity,
         ckbBalance,
         ickbRealUdtBalance,
         ckbAvailable,
-        ickbUdtAvailable,
+        ickbPendingBalance,
+        ckbPendingBalance,
         tipHeader,
         txBuilder,
         hasMatchable,
     };
 }
-export async function callMelt(myOrders: MyOrder[]) {
-    const walletConfig = getWalletConfig();
-    const { rpc } = walletConfig
-    const feeRatePromise = rpc.getFeeRate(BigInt(1));
-    const feeRate = BigInt(Number(await feeRatePromise) + 1000);
-    return meltOrder(myOrders, feeRate, walletConfig)
+
+function convertReceipts(receipts: I8Cell[], config: ConfigAdapter): MyReceipt[] {
+    const ickbLogic = ickbLogicScript(config);
+    return receipts.filter((c) => {
+        return scriptEq(c.cellOutput.type, ickbLogic);
+    }).map((c) => {
+        const header = c.cellOutput.type![headerDeps][0];
+        const { depositQuantity: quantity, depositAmount: amount } =
+            ReceiptData.unpack(c.data);
+        const ickbValue = ckb2Ickb(amount, header, false) * BigInt(quantity);
+        return {
+            receiptCell: c,
+            depositQuantity: quantity,
+            depositAmount: amount,
+            ickbAmount: ickbValue,
+        }
+    });
 }
 
-async function getTotalUdtCapacity(walletConfig: WalletConfig): Promise<bigint> {
-    const { rpc, config } = walletConfig;
+async function getTotalUdtCapacity(walletConfig: WalletConfig): Promise<{
+    poolBalance: bigint;
+    userBalance: bigint;
+}> {
+    const { rpc, config, accountLock } = walletConfig;
     const udtType = ickbUdtType(config);
     let cursor = undefined;
     let udtCapacity = BigInt(0);
+    let userUdtCapacity = BigInt(0);
     while (true) {
         //@ts-expect-error 未指定type
         const result = await rpc.getCells({
@@ -269,44 +336,20 @@ async function getTotalUdtCapacity(walletConfig: WalletConfig): Promise<bigint> 
         if (result.objects.length === 0) {
             break;
         }
-
         cursor = result.lastCursor;
         //@ts-expect-error 未指定type
-        result.objects.forEach((cell: { outputData; }) => {
+        result.objects.forEach((cell: { outputData; output; }) => {
+            if (scriptEq(cell.output.lock, accountLock)) {
+                userUdtCapacity += Uint128.unpack(cell.outputData.slice(0, 2 + 16 * 2));
+            }
             udtCapacity += Uint128.unpack(cell.outputData.slice(0, 2 + 16 * 2));
         })
     }
-    return udtCapacity;
+    return {
+        poolBalance: udtCapacity,
+        userBalance: userUdtCapacity,
+    };
 }
-
-// async function getUserUdtBalance(walletConfig: WalletConfig): Promise<bigint> {
-//     const { rpc, config, accountLock } = walletConfig;
-//     const udtType = ickbUdtType(config);
-//     let cursor = undefined;
-//     let udtCapacity = BigInt(0);
-//     while (true) {
-//         //@ts-expect-error 未指定type
-//         const result = await rpc.getCells({
-//             script: udtType,
-//             scriptType: "type",
-//             scriptSearchMode: "exact",
-//             withData: true,
-//             filter: {
-//                 script: accountLock,
-//             }
-//         }, "desc", BigInt(50), cursor);
-//         if (result.objects.length === 0) {
-//             break;
-//         }
-
-//         cursor = result.lastCursor;
-//         //@ts-expect-error 未指定type
-//         result.objects.forEach((cell: { outputData; }) => {
-//             udtCapacity += Uint128.unpack(cell.outputData.slice(0, 2 + 16 * 2));
-//         })
-//     }
-//     return udtCapacity;
-// }
 
 async function getMixedCells(walletConfig: WalletConfig) {
     const { accountLock, config, rpc } = walletConfig;
@@ -430,3 +473,40 @@ export const headerPlaceholder = I8Header.from({
     timestamp: "0x16e70e6985c",
     version: "0x0",
 });
+
+export async function* getRecentIckbOrders(signer: ccc.Signer, config: ConfigAdapter) {
+    const limitOrder = limitOrderScript(config);
+    const udtType = ickbUdtType(config);
+    // Filter order mint and withdraw
+    for await (const tx of signer.findTransactions({
+        script: limitOrder,
+    }, true, "desc")) {
+        const header = await signer.client.getHeaderByNumber(tx.blockNumber);
+        if (!header) {
+            continue;
+        }
+        const inOutput = tx.cells.find(({ isInput }) => !isInput);
+        if (inOutput) {
+            const result = await signer.client.getTransaction(tx.txHash);
+            if (!result) {
+                continue;
+            }
+            const { transaction } = result;
+            const orderIndex = transaction.outputs.findIndex(cell => scriptEq(cell.lock, limitOrder) && scriptEq(cell.type, udtType));
+            if (orderIndex === -1) {
+                continue;
+            }
+            const orderData = transaction.outputsData[orderIndex];
+            const udtAmount = Uint128.unpack(orderData.slice(0, 2 + 16 * 2));
+            const ckbAmount = transaction.outputs[orderIndex].capacity;
+            const timestamp = header.timestamp;
+            const order: RecentOrder = {
+                timestamp,
+                operation: udtAmount > 0 ? "order_withdraw" : "order_deposit",
+                amount: udtAmount > 0 ? udtAmount : ckbAmount,
+                unit: udtAmount > 0 ? "iCKB" : "CKB",
+            }
+            yield order;
+        }
+    }
+}

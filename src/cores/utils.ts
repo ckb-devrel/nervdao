@@ -10,6 +10,7 @@ import type { QueryClient } from "@tanstack/react-query";
 import {
     CKB,
     epochSinceCompare,
+    I8Cell,
     isPopulated,
     type ChainConfig,
     type I8Header,
@@ -20,19 +21,45 @@ import { MyOrder } from "@ickb/v1-core";
 export interface RootConfig extends ChainConfig {
     queryClient: QueryClient;
 }
-export type  IckbDateType ={
+
+export type IckbDateType = {
     ickbDaoBalance: bigint;
     ickbUdtPoolBalance: bigint;
     myOrders: MyOrder[];
+    myReceipts: MyReceipt[];
+    myMaturity: MyMaturity[];
     ckbBalance: bigint;
+    ckbPendingBalance: bigint;
+    ickbPendingBalance: bigint;
     ckbAvailable: bigint;
-    ickbUdtAvailable: bigint;
-    ickbRealUdtBalance:bigint;
+    ickbRealUdtBalance: bigint;
     tipHeader: Readonly<I8Header>;
-    txBuilder: (isCkb2Udt: boolean, amount: bigint) => Readonly<TxInfo>;
+    txBuilder: (direction: IckbDirection, amount: bigint) => Readonly<TxInfo>;
     hasMatchable: boolean;
 
-}|undefined
+} | undefined
+
+export type IckbDirection = "ckb2ickb" | "ickb2ckb" | "melt";
+
+export type MyReceipt = {
+    receiptCell: I8Cell;
+    depositQuantity: number;
+    depositAmount: bigint;
+    ickbAmount: bigint;
+}
+
+export type MyMaturity = {
+    daoCell: I8Cell,
+    ckbAmount: bigint;
+    waitTime: string;
+}
+
+export type RecentOrder = {
+    timestamp: bigint;
+    operation: "order_deposit" | "order_withdraw" | "dao_deposit" | "dao_withdraw";
+    amount: bigint;
+    unit: "CKB" | "iCKB";
+}
 
 export function symbol2Direction(s: string) {
     return s === "C";
@@ -89,8 +116,12 @@ export function toBigInt(text: string) {
 }
 
 export function maxWaitTime(ee: EpochSinceValue[], tipHeader: I8Header) {
-    const t = parseEpoch(tipHeader.epoch);
     const e = ee.reduce((a, b) => (epochSinceCompare(a, b) === -1 ? b : a));
+    return maturityWaitTime(e, tipHeader);
+}
+
+export function maturityWaitTime(e: EpochSinceValue, tipHeader: I8Header) {
+    const t = parseEpoch(tipHeader.epoch);
     const epochs = e.index / e.length - t.index / t.length + e.number - t.number;
     if (epochs <= 0.375) {
         //90 minutes
