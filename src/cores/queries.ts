@@ -42,11 +42,13 @@ import {
     MyReceipt,
     MyMaturity,
     txInfoFrom,
+    RecentOrder,
 } from "./utils";
 import { addChange, base, convert } from "./transaction";
 import type { Cell, Header, HexNumber, Transaction } from "@ckb-lumos/base";
 import { parseAbsoluteEpochSince } from "@ckb-lumos/base/lib/since";
 import { getWalletConfig, type WalletConfig } from "./config";
+import { ccc } from "@ckb-ccc/core";
 
 const depositUsedCapacity = BigInt(82) * CKB;
 
@@ -241,37 +243,20 @@ async function getL1State(walletConfig: WalletConfig) {
 
     // Calculate total and real ickb udt liquidity
     const { poolBalance: ickbUdtPoolBalance, userBalance: ickbRealUdtBalance } = await getTotalUdtCapacity(walletConfig);
-    // myOrders.forEach((order) => {
-    //     if (order.info.isCkb2Udt) {
-    //         const multiplier = order.info.ckbToUdt.udtMultiplier;
-    //         const ickbValue = order.info.absTotal / multiplier;
-    //         if (ickbRealUdtBalance > ickbValue) {
-    //             ickbRealUdtBalance -= ickbValue;
-    //         }
-    //     } else {
-    //         const multiplier = order.info.udtToCkb.udtMultiplier;
-    //         const ickbValue = order.info.absTotal / multiplier;
-    //         if (ickbRealUdtBalance > ickbValue) {
-    //             ickbRealUdtBalance -= ickbValue;
-    //         }
-    //     }
-    // });
-    // myReceipts.forEach((receipt) => {
-    //     ickbRealUdtBalance -= receipt.ickbAmount;
-    // });
 
-    const myMaturity: MyMaturity[] = [];
-    // Calculate pending udt and ckb
+    // Calculate pending udt and ckb, including matured
     let ckbPendingBalance = BigInt(0);
     myOrders.forEach((item) => {
         if (item.info.isUdt2Ckb && item.info.absTotal === item.info.absProgress) {
             ckbPendingBalance += item.info.ckbAmount;
         }
     });
+    const myMaturity: MyMaturity[] = [];
     mature.forEach((item) => {
         const maturedCkb = BigInt(parseInt(item.ownedWithdrawalRequest.cellOutput.capacity, 16));
         ckbPendingBalance += maturedCkb;
         myMaturity.push({
+            daoCell: item.owner,
             ckbAmount: maturedCkb,
             waitTime: "matured",
         })
@@ -283,13 +268,14 @@ async function getL1State(walletConfig: WalletConfig) {
         }
     });
 
-    // Calculate maturity progress
+    // Calculate not matured
     notMature.forEach((item) => {
         const notMaturedCkb = BigInt(parseInt(item.ownedWithdrawalRequest.cellOutput.capacity, 16));
         const e = parseAbsoluteEpochSince(
             item.ownedWithdrawalRequest.cellOutput.type![since],
         );
         myMaturity.push({
+            daoCell: item.owner,
             ckbAmount: notMaturedCkb,
             waitTime: maturityWaitTime(e, tipHeader)
         });
@@ -487,3 +473,40 @@ export const headerPlaceholder = I8Header.from({
     timestamp: "0x16e70e6985c",
     version: "0x0",
 });
+
+export async function* getRecentIckbOrders(signer: ccc.Signer, config: ConfigAdapter) {
+    const limitOrder = limitOrderScript(config);
+    const udtType = ickbUdtType(config);
+    // Filter order mint and withdraw
+    for await (const tx of signer.findTransactions({
+        script: limitOrder,
+    }, true, "desc")) {
+        const header = await signer.client.getHeaderByNumber(tx.blockNumber);
+        if (!header) {
+            continue;
+        }
+        const inOutput = tx.cells.find(({ isInput }) => !isInput);
+        if (inOutput) {
+            const result = await signer.client.getTransaction(tx.txHash);
+            if (!result) {
+                continue;
+            }
+            const { transaction } = result;
+            const orderIndex = transaction.outputs.findIndex(cell => scriptEq(cell.lock, limitOrder) && scriptEq(cell.type, udtType));
+            if (orderIndex === -1) {
+                continue;
+            }
+            const orderData = transaction.outputsData[orderIndex];
+            const udtAmount = Uint128.unpack(orderData.slice(0, 2 + 16 * 2));
+            const ckbAmount = transaction.outputs[orderIndex].capacity;
+            const timestamp = header.timestamp;
+            const order: RecentOrder = {
+                timestamp,
+                operation: udtAmount > 0 ? "order_withdraw" : "order_deposit",
+                amount: udtAmount > 0 ? udtAmount : ckbAmount,
+                unit: udtAmount > 0 ? "iCKB" : "CKB",
+            }
+            yield order;
+        }
+    }
+}

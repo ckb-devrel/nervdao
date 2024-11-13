@@ -49,8 +49,16 @@ export type MyReceipt = {
 }
 
 export type MyMaturity = {
+    daoCell: I8Cell,
     ckbAmount: bigint;
     waitTime: string;
+}
+
+export type RecentOrder = {
+    timestamp: bigint;
+    operation: "order_deposit" | "order_withdraw" | "dao_deposit" | "dao_withdraw";
+    amount: bigint;
+    unit: "CKB" | "iCKB";
 }
 
 export function symbol2Direction(s: string) {
