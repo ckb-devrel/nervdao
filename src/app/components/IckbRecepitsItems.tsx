@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { ArrowUp, Download, Info } from "lucide-react";
+import { Download, Info } from "lucide-react";
 import { WalletConfig } from "@/cores/config";
 import { HexNumber } from "@ckb-lumos/base";
 import { getHeadersByNumber } from "@/cores/queries";
-import CircularProgress from "./CircularProgress";
 import { CKB } from "@ickb/lumos-utils";
 
 interface IckbRecepitsItemProps {
@@ -48,11 +47,11 @@ export function IckbRecepitsItems({
             </div>
             <div className="text-white font-work-sans text-body-2 flex items-center" >
                 <div className="mr-4">
-                <p className="text-base font-bold font-play ">
-                {parseFloat((Number(item.ickbAmount / CKB)).toString()).toFixed(2)} iCKB
-                </p>
+                    <p className="text-base font-bold font-play ">
+                        {parseFloat((Number(item.ickbAmount / CKB)).toString()).toFixed(2)} iCKB
+                    </p>
                 </div>
-                
+
 
             </div>
         </div>

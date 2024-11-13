@@ -26,7 +26,6 @@ import {
 import {
     addWithdrawalRequestGroups,
     ckb2Ickb,
-    ickbDelta,
     ickbLogicScript,
     ickbPoolSifter,
     ickbSifter,
@@ -38,8 +37,10 @@ import {
 } from "@ickb/v1-core";
 import {
     IckbDirection,
+    maturityWaitTime,
     maxWaitTime,
     MyReceipt,
+    MyMaturity,
     txInfoFrom,
 } from "./utils";
 import { addChange, base, convert } from "./transaction";
@@ -75,16 +76,12 @@ export function l1StateOptions(isFrozen: boolean) {
             ickbDaoBalance: BigInt(-1),
             myOrders: [],
             myReceipts: [],
+            myMaturity: [],
             ckbBalance: BigInt(-1),
             ickbRealUdtBalance: BigInt(-1),
             ickbPendingBalance: BigInt(-1),
             ckbPendingBalance: BigInt(-1),
             ckbAvailable: BigInt(6) * CKB * CKB,
-            ckbMaturity: {
-                progressCkb: BigInt(0),
-                totalCkb: BigInt(0),
-                maxWaitTime: "0 minutes",
-            },
             tipHeader: headerPlaceholder,
             txBuilder: () => txInfoFrom({}),
             hasMatchable: false,
@@ -187,7 +184,7 @@ async function getL1State(walletConfig: WalletConfig) {
     });
 
     const myReceipts = convertReceipts(receipts, config);
-    const ickbUdtBalance = ickbDelta(baseTx, config);
+    // const ickbUdtBalance = ickbDelta(baseTx, config);
 
     let ckbBalance = ckbDelta(baseTx, config);
     const ckbAvailable = max((ckbBalance / CKB - BigInt(1000)) * CKB, BigInt(0));
@@ -243,23 +240,27 @@ async function getL1State(walletConfig: WalletConfig) {
     };
 
     // Calculate total and real ickb udt liquidity
-    const ickbUdtPoolBalance = await getTotalUdtCapacity(walletConfig);
-    let ickbRealUdtBalance = ickbUdtBalance;
-    myOrders.forEach((order) => {
-        if (order.info.isCkb2Udt) {
-            const multiplier = order.info.ckbToUdt.udtMultiplier;
-            const ickbValue = order.info.absTotal / multiplier;
-            ickbRealUdtBalance -= ickbValue;
-        } else {
-            const multiplier = order.info.udtToCkb.udtMultiplier;
-            const ickbValue = (order.info.absTotal - order.info.absProgress) / multiplier;
-            ickbRealUdtBalance -= ickbValue;
-        }
-    });
-    myReceipts.forEach((receipt) => {
-        ickbRealUdtBalance -= receipt.ickbAmount;
-    });
+    const { poolBalance: ickbUdtPoolBalance, userBalance: ickbRealUdtBalance } = await getTotalUdtCapacity(walletConfig);
+    // myOrders.forEach((order) => {
+    //     if (order.info.isCkb2Udt) {
+    //         const multiplier = order.info.ckbToUdt.udtMultiplier;
+    //         const ickbValue = order.info.absTotal / multiplier;
+    //         if (ickbRealUdtBalance > ickbValue) {
+    //             ickbRealUdtBalance -= ickbValue;
+    //         }
+    //     } else {
+    //         const multiplier = order.info.udtToCkb.udtMultiplier;
+    //         const ickbValue = order.info.absTotal / multiplier;
+    //         if (ickbRealUdtBalance > ickbValue) {
+    //             ickbRealUdtBalance -= ickbValue;
+    //         }
+    //     }
+    // });
+    // myReceipts.forEach((receipt) => {
+    //     ickbRealUdtBalance -= receipt.ickbAmount;
+    // });
 
+    const myMaturity: MyMaturity[] = [];
     // Calculate pending udt and ckb
     let ckbPendingBalance = BigInt(0);
     myOrders.forEach((item) => {
@@ -267,11 +268,13 @@ async function getL1State(walletConfig: WalletConfig) {
             ckbPendingBalance += item.info.ckbAmount;
         }
     });
-    let maturityProgress = BigInt(0);
     mature.forEach((item) => {
         const maturedCkb = BigInt(parseInt(item.ownedWithdrawalRequest.cellOutput.capacity, 16));
-        maturityProgress += maturedCkb;
         ckbPendingBalance += maturedCkb;
+        myMaturity.push({
+            ckbAmount: maturedCkb,
+            waitTime: "matured",
+        })
     });
     let ickbPendingBalance = BigInt(0);
     myOrders.forEach((item) => {
@@ -281,28 +284,28 @@ async function getL1State(walletConfig: WalletConfig) {
     });
 
     // Calculate maturity progress
-    let maturityTotal = maturityProgress;
     notMature.forEach((item) => {
-        maturityTotal += BigInt(parseInt(item.ownedWithdrawalRequest.cellOutput.capacity, 16));
+        const notMaturedCkb = BigInt(parseInt(item.ownedWithdrawalRequest.cellOutput.capacity, 16));
+        const e = parseAbsoluteEpochSince(
+            item.ownedWithdrawalRequest.cellOutput.type![since],
+        );
+        myMaturity.push({
+            ckbAmount: notMaturedCkb,
+            waitTime: maturityWaitTime(e, tipHeader)
+        });
     });
-    const ckbMaturity = {
-        progressCkb: maturityProgress,
-        totalCkb: maturityTotal,
-        maxWaitTime: wrWaitTime,
-    };
-    console.log("mature", mature, "noMature", notMature);
 
     return {
         ickbDaoBalance,
         ickbUdtPoolBalance,
         myOrders,
         myReceipts,
+        myMaturity,
         ckbBalance,
         ickbRealUdtBalance,
         ckbAvailable,
         ickbPendingBalance,
         ckbPendingBalance,
-        ckbMaturity,
         tipHeader,
         txBuilder,
         hasMatchable,
@@ -327,11 +330,15 @@ function convertReceipts(receipts: I8Cell[], config: ConfigAdapter): MyReceipt[]
     });
 }
 
-async function getTotalUdtCapacity(walletConfig: WalletConfig): Promise<bigint> {
-    const { rpc, config } = walletConfig;
+async function getTotalUdtCapacity(walletConfig: WalletConfig): Promise<{
+    poolBalance: bigint;
+    userBalance: bigint;
+}> {
+    const { rpc, config, accountLock } = walletConfig;
     const udtType = ickbUdtType(config);
     let cursor = undefined;
     let udtCapacity = BigInt(0);
+    let userUdtCapacity = BigInt(0);
     while (true) {
         //@ts-expect-error 未指定type
         const result = await rpc.getCells({
@@ -343,14 +350,19 @@ async function getTotalUdtCapacity(walletConfig: WalletConfig): Promise<bigint> 
         if (result.objects.length === 0) {
             break;
         }
-
         cursor = result.lastCursor;
         //@ts-expect-error 未指定type
-        result.objects.forEach((cell: { outputData; }) => {
+        result.objects.forEach((cell: { outputData; output; }) => {
+            if (scriptEq(cell.output.lock, accountLock)) {
+                userUdtCapacity += Uint128.unpack(cell.outputData.slice(0, 2 + 16 * 2));
+            }
             udtCapacity += Uint128.unpack(cell.outputData.slice(0, 2 + 16 * 2));
         })
     }
-    return udtCapacity;
+    return {
+        poolBalance: udtCapacity,
+        userBalance: userUdtCapacity,
+    };
 }
 
 async function getMixedCells(walletConfig: WalletConfig) {

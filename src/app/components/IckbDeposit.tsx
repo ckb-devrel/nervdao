@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { ccc } from "@ckb-ccc/connector-react";
 import { useNotification } from "@/context/NotificationProvider";
 import { ckb2Ickb } from "@ickb/v1-core";
-import { Info, ArrowDown, TriangleAlert } from "lucide-react";
+import { Info, TriangleAlert } from "lucide-react";
 import { toText } from "@/utils/stringUtils";
 import { IckbDateType } from "@/cores/utils";
 import { CKB } from "@ickb/lumos-utils";
@@ -71,8 +71,6 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
         setAmount(ccc.fixedPointToString(maxBalance));
     };
     const handleAmountChange = (e: { target: { value: React.SetStateAction<string>; }; }) => {
-
-
         setAmount(e.target.value)
     }
     const handleMelt = async () => {
@@ -105,7 +103,7 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
     useEffect(() => {
         if (!ickbData) return;
         const canMelt = ickbData.ckbPendingBalance > BigInt(0);
-        ickbData.ckbPendingBalance>0?setPendingBalance(toText(BigInt(ickbData.ckbPendingBalance))):setPendingBalance('0');
+        ickbData.ckbPendingBalance > 0 ? setPendingBalance(toText(BigInt(ickbData.ckbPendingBalance))) : setPendingBalance('0');
         setCanMelt(canMelt);
 
         // setPendingBalance(toText(BigInt(pending)) || '-');
@@ -176,12 +174,12 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
                 </span>
             </div>
             <p className="text-center text-large font-bold text-center text-cyan-500 mb-4 pb-2 ">
-                1 CKB ≈ {ickbData?.tipHeader && approxConversion(CKB)}iCKB
+                1 CKB ≈ {ickbData?.tipHeader && approxConversion(CKB)} iCKB
             </p>
             <div className="flex justify-between my-3 text-base">
-                <span>You will Receive <Info size={16} className="inline-block" data-tooltip-id="my-tooltip" data-tooltip-content="receive info" /></span>
+                <span>Receive </span>
                 {/* 扣除0.1% 交易bot fee */}
-                <span>{amount ? <>≈{approxConversion(BigInt(Math.trunc(parseFloat(amount) * Number(CKB)/*99900000*/)))} iCKB</> : '0'}</span>
+                <span>{amount ? <>≈{approxConversion(BigInt(Math.trunc(parseFloat(amount) * Number(CKB)/*99900000*/)))} iCKB</> : '0 iCKB'}</span>
             </div>
             {txInfo && Number(amount) > 0 &&
                 <div className="rounded border-1 border-yellow-500 p-4 bg-yellow-500/[.12]  my-3">
@@ -195,12 +193,12 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
                             .join(". ")}
                     </p></div>
             }
-          
+
 
             <button
                 onClick={handleSwap}
                 className="mt-4 w-full font-bold bg-btn-gradient text-gray-800 text-body-2 py-3 rounded-lg hover:bg-btn-gradient-hover transition duration-200 disabled:opacity-50 disabled:hover:bg-btn-gradient"
-                disabled={ transTBC}
+                disabled={transTBC}
             >
                 {transTBC ? (<>
                     <TailSpin

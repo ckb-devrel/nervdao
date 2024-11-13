@@ -27,11 +27,11 @@ export type IckbDateType = {
     ickbUdtPoolBalance: bigint;
     myOrders: MyOrder[];
     myReceipts: MyReceipt[];
+    myMaturity: MyMaturity[];
     ckbBalance: bigint;
     ckbPendingBalance: bigint;
     ickbPendingBalance: bigint;
     ckbAvailable: bigint;
-    ckbMaturity: Maturity;
     ickbRealUdtBalance: bigint;
     tipHeader: Readonly<I8Header>;
     txBuilder: (direction: IckbDirection, amount: bigint) => Readonly<TxInfo>;
@@ -48,10 +48,9 @@ export type MyReceipt = {
     ickbAmount: bigint;
 }
 
-export type Maturity = {
-    progressCkb: bigint;
-    totalCkb: bigint;
-    maxWaitTime: string;
+export type MyMaturity = {
+    ckbAmount: bigint;
+    waitTime: string;
 }
 
 export function symbol2Direction(s: string) {
@@ -109,8 +108,12 @@ export function toBigInt(text: string) {
 }
 
 export function maxWaitTime(ee: EpochSinceValue[], tipHeader: I8Header) {
-    const t = parseEpoch(tipHeader.epoch);
     const e = ee.reduce((a, b) => (epochSinceCompare(a, b) === -1 ? b : a));
+    return maturityWaitTime(e, tipHeader);
+}
+
+export function maturityWaitTime(e: EpochSinceValue, tipHeader: I8Header) {
+    const t = parseEpoch(tipHeader.epoch);
     const epochs = e.index / e.length - t.index / t.length + e.number - t.number;
     if (epochs <= 0.375) {
         //90 minutes
