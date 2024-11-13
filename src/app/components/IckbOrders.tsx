@@ -3,9 +3,9 @@ import React from "react";
 import { IckbOrderItem } from "./IckbOrderItem";
 import { IckbDateType } from "@/cores/utils";
 import { IckbRecepitsItems } from "./IckbRecepitsItems";
-import { IckbMaturityItems } from "./IckbMaturityItems";
 
 const IckbOrders: React.FC<{ walletConfig: WalletConfig, ickbData: IckbDateType }> = ({ walletConfig, ickbData }) => {
+    
     return (
         <>
             <div className="bg-gray-900 rounded-lg p-4 flex flex-col flex-grow">

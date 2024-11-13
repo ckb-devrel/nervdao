@@ -9,7 +9,7 @@ import { CKB } from "@ickb/lumos-utils";
 import { TailSpin } from "react-loader-spinner";
 
 
-const IckbWithDraw: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = ({ ickbData, onUpdate }) => {
+const IckbWithdraw: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = ({ ickbData, onUpdate }) => {
     const [amount, setAmount] = useState<string>("");
     const [pendingBalance, setPendingBalance] = useState<string>("0");
     const [canMelt, setCanMelt] = useState<boolean>(false);
@@ -215,4 +215,4 @@ const IckbWithDraw: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }>
     );
 };
 
-export default IckbWithDraw;
+export default IckbWithdraw;

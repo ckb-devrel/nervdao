@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import IckbDeposit from "./IckbDeposit";
 import { type WalletConfig } from "@/cores/config";
-import IckbWithDraw from "./IckbWithDraw";
+import IckbWithDraw from "./IckbWithrraw";
 import IckbStatus from "./IckbStatus";
 import IckbRecentOrders from "./IckbOrders";
 import { useQuery } from "@tanstack/react-query";
@@ -36,6 +36,7 @@ const IckbForm: React.FC<{ walletConfig: WalletConfig }> = ({ walletConfig }) =>
                                     {ickbData.myMaturity.map((item, index) => {
                                         return (
                                             <IckbMaturityItems
+                                                walletConfig={walletConfig} 
                                                 key={index}
                                                 item={
                                                     item
