@@ -28,9 +28,9 @@ const IckbRecentOrders: React.FC<{ walletConfig: WalletConfig, ickbData: IckbDat
                             />
 
                         )
-                    }) : "no active orders"}
+                    }) : 'no active orders'}
                 </div>
-            
+
                 <div className="">
                     {(ickbData && ickbData.myReceipts.length) ? ickbData.myReceipts.map((item, index) => {
                         return (
@@ -48,11 +48,11 @@ const IckbRecentOrders: React.FC<{ walletConfig: WalletConfig, ickbData: IckbDat
                         )
                     }) : null}
                 </div>
-               
+
             </div>
             <div className="bg-gray-900 rounded-lg p-4 flex flex-col flex-grow mt-4">
-            <h3 className="text-xl font-play font-bold mb-4">Recent Orders</h3>
-            <div ></div>
+                <h3 className="text-xl font-play font-bold mb-4">Recent Orders</h3>
+                <div ></div>
             </div>
         </>
     )

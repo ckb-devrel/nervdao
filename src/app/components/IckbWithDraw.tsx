@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { ccc } from "@ckb-ccc/connector-react";
 import { useNotification } from "@/context/NotificationProvider";
 import { ickb2Ckb } from "@ickb/v1-core";
-import { Info, TriangleAlert } from "lucide-react";
+import { TriangleAlert } from "lucide-react";
 import { toText } from "@/utils/stringUtils";
 import { IckbDateType } from "@/cores/utils";
 import { CKB } from "@ickb/lumos-utils";
@@ -31,14 +31,14 @@ const IckbWithDraw: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }>
             const cccTx = ccc.Transaction.fromLumosSkeleton(txInfo.tx);
             txHash = await signerCcc.sendTransaction(cccTx);
             setTransTBC(true)
-            progressId = await showNotification("progress", `WithDraw in progress, wait for 60s`);
+            progressId = await showNotification("progress", `Withdraw in progress, wait for 60s`);
             setWithdrawPending(true)
 
             await signerCcc.client.waitTransaction(txHash, 0, 60000)
-            showNotification("success", `WithDraw Success: ${txHash}`);
+            showNotification("success", `Withdraw Success: ${txHash}`);
             onUpdate()
         } catch (error) {
-            showNotification("error", `WithDraw Error: ${error}`);
+            showNotification("error", `Withdraw Error: ${error}`);
         } finally {
             removeNotification(progressId + '')
             setAmount("")
@@ -114,7 +114,7 @@ const IckbWithDraw: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }>
             });
         }
         setCanMelt(canMelt)
-        pending>0?setPendingBalance(toText(BigInt(pending))):setPendingBalance('0');
+        pending > 0 ? setPendingBalance(toText(BigInt(pending))) : setPendingBalance('0');
 
     }, [ickbData, meltTBC]);
 
@@ -160,11 +160,11 @@ const IckbWithDraw: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }>
             </div>
 
             <p className="text-center text-large font-bold text-center text-cyan-500 mb-4 pb-2 ">
-                1 iCKB ≈ {ickbData?.tipHeader && approxConversion(CKB)}CKB
+                1 iCKB ≈ {ickbData?.tipHeader && approxConversion(CKB)} CKB
             </p>
             <div className="flex justify-between my-3 text-base">
-                <span>You will Receive <Info size={16} className="inline-block" data-tooltip-id="my-tooltip" data-tooltip-content="receive info" /></span>
-                <span>{amount ? <>≈{approxConversion(BigInt(Math.trunc(parseFloat(amount) * Number(CKB))))} CKB</> : '0'}</span>
+                <span>Receive </span>
+                <span>{amount ? <>≈{approxConversion(BigInt(Math.trunc(parseFloat(amount) * Number(CKB))))} CKB</> : 0} CKB</span>
             </div>
             {txInfo && Number(amount) > 0 &&
                 <div className="rounded border-1 border-yellow-500 p-4 bg-yellow-500/[.12]  my-3">
@@ -181,9 +181,9 @@ const IckbWithDraw: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }>
             <button
                 onClick={handleWithDraw}
                 className="mt-4 w-full font-bold bg-btn-gradient text-gray-800 text-body-2 py-3 rounded-lg hover:bg-btn-gradient-hover transition duration-200 disabled:opacity-50 disabled:hover:bg-btn-gradient"
-                 disabled={ transTBC}
+                disabled={transTBC}
             >
-                 {transTBC ? (<>
+                {transTBC ? (<>
                     <TailSpin
                         height="20"
                         width="20"
@@ -195,9 +195,9 @@ const IckbWithDraw: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }>
                     /> {withdrawPending ? 'pending' : 'To be confirmed'}
                 </>) :
 
-                    <>{amount ? 'WithDraw' : 'Enter an amount'}
+                    <>{amount ? 'Withdraw' : 'Enter an amount'}
                     </>}
-               
+
 
             </button>
             {/* <div className="mt-8 w-full">
