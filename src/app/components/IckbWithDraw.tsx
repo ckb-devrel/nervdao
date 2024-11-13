@@ -164,7 +164,7 @@ const IckbWithDraw: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }>
             </p>
             <div className="flex justify-between my-3 text-base">
                 <span>Receive </span>
-                <span>{amount ? <>≈{approxConversion(BigInt(Math.trunc(parseFloat(amount) * Number(CKB))))} CKB</> : 0} CKB</span>
+                <span>{amount ? <>≈{approxConversion(BigInt(Math.trunc(parseFloat(amount) * Number(CKB))))}</> : 0} CKB</span>
             </div>
             {txInfo && Number(amount) > 0 &&
                 <div className="rounded border-1 border-yellow-500 p-4 bg-yellow-500/[.12]  my-3">
