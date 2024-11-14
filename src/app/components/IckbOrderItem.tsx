@@ -41,7 +41,7 @@ export function IckbOrderItem({
                 </div>
                 <div>
                     <p className="text-white font-work-sans text-body-2 flex items-center"> {item.isCkb2Udt ? "Swap CKB to iCKB" : "Withdraw CKB from iCKB"}
-                        <a data-tooltip-id="my-tooltip" data-tooltip-content={item.isCkb2Udt ? "Should wait market maker to take" : "Automatically withdraw while in the next operation"}>
+                        <a data-tooltip-id="my-tooltip" data-tooltip-content="Order less than 100,000 iCKB relies on the 3rd-party market maker's participation">
                             <Info className="w-4 h-4 cursor-pointer ml-2" />
                         </a>
                     </p>

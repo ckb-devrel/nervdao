@@ -9,6 +9,7 @@ interface IckbRecepitsItemProps {
     walletConfig: WalletConfig
     item: {
         ickbAmount: bigint;
+        ckbAmount: bigint;
         blockNumber: string | undefined;
     }
 }
@@ -37,8 +38,8 @@ export function IckbRecepitsItems({
 
                 </div>
                 <div>
-                    <p className="text-white font-work-sans text-body-2 flex items-center"> Receipt of Nervos DAO
-                        <a data-tooltip-id="my-tooltip" data-tooltip-content="More than 100,000 iCKB will deposit to NervDao">
+                    <p className="text-white font-work-sans text-body-2 flex items-center"> Deposit into Nervos DAO
+                        <a data-tooltip-id="my-tooltip" data-tooltip-content="Order more than 100,000 iCKB will directly deposit into Nervos DAO">
                             <Info className="w-4 h-4 cursor-pointer ml-2" />
                         </a>
                     </p>
@@ -48,7 +49,7 @@ export function IckbRecepitsItems({
             <div className="text-white font-work-sans text-body-2 flex items-center" >
                 <div className="mr-4">
                     <p className="text-base font-bold font-play ">
-                        {parseFloat((Number(item.ickbAmount / CKB)).toString()).toFixed(2)} iCKB
+                        {parseFloat((Number(item.ckbAmount / CKB)).toString()).toFixed(2)} CKB
                     </p>
                 </div>
 

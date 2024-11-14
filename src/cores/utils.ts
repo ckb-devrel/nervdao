@@ -45,6 +45,7 @@ export type MyReceipt = {
     receiptCell: I8Cell;
     depositQuantity: number;
     depositAmount: bigint;
+    ckbAmount: bigint;
     ickbAmount: bigint;
 }
 

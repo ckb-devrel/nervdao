@@ -56,6 +56,7 @@ const IckbOrders: React.FC<{ walletConfig: WalletConfig, ickbData: IckbDateType 
 
 
 
+
     return (
         <>
             <div className="bg-gray-900 rounded-lg p-4 flex flex-col flex-grow">
@@ -91,43 +92,15 @@ const IckbOrders: React.FC<{ walletConfig: WalletConfig, ickbData: IckbDateType 
                         item={
                             {
                                 ickbAmount: item.ickbAmount,
+                                ckbAmount: item.ckbAmount,
                                 blockNumber: item.receiptCell.blockNumber
-
                             }
                         }
                     />
                 )
-            })
+            }) : <></>}
 
-                : <></>}
 
-            <div className="bg-gray-900 rounded-lg p-4 flex flex-col flex-grow mt-6 text-left">
-                <h3 className="text-xl font-play font-bold mb-4">Recent Orders</h3>
-                {txs && txs.length > 0 ? <>
-                    {txs.map((item, index) => {
-                        return (
-                            <IckbHistoryOrderItems
-                                key={index}
-                                item={item}
-
-                            />
-                        )
-                    })}
-                    {txGenerator ? (
-                        <button
-                            className="text-cyan-400 mt-4 hover:underline"
-                            onClick={() => setLimit(limit + 5)}
-                        >
-                            View all history
-                        </button>
-                    ) : undefined}</>
-                    : <div
-
-                        className={`flex flex-grow items-center justify-center bg-gray-800 rounded-lg p-4  `}
-                    >
-                        <p className="text-gray-400">No recent transactions</p>
-                    </div>}
-            </div>
 
         </>
     )
