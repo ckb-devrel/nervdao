@@ -15,8 +15,8 @@ interface IckbRecepitsItemProps {
     item: MyMaturity
 }
 export function IckbMaturityItems({
-     item,walletConfig
-}:IckbRecepitsItemProps) {
+    item, walletConfig
+}: IckbRecepitsItemProps) {
     const [orderDate, setOrderDate] = useState<string>('')
     useEffect(() => {
         const refresh = async () => {
@@ -39,8 +39,8 @@ export function IckbMaturityItems({
 
                 </div>
                 <div>
-                    <p className="text-white font-work-sans text-body-2 flex items-center"> Maturity CKB
-                        <a data-tooltip-id="my-tooltip" data-tooltip-content="More than 100,000 iCKB will deposit to NervDao">
+                    <p className="text-white font-work-sans text-body-2 flex items-center"> Withdraw from Nervos DAO
+                        <a data-tooltip-id="my-tooltip" data-tooltip-content="Order more than 100,000 iCKB will directly withdraw from Nervos DAO">
                             <Info className="w-4 h-4 cursor-pointer ml-2" />
                         </a>
                     </p>
