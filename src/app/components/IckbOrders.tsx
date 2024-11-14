@@ -5,7 +5,7 @@ import { IckbDateType } from "@/cores/utils";
 import { IckbRecepitsItems } from "./IckbRecepitsItems";
 
 const IckbOrders: React.FC<{ walletConfig: WalletConfig, ickbData: IckbDateType }> = ({ walletConfig, ickbData }) => {
-    
+
     return (
         <>
             <div className="bg-gray-900 rounded-lg p-4 flex flex-col flex-grow">
@@ -43,8 +43,8 @@ const IckbOrders: React.FC<{ walletConfig: WalletConfig, ickbData: IckbDateType 
                         item={
                             {
                                 ickbAmount: item.ickbAmount,
+                                ckbAmount: item.ckbAmount,
                                 blockNumber: item.receiptCell.blockNumber
-
                             }
                         }
                     />
@@ -52,7 +52,7 @@ const IckbOrders: React.FC<{ walletConfig: WalletConfig, ickbData: IckbDateType 
             }) : <></>}
 
 
-            
+
         </>
     )
 }

@@ -311,6 +311,7 @@ function convertReceipts(receipts: I8Cell[], config: ConfigAdapter): MyReceipt[]
             receiptCell: c,
             depositQuantity: quantity,
             depositAmount: amount,
+            ckbAmount: amount * BigInt(quantity),
             ickbAmount: ickbValue,
         }
     });
@@ -477,6 +478,69 @@ export const headerPlaceholder = I8Header.from({
 export async function* getRecentIckbOrders(signer: ccc.Signer, config: ConfigAdapter) {
     const limitOrder = limitOrderScript(config);
     const udtType = ickbUdtType(config);
+    const ickbLogicType = ickbLogicScript(config);
+    const ownedOwner = ownedOwnerScript(config);
+    let recentOrders: RecentOrder[] = [];
+    // Find all dao mint
+    for await (const tx of signer.findTransactions({
+        script: ickbLogicType,
+    }, true, "desc")) {
+        const header = await signer.client.getHeaderByNumber(tx.blockNumber);
+        if (!header) {
+            continue;
+        }
+        const inOutput = tx.cells.find(({ isInput }) => !isInput);
+        if (inOutput) {
+            const receiptCell = await signer.client.getCell({
+                txHash: tx.txHash,
+                index: inOutput.cellIndex
+            });
+            if (!receiptCell) {
+                continue;
+            }
+            const receiptData = ReceiptData.unpack(receiptCell.outputData);
+            const ckbAmount = receiptData.depositAmount * BigInt(receiptData.depositQuantity);
+            const timestamp = header.timestamp;
+            const order: RecentOrder = {
+                timestamp,
+                operation: "dao_deposit",
+                amount: ckbAmount,
+                unit: "CKB",
+            }
+            recentOrders.push(order);
+        }
+    }
+    // Find all dao withdraw
+    for await (const tx of signer.findTransactions({
+        script: ownedOwner
+    }, true, "desc")) {
+        const header = await signer.client.getHeaderByNumber(tx.blockNumber);
+        if (!header) {
+            continue;
+        }
+        const inOutput = tx.cells.find(({ isInput }) => !isInput);
+        if (inOutput) {
+            const result = await signer.client.getTransaction(tx.txHash);
+            if (!result) {
+                continue;
+            }
+            const { transaction } = result;
+            const daoWithdrawIndex = transaction.outputs.findIndex(cell => scriptEq(cell.lock, ownedOwner));
+            if (daoWithdrawIndex === -1) {
+                continue;
+            }
+            const ckbAmount = transaction.outputs[daoWithdrawIndex].capacity;
+            const timestamp = header.timestamp;
+            const order: RecentOrder = {
+                timestamp,
+                operation: "dao_withdraw",
+                amount: ckbAmount,
+                unit: "CKB",
+            }
+            recentOrders.push(order);
+        }
+    }
+    recentOrders = recentOrders.sort((a, b) => Number(b.timestamp - a.timestamp));
     // Filter order mint and withdraw
     for await (const tx of signer.findTransactions({
         script: limitOrder,
@@ -500,13 +564,14 @@ export async function* getRecentIckbOrders(signer: ccc.Signer, config: ConfigAda
             const udtAmount = Uint128.unpack(orderData.slice(0, 2 + 16 * 2));
             const ckbAmount = transaction.outputs[orderIndex].capacity;
             const timestamp = header.timestamp;
-            const order: RecentOrder = {
+            recentOrders.push({
                 timestamp,
                 operation: udtAmount > 0 ? "order_withdraw" : "order_deposit",
                 amount: udtAmount > 0 ? udtAmount : ckbAmount,
                 unit: udtAmount > 0 ? "iCKB" : "CKB",
-            }
-            yield order;
+            });
+            recentOrders = recentOrders.sort((a, b) => Number(b.timestamp - a.timestamp));
+            yield recentOrders.pop();
         }
     }
 }
