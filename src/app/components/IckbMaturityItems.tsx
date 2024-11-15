@@ -50,7 +50,10 @@ export function IckbMaturityItems({
             <div className="text-white font-work-sans text-body-2 flex items-center" >
                 <div className="mr-4">
                     <p className="text-base font-bold font-play ">
-                        {parseFloat((Number(item.ckbAmount / CKB)).toString()).toFixed(2)} CKB {item.waitTime}
+                        {parseFloat((Number(item.ckbAmount / CKB)).toString()).toFixed(2)} CKB
+                    </p>
+                    <p>
+                        {'< ' + item.waitTime}
                     </p>
                 </div>
 

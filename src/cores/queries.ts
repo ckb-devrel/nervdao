@@ -540,7 +540,7 @@ export async function* getRecentIckbOrders(signer: ccc.Signer, config: ConfigAda
             recentOrders.push(order);
         }
     }
-    recentOrders = recentOrders.sort((a, b) => Number(b.timestamp - a.timestamp));
+    recentOrders = recentOrders.sort((a, b) => Number(a.timestamp - b.timestamp));
     // Filter order mint and withdraw
     for await (const tx of signer.findTransactions({
         script: limitOrder,
@@ -570,7 +570,7 @@ export async function* getRecentIckbOrders(signer: ccc.Signer, config: ConfigAda
                 amount: udtAmount > 0 ? udtAmount : ckbAmount,
                 unit: udtAmount > 0 ? "iCKB" : "CKB",
             });
-            recentOrders = recentOrders.sort((a, b) => Number(b.timestamp - a.timestamp));
+            recentOrders = recentOrders.sort((a, b) => Number(a.timestamp - b.timestamp));
             yield recentOrders.pop();
         }
     }
