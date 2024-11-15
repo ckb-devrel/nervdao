@@ -53,7 +53,7 @@ export function IckbMaturityItems({
                         {parseFloat((Number(item.ckbAmount / CKB)).toString()).toFixed(2)} CKB
                     </p>
                     <p>
-                        {'< ' + item.waitTime}
+                        {item.waitTime === 'matured' ? `(${item.waitTime})` : '< ' + item.waitTime}
                     </p>
                 </div>
 

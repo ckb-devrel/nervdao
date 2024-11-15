@@ -33,7 +33,7 @@ const IckbForm: React.FC<{ walletConfig: WalletConfig }> = ({ walletConfig }) =>
                     </div>
                     {(ickbData && ickbData.myMaturity.length) ?
                         <div className="bg-gray-900 rounded-lg p-6 flex flex-col  mt-6">
-                            <h3 className="text-xl font-play font-bold mb-4">Maturity</h3>
+                            <h3 className="text-xl font-play font-bold mb-4">Pending Nervos DAO Withdraw</h3>
                             <div>
                                 {ickbData.myMaturity.map((item, index) => {
                                     return (
