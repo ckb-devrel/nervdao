@@ -17,7 +17,6 @@ const IckbWithdraw: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }>
     const [transTBC, setTransTBC] = useState<boolean>(false);
     const txInfo = (ickbData && amount.length > 0) ? ickbData?.txBuilder("ickb2ckb", ccc.fixedPointFrom(amount)) : null;
     const [withdrawPending, setWithdrawPending] = useState<boolean>(false);
-
     const signerCcc = ccc.useSigner();
     // const pendingIckbs = ickbData?ickbData.myOrders;
     const { showNotification, removeNotification } = useNotification();
@@ -123,7 +122,7 @@ const IckbWithdraw: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }>
             <div className="flex flex-row font-play mb-4 mt-8 text-left">
                 <div className="basis-1/2">
                     <p className="text-gray-400 mb-2 flex items-center"><span className="w-2 h-2 bg-green-500 mr-2"></span>Withdrawable iCKB</p>
-                    <p className="text-2xl font-bold font-play mb-4">{(ickbData && ickbData.ckbAvailable !== BigInt(3) * CKB * CKB) ? toText(ickbData?.ickbRealUdtBalance) : '-'} <span className="text-base font-normal">iCKB</span></p>
+                    <p className="text-2xl font-bold font-play mb-4">{(ickbData && ickbData.ickbRealUdtBalance )? toText(ickbData?.ickbRealUdtBalance) : '0'} <span className="text-base font-normal">iCKB</span></p>
                 </div>
                 <div className="basis-1/2">
                     <p className="text-gray-400 mb-2 flex items-center">

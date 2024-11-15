@@ -23,36 +23,30 @@ const IckbOrders: React.FC<{ walletConfig: WalletConfig, ickbData: IckbDateType 
         setTxGenerator(getRecentIckbOrders(signerCcc, config));
 
         const refresh = async () => {
-            console.log('refresh')
             setTxs((txs) => {
                 if (txs.length === 0) {
-                  return txs;
+                    return txs;
                 }
-                console.log(txs.length);
 
                 (async () => {
-                  for await (const data of getRecentIckbOrders(signerCcc, config)) {
-                    if(!data){ return }
+                    for await (const data of getRecentIckbOrders(signerCcc, config)) {
+                        if (!data) { return }
 
-                    if (txs.find((t) => t.timestamp === data?.timestamp)) {
-                        console.log(1)
-                      break;
+                        if (txs.find((t) => t.timestamp === data?.timestamp)) {
+                            break;
+                        }
+
+                        setTxs((txs) => {
+                            if (txs.find((t) => t.timestamp === data?.timestamp)) {
+                                return txs;
+                            }
+                            return [data, ...txs];
+                        });
                     }
-                    // const tx = await signer.client.getTransaction(hash);
-                    // if (!tx) {
-                    //   break;
-                    // }
-                    setTxs((txs) => {
-                      if (txs.find((t) => t.timestamp=== data?.timestamp)) {
-                        return txs;
-                      }
-                      return [data, ...txs];
-                    });
-                  }
                 })();
-                
+
                 return txs;
-              });
+            });
         };
         refresh()
         const interval = setInterval(refresh, 15000);
@@ -87,7 +81,7 @@ const IckbOrders: React.FC<{ walletConfig: WalletConfig, ickbData: IckbDateType 
             <div className="bg-gray-900 rounded-lg p-4 flex flex-col flex-grow">
                 <h3 className="text-xl font-play font-bold mb-4">Active Orders</h3>
                 {(ickbData && ickbData.myOrders.length) ?
-                    <div className="border-b pb-2 border-white/20 py-2">
+                    <div className={" py-2"}>
 
                         {ickbData.myOrders.map((item, index) => {
                             const multiplier = item.info.isCkb2Udt ? item.info.ckbToUdt.ckbMultiplier : item.info.udtToCkb.udtMultiplier;
@@ -108,25 +102,27 @@ const IckbOrders: React.FC<{ walletConfig: WalletConfig, ickbData: IckbDateType 
 
                             )
                         })} </div> : 'no active orders'}
-            </div>
-            {(ickbData && ickbData.myReceipts.length) ? ickbData.myReceipts.map((item, index) => {
-                return (
-                    <IckbRecepitsItems
-                        walletConfig={walletConfig}
-                        key={index}
-                        item={
-                            {
-                                ickbAmount: item.ickbAmount,
-                                ckbAmount: item.ckbAmount,
-                                blockNumber: item.receiptCell.blockNumber
-                            }
-                        }
-                    />
-                )
-            })
-
+            
+            {(ickbData && ickbData.myReceipts.length) ?
+                <div className="border-t border-white/20 py-2">
+                    {ickbData.myReceipts.map((item, index) => {
+                        return (
+                            <IckbRecepitsItems
+                                walletConfig={walletConfig}
+                                key={index}
+                                item={
+                                    {
+                                        ickbAmount: item.ickbAmount,
+                                        ckbAmount: item.ckbAmount,
+                                        blockNumber: item.receiptCell.blockNumber
+                                    }
+                                }
+                            />
+                        )
+                    })}
+                </div>
                 : <></>}
-
+</div>
             <div className="bg-gray-900 rounded-lg p-4 flex flex-col flex-grow mt-6 text-left">
                 <h3 className="text-xl font-play font-bold mb-4">Recent Orders</h3>
                 {txs && txs.length > 0 ? <>
