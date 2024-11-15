@@ -18,20 +18,45 @@ const IckbOrders: React.FC<{ walletConfig: WalletConfig, ickbData: IckbDateType 
         if (!signerCcc) { return }
         const { config } = walletConfig;
 
-        // setTxs([]);
-        // setLimit(5);
+        setTxs([]);
+        setLimit(5);
         setTxGenerator(getRecentIckbOrders(signerCcc, config));
 
-        // const refresh = async () => {
-        //     let orders = []
-        //     for await (const data of getRecentIckbOrders(signerCcc, config)) {
-        //         orders.push(data)
-        //     }
-        //     setTxs(orders)
-        // };
-        // refresh()
-        // const interval = setInterval(refresh, 15000);
-        // return () => clearInterval(interval);
+        const refresh = async () => {
+            console.log('refresh')
+            setTxs((txs) => {
+                if (txs.length === 0) {
+                  return txs;
+                }
+                console.log(txs.length);
+
+                (async () => {
+                  for await (const data of getRecentIckbOrders(signerCcc, config)) {
+                    if(!data){ return }
+
+                    if (txs.find((t) => t.timestamp === data?.timestamp)) {
+                        console.log(1)
+                      break;
+                    }
+                    // const tx = await signer.client.getTransaction(hash);
+                    // if (!tx) {
+                    //   break;
+                    // }
+                    setTxs((txs) => {
+                      if (txs.find((t) => t.timestamp=== data?.timestamp)) {
+                        return txs;
+                      }
+                      return [data, ...txs];
+                    });
+                  }
+                })();
+                
+                return txs;
+              });
+        };
+        refresh()
+        const interval = setInterval(refresh, 15000);
+        return () => clearInterval(interval);
 
 
     }, [signerCcc]);
