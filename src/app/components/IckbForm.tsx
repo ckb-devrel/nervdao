@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import IckbDeposit from "./IckbDeposit";
 import { type WalletConfig } from "@/cores/config";
-import IckbWithDraw from "./IckbWithrraw";
+import IckbWithDraw from "./IckbWithdraw";
 import IckbStatus from "./IckbStatus";
 import IckbRecentOrders from "./IckbOrders";
 import { useQuery } from "@tanstack/react-query";

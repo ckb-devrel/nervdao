@@ -49,7 +49,13 @@ export function IckbOrderItem({
                 </div>
             </div>
             <div className="text-white font-work-sans text-body-2 flex items-center" >
-                <div className="mr-4">
+                <CircularProgress
+                    percentage={parseFloat(((Number(item.progress) / Number(item.total)) * 100).toFixed(2))}
+                    size={48}
+                    strokeWidth={3}
+                    progressColor={'#3CFF97'}
+                />
+                <div className="ml-4">
                     <p className="text-gray-400">{(item.progress === item.total) ? 'Complete' : 'Pending'}</p>
                     {/* <p className="text-2xl font-bold font-play mb-4">{ickbData ? toText(ickbData?.ckbAvailable):"-"} <span className="text-base font-normal">CKB</span></p> */}
                     <p className="text-base font-bold font-play ">
@@ -58,12 +64,7 @@ export function IckbOrderItem({
                         {parseFloat((Number(item.total / CKB)).toString()).toFixed(2)}
                         {item.isCkb2Udt ? ' CKB' : ' iCKB'}</p>
                 </div>
-                <CircularProgress
-                    percentage={parseFloat(((Number(item.progress) / Number(item.total)) * 100).toFixed(2))}
-                    size={48}
-                    strokeWidth={3}
-                    progressColor={'#3CFF97'}
-                />
+               
 
             </div>
         </div>
