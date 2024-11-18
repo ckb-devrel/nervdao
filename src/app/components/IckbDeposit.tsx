@@ -11,10 +11,11 @@ import { TailSpin } from "react-loader-spinner";
 
 const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = ({ ickbData, onUpdate }) => {
     const [amount, setAmount] = useState<string>("");
+    const [debouncedAmount, setDebouncedAmount] = useState<string>("");
     const [pendingBalance, setPendingBalance] = useState<string>("0");
     const [meltTBC, setMeltTBC] = useState<boolean>(false);
     const [transTBC, setTransTBC] = useState<boolean>(false);
-    const txInfo = (ickbData && amount.length > 0) ? ickbData?.txBuilder("ckb2ickb", ccc.fixedPointFrom(amount)) : null;
+    const txInfo = (ickbData && debouncedAmount.length > 0) ? ickbData?.txBuilder("ckb2ickb", ccc.fixedPointFrom(debouncedAmount)) : null;
     const signerCcc = ccc.useSigner();
     const [canMelt, setCanMelt] = useState<boolean>(false);
     const { showNotification, removeNotification } = useNotification();
@@ -57,9 +58,8 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
             return
         }
         const [convertedAmount] = [ckb2Ickb(amount, ickbData?.tipHeader, false)]
-        //Worst case scenario is a 0.1% fee for bot
-        // convertedAmount -= convertedAmount / BigInt(1000);
-        return `${toText(convertedAmount)}`;
+
+        return `${toText((convertedAmount===BigInt(100000000))?BigInt(0):convertedAmount)}`;
     }
 
     const handleMax = () => {
@@ -73,6 +73,13 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
     const handleAmountChange = (e: { target: { value: React.SetStateAction<string>; }; }) => {
         setAmount(e.target.value)
     }
+    useEffect(() => {
+        const handler = setTimeout(() => {
+          setDebouncedAmount(amount);
+        }, 200); // 500ms 的延迟
+    
+        return () => clearTimeout(handler);
+      }, [amount]);
     const handleMelt = async () => {
         const txMelt = ickbData?.txBuilder("melt", BigInt(0));
         if (!txMelt || !signerCcc) {
@@ -169,7 +176,7 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
                     onChange={handleAmountChange}
                     placeholder="0" />
                 <img src="/svg/icon-ckb.svg" className="absolute left-4 top-[18px]" alt="CKB" />
-                <span className="absolute right-4 top-[8px] p-3 flex items-center text-teal-500 cursor-pointer" onClick={handleMax}>
+                <span className="absolute right-4 top-[7px] p-3 flex items-center text-teal-500 cursor-pointer" onClick={handleMax}>
                     MAX
                 </span>
             </div>
@@ -212,7 +219,7 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
                     /> {depositPending ? 'pending' : 'To be confirmed'}
                 </>) :
 
-                    <>{amount ? 'Swap' : 'Enter an amount'}
+                    <>{debouncedAmount ? 'Swap' : 'Enter an amount'}
                     </>}
             </button>
 
@@ -221,3 +228,4 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
 };
 
 export default IckbSwap;
+

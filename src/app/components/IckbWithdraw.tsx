@@ -54,9 +54,8 @@ const IckbWithdraw: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }>
             return
         }
         const [convertedAmount] = [ickb2Ckb(amount, ickbData?.tipHeader, false)]
-        //Worst case scenario is a 0.1% fee for bot
-        // convertedAmount -= convertedAmount / BigInt(1000);
-        return `${toText(convertedAmount)}`;
+       
+        return `${toText((convertedAmount===BigInt(100000000))?BigInt(0):convertedAmount)}`;
     }
 
     const handleMax = async () => {
@@ -153,7 +152,7 @@ const IckbWithdraw: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }>
                     onChange={handleAmountChange}
                     placeholder="0" />
                 <img src="/svg/icon-ickb-2.svg" className="absolute left-4 top-[18px]" alt="iCKB" />
-                <span className="absolute right-4 top-[8px] p-3 flex items-center text-teal-500 cursor-pointer" onClick={handleMax}>
+                <span className="absolute right-4 top-[7px] p-3 flex items-center text-teal-500 cursor-pointer" onClick={handleMax}>
                     MAX
                 </span>
             </div>

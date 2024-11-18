@@ -56,7 +56,13 @@ export function IckbOrderItem({
                     progressColor={'#3CFF97'}
                 />
                 <div className="ml-4">
-                    <p className="text-gray-400">{(item.progress === item.total) ? 'Complete' : 'Pending'}</p>
+                    <p className="text-gray-400 flex items-center">{
+                        (item.progress === item.total) ?
+                            <>Complete
+                                <a data-tooltip-id="my-tooltip" className="inline-flex" data-tooltip-content={`You can switch to the ${item.isCkb2Udt ? 'Withdraw' : ' Deposit'} tab to Melt`}>
+                                    <Info className="w-4 h-4 cursor-pointer ml-2" />
+                                </a></>
+                            : 'Pending'}</p>
                     {/* <p className="text-2xl font-bold font-play mb-4">{ickbData ? toText(ickbData?.ckbAvailable):"-"} <span className="text-base font-normal">CKB</span></p> */}
                     <p className="text-base font-bold font-play ">
                         {parseFloat((Number(item.progress / CKB)).toString()).toFixed(2)}
@@ -64,7 +70,7 @@ export function IckbOrderItem({
                         {parseFloat((Number(item.total / CKB)).toString()).toFixed(2)}
                         {item.isCkb2Udt ? ' CKB' : ' iCKB'}</p>
                 </div>
-               
+
 
             </div>
         </div>

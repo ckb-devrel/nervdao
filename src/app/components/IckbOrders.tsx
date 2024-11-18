@@ -72,10 +72,6 @@ const IckbOrders: React.FC<{ walletConfig: WalletConfig, ickbData: IckbDateType 
             setTxs((txs) => [...txs, value]);
         })();
     }, [txGenerator, limit, txs, signerCcc]);
-
-
-
-
     return (
         <>
             <div className="bg-gray-900 rounded-lg p-4 flex flex-col flex-grow">
