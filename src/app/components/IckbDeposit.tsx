@@ -64,14 +64,14 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
     const handleMax = () => {
         if (!balance) return;
         const maxBalance = balance + (ickbData ? ickbData.ckbPendingBalance : BigInt(0));
-        setAmount(ccc.fixedPointToString(maxBalance));
+        setAmount(Number(maxBalance/CKB)*0.998+'');
     };
     const handleAmountChange = (e: { target: { value: React.SetStateAction<string>; }; }) => {
-        if (Number(e.target.value)  >= Number(balanceShow)) {
-            setAmount(balanceShow)
+        if (Number(e.target.value)  >= (Number(balanceShow))) {
+            setAmount(Number(balanceShow)*0.998+'')
             return
         }
-        //超出1千万的输入会引起内核VM卡死,暂时限定最大值为1000000
+        //超出1千万的输入会引起内核VM卡死,暂时限定最大值为10000000
         if (Number(e.target.value)  >= 100000000) {
             setAmount('100000000')
             return
