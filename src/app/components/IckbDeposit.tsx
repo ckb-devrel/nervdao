@@ -71,6 +71,11 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
             setAmount(balanceShow)
             return
         }
+        //超出1千万的输入会引起内核VM卡死,暂时限定最大值为1000000
+        if (Number(e.target.value)  >= 100000000) {
+            setAmount('100000000')
+            return
+        }
         setAmount(e.target.value)
 
     }
