@@ -64,6 +64,11 @@ const IckbWithdraw: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }>
         setAmount(ccc.fixedPointToString(udtBalance));
     };
     const handleAmountChange = (e: { target: { value: React.SetStateAction<string>; }; }) => {
+        if(!ickbData){ return}
+        if (Number(e.target.value)  >= Number(ccc.fixedPointToString(ickbData.ickbRealUdtBalance))) {
+            setAmount(ccc.fixedPointToString(ickbData.ickbRealUdtBalance))
+            return
+        }
         setAmount(e.target.value)
     }
     const handleMelt = async () => {

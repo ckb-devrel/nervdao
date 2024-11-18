@@ -58,28 +58,29 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
             return
         }
         const [convertedAmount] = [ckb2Ickb(amount, ickbData?.tipHeader, false)]
-
-        return `${toText((convertedAmount===BigInt(100000000))?BigInt(0):convertedAmount)}`;
+        return `${toText((convertedAmount === BigInt(100000000)) ? BigInt(0) : convertedAmount)}`;
     }
 
     const handleMax = () => {
         if (!balance) return;
-    
-        // console.log(Number(balance) - 1000 * Number(CKB))
-        // const maxBalance = BigInt(Number(balance) - 1000 * Number(CKB)) + (ickbData ? ickbData.ckbPendingBalance : BigInt(0));
         const maxBalance = balance + (ickbData ? ickbData.ckbPendingBalance : BigInt(0));
         setAmount(ccc.fixedPointToString(maxBalance));
     };
     const handleAmountChange = (e: { target: { value: React.SetStateAction<string>; }; }) => {
+        if (Number(e.target.value)  >= Number(balanceShow)) {
+            setAmount(balanceShow)
+            return
+        }
         setAmount(e.target.value)
+
     }
     useEffect(() => {
         const handler = setTimeout(() => {
-          setDebouncedAmount(amount);
+            setDebouncedAmount(amount);
         }, 200); // 500ms 的延迟
-    
+
         return () => clearTimeout(handler);
-      }, [amount]);
+    }, [amount]);
     const handleMelt = async () => {
         const txMelt = ickbData?.txBuilder("melt", BigInt(0));
         if (!txMelt || !signerCcc) {
@@ -121,13 +122,7 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
             setBalanceShow(ccc.fixedPointToString(balanceCCC));
         })();
     }, [ickbData, signerCcc, meltTBC]);
-    // useEffect(() => {
-    //     (async () => {
-    //         if (!signerCcc) return;
-    //         const balance = await signerCcc.getBalance();
-    //         setBalance(balance / BigInt(CKB));
-    //     })();
-    // }, [signerCcc, ickbData, pendingBalance]);
+
     return (
         <>
             <div className="flex flex-row font-play mb-4 mt-8 text-left">
@@ -174,7 +169,8 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
                     type="number"
                     value={amount}
                     onChange={handleAmountChange}
-                    placeholder="0" />
+                    placeholder="0"
+                    max={Number(balance/CKB)} />
                 <img src="/svg/icon-ckb.svg" className="absolute left-4 top-[18px]" alt="CKB" />
                 <span className="absolute right-4 top-[7px] p-3 flex items-center text-teal-500 cursor-pointer" onClick={handleMax}>
                     MAX
