@@ -323,6 +323,7 @@ async function getTotalUdtCapacity(walletConfig: WalletConfig): Promise<{
 }> {
     const { rpc, config, accountLock } = walletConfig;
     const udtType = ickbUdtType(config);
+    console.log("udtType = ", udtType);
     let cursor = undefined;
     let udtCapacity = BigInt(0);
     let userUdtCapacity = BigInt(0);
@@ -574,4 +575,19 @@ export async function* getRecentIckbOrders(signer: ccc.Signer, config: ConfigAda
             yield recentOrders.pop();
         }
     }
+}
+
+export async function getUserUdtCapacityBySigner(signer: ccc.Signer): Promise<bigint> {
+    const udtType: ccc.ScriptLike = {
+        codeHash: "0x50bd8d6680b8b9cf98b73f3c08faf8b2a21914311954118ad6609be6e78a1b95",
+        args: "0xb73b6ab39d79390c6de90a09c96b290c331baf1798ed6f97aed02590929734e800000080",
+        hashType: "data1",
+    };
+    let udtCapacity = BigInt(0);
+    for await (const cell of signer.findCells({
+        script: udtType
+    }, true)) {
+        udtCapacity += Uint128.unpack(cell.outputData.slice(0, 2 + 16 * 2));
+    }
+    return udtCapacity;
 }
