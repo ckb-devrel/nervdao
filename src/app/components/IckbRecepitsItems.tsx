@@ -38,7 +38,7 @@ export function IckbRecepitsItems({
 
                 </div>
                 <div>
-                    <p className="text-white font-work-sans text-body-2 flex items-center"> Deposit into Nervos DAO
+                    <p className="text-white font-work-sans flex items-center"> <span>Deposit into Nervos DAO</span>
                         <a data-tooltip-id="my-tooltip" data-tooltip-content="Order more than 100,000 iCKB will directly deposit into Nervos DAO">
                             <Info className="w-4 h-4 cursor-pointer ml-2" />
                         </a>

@@ -52,7 +52,7 @@ const IckbForm: React.FC<{ walletConfig: WalletConfig }> = ({ walletConfig }) =>
                 </div>
                 <div className="flex-1 flex-row">
                     <IckbStatus ickbData={ickbData} />
-                    {walletConfig && <IckbRecentOrders ickbData={ickbData} walletConfig={walletConfig} />}
+                    {walletConfig && <IckbRecentOrders ickbData={ickbData} walletConfig={walletConfig}   onUpdate={handleChildEvent} />}
                 </div>
             </>
             }

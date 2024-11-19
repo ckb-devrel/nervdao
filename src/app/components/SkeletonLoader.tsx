@@ -8,7 +8,7 @@ interface SkeletonLoaderProps {
 
 const SkeletonLoader: React.FC<SkeletonLoaderProps> = ({
   showHeader = true,
-  itemCount = 3,
+  itemCount = 4,
   showChart = false,
 }) => {
   return (
@@ -36,7 +36,7 @@ const SkeletonLoader: React.FC<SkeletonLoaderProps> = ({
           <div className="h-6 bg-gray-700 rounded w-32"></div>
         </div>
       ))}
-
+    
       {showChart && (
         <div className="mt-4">
           <div className="h-40 bg-gray-800 rounded-lg"></div>

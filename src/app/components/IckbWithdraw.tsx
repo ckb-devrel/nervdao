@@ -12,8 +12,6 @@ import { TailSpin } from "react-loader-spinner";
 const IckbWithdraw: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = ({ ickbData, onUpdate }) => {
     const [amount, setAmount] = useState<string>("");
     const [pendingBalance, setPendingBalance] = useState<string>("0");
-    const [canMelt, setCanMelt] = useState<boolean>(false);
-    const [meltTBC, setMeltTBC] = useState<boolean>(false);
     const [transTBC, setTransTBC] = useState<boolean>(false);
     const txInfo = (ickbData && amount.length > 0) ? ickbData?.txBuilder("ickb2ckb", ccc.fixedPointFrom(amount)) : null;
     const [withdrawPending, setWithdrawPending] = useState<boolean>(false);
@@ -32,7 +30,6 @@ const IckbWithdraw: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }>
             setTransTBC(true)
             progressId = await showNotification("progress", `Withdraw in progress, wait for 60s`);
             setWithdrawPending(true)
-
             await signerCcc.client.waitTransaction(txHash, 0, 60000)
             showNotification("success", `Withdraw Success: ${txHash}`);
             onUpdate()
@@ -71,62 +68,32 @@ const IckbWithdraw: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }>
         }
         setAmount(e.target.value)
     }
-    const handleMelt = async () => {
-        const txMelt = ickbData?.txBuilder("melt", BigInt(0));
-        if (!txMelt || !signerCcc) {
-            return
-        }
-        let progressId, txHash;
-        setMeltTBC(true)
-        try {
-            const cccTx = ccc.Transaction.fromLumosSkeleton(txMelt.tx);
-            txHash = await signerCcc.sendTransaction(cccTx);
-            progressId = await showNotification("progress", `Melt in progress, wait for 60s`);
-
-            await signerCcc.client.waitTransaction(txHash, 0, 60000)
-            removeNotification(progressId + '')
-
-            onUpdate()
-            // setMeltTBC(false)
-            showNotification("success", `Melt Success: ${txHash}`);
-        } catch (error) {
-            showNotification("error", `${error}`);
-
-        } finally {
-            removeNotification(progressId + '')
-            setMeltTBC(false)
-
-        }
-    }
+   
     useEffect(() => {
         if (!ickbData) return;
         let pending = 0;
-        let canMelt = false
         if (ickbData.myOrders.length > 0) {
             ickbData.myOrders.map(item => {
                 if (item.info.isCkb2Udt && item.info.absTotal === item.info.absProgress) {
                     pending += Number(item.info.udtAmount);
-                    canMelt = true;
                 }
             })
         }
         if (ickbData.myReceipts.length > 0) {
-            canMelt = true;
             ickbData.myReceipts.forEach((item) => {
                 pending += Number(item.ickbAmount);
             });
         }
-        setCanMelt(canMelt)
         pending > 0 ? setPendingBalance(toText(BigInt(pending))) : setPendingBalance('0');
 
-    }, [ickbData, meltTBC]);
+    }, [ickbData]);
 
     return (
         <>
             <div className="flex flex-row font-play mb-4 mt-8 text-left">
                 <div className="basis-1/2">
                     <p className="text-gray-400 mb-2 flex items-center"><span className="w-2 h-2 bg-green-500 mr-2"></span>Withdrawable iCKB</p>
-                    <p className="text-2xl font-bold font-play mb-4">{(ickbData && ickbData.ickbRealUdtBalance )? toText(ickbData?.ickbRealUdtBalance) : '0'} <span className="text-base font-normal">iCKB</span></p>
+                    <p className="text-2xl font-bold font-play mb-4">{(ickbData &&toText(ickbData.ickbRealUdtBalance||BigInt(0)) )} <span className="text-base font-normal">iCKB</span></p>
                 </div>
                 <div className="basis-1/2">
                     <p className="text-gray-400 mb-2 flex items-center">
@@ -137,15 +104,7 @@ const IckbWithdraw: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }>
                         <span>
                             {pendingBalance} <span className="text-base font-normal">iCKB</span>
                         </span>
-                        {ickbData && canMelt &&
-                            <button
-                                className="font-bold ml-2 bg-btn-gradient text-gray-800 text-body-2 py-1 px-2 rounded-lg hover:bg-btn-gradient-hover transition duration-200 disabled:opacity-50 disabled:hover:bg-btn-gradient"
-                                onClick={() => handleMelt()}
-                                disabled={meltTBC}
-                            >
-                                Melt
-                            </button>
-                        }
+                        
                     </p>
                 </div>
             </div>

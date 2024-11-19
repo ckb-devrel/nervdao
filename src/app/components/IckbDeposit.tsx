@@ -13,11 +13,9 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
     const [amount, setAmount] = useState<string>("");
     const [debouncedAmount, setDebouncedAmount] = useState<string>("");
     const [pendingBalance, setPendingBalance] = useState<string>("0");
-    const [meltTBC, setMeltTBC] = useState<boolean>(false);
     const [transTBC, setTransTBC] = useState<boolean>(false);
     const txInfo = (ickbData && debouncedAmount.length > 0) ? ickbData?.txBuilder("ckb2ickb", ccc.fixedPointFrom(debouncedAmount)) : null;
     const signerCcc = ccc.useSigner();
-    const [canMelt, setCanMelt] = useState<boolean>(false);
     const { showNotification, removeNotification } = useNotification();
     const [balance, setBalance] = useState<bigint>(BigInt(0));
     const [balanceShow, setBalanceShow] = useState<string>("");
@@ -86,38 +84,10 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
 
         return () => clearTimeout(handler);
     }, [amount]);
-    const handleMelt = async () => {
-        const txMelt = ickbData?.txBuilder("melt", BigInt(0));
-        if (!txMelt || !signerCcc) {
-            return
-        }
-        let progressId, txHash;
-        setMeltTBC(true)
-        try {
-            const cccTx = ccc.Transaction.fromLumosSkeleton(txMelt.tx);
-            txHash = await signerCcc.sendTransaction(cccTx);
-            progressId = await showNotification("progress", `Melt in progress, wait for 60s`);
-
-            await signerCcc.client.waitTransaction(txHash, 0, 60000)
-            removeNotification(progressId + '')
-
-            onUpdate()
-            // setMeltTBC(false)
-            showNotification("success", `Melt Success: ${txHash}`);
-        } catch (error) {
-            showNotification("error", `${error}`);
-
-        } finally {
-            removeNotification(progressId + '')
-            setMeltTBC(false)
-
-        }
-    }
+  
     useEffect(() => {
         if (!ickbData) return;
-        const canMelt = ickbData.ckbPendingBalance > BigInt(0);
         ickbData.ckbPendingBalance > 0 ? setPendingBalance(toText(BigInt(ickbData.ckbPendingBalance))) : setPendingBalance('0');
-        setCanMelt(canMelt);
 
         // setPendingBalance(toText(BigInt(pending)) || '-');
         (async () => {
@@ -126,7 +96,7 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
             setBalance(balanceCCC);
             setBalanceShow(ccc.fixedPointToString(balanceCCC));
         })();
-    }, [ickbData, signerCcc, meltTBC]);
+    }, [ickbData, signerCcc]);
 
     return (
         <>
@@ -146,15 +116,7 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
                         <span>
                             {pendingBalance} <span className="text-base font-normal">CKB</span>
                         </span>
-                        {ickbData && canMelt &&
-                            <button
-                                className="font-bold ml-2 bg-btn-gradient text-gray-800 text-body-2 py-1 px-2 rounded-lg hover:bg-btn-gradient-hover transition duration-200 disabled:opacity-50 disabled:hover:bg-btn-gradient"
-                                onClick={() => handleMelt()}
-                                disabled={meltTBC}
-                            >
-                                Melt
-                            </button>
-                        }
+                       
                     </p>
                 </div>
             </div>

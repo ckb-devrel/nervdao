@@ -75,7 +75,7 @@ const AppLayout: React.FC = () => {
       case "deposit":
         return "Deposit";
       case "ickb":
-          return "iCKB";
+          return <>iCKB <span className="ml-2 text-sm text-gray-400">1111111111111</span></>;
       default:
         return currentPage.charAt(0).toUpperCase() + currentPage.slice(1);
     }
