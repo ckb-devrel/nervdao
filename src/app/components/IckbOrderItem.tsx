@@ -5,7 +5,6 @@ import { HexNumber } from "@ckb-lumos/base";
 import { getHeadersByNumber } from "@/cores/queries";
 import CircularProgress from "./CircularProgress";
 import { CKB } from "@ickb/lumos-utils";
-import { IckbDateType } from "@/cores/utils";
 
 
 interface IckbOrderItemItemProps {
@@ -16,14 +15,11 @@ interface IckbOrderItemItemProps {
         blockNumber: string | undefined;
         isCkb2Udt: boolean;
     }
-    ickbData:IckbDateType,
-    onUpdate: VoidFunction
 }
 export function IckbOrderItem({
-    walletConfig, item,ickbData,onUpdate
+    walletConfig, item
 }: IckbOrderItemItemProps) {
     const [orderDate, setOrderDate] = useState<string>('')
-   
     useEffect(() => {
         const refresh = async () => {
             const hexArray: Set<HexNumber> = new Set();
@@ -46,7 +42,7 @@ export function IckbOrderItem({
 
                 </div>
                 <div>
-                    <p className="text-white font-work-sans  flex items-center"> 
+                    <p className="text-white font-work-sans  flex items-center">
                         <span>{item.isCkb2Udt ? "Swap CKB to iCKB" : "Withdraw CKB from iCKB"}</span>
                         <a data-tooltip-id="my-tooltip" data-tooltip-content="Order less than 100,000 iCKB relies on the 3rd-party market maker's participation">
                             <Info className="w-4 h-4 cursor-pointer ml-2" />
@@ -56,19 +52,19 @@ export function IckbOrderItem({
                 </div>
             </div>
             <div className="text-white mr-4 font-work-sans text-body-2 flex items-center" >
-               
+
                 <CircularProgress
                     percentage={parseFloat(((Number(item.progress) / Number(item.total)) * 100).toFixed(2))}
                     size={48}
                     strokeWidth={3}
                     progressColor={'#3CFF97'}
                 />
-                 
+
                 <div className="ml-4">
                     <p className="text-gray-400 flex items-center  justify-between">{
                         (item.progress === item.total) ?
-                           <><span>Complete</span>
-                          </>: 'Pending'}</p>
+                            <><span>Complete</span>
+                            </> : 'Pending'}</p>
                     <p className="text-base font-bold font-play ">
                         {parseFloat((Number(item.progress / CKB)).toString()).toFixed(2)}
                         /

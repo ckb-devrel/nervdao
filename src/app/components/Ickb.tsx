@@ -17,7 +17,7 @@ const Ickb: React.FC = () => {
       const walletConfig = await setupWalletConfig(signer, queryClient)
       setWalletConfig(walletConfig)
     })();
-  }, []);
+  }, [signer,queryClient]);
   return (
     <QueryClientProvider client={queryClient}>
 

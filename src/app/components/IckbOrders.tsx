@@ -86,7 +86,7 @@ const IckbOrders: React.FC<{ walletConfig: WalletConfig, ickbData: IckbDateType,
         return () => clearInterval(interval);
 
 
-    }, [signerCcc]);
+    }, [signerCcc,walletConfig]);
     useEffect(() => {
         if (!txGenerator || !signerCcc || txs.length >= limit) {
             return;
@@ -117,7 +117,6 @@ const IckbOrders: React.FC<{ walletConfig: WalletConfig, ickbData: IckbDateType,
                 }
             })
         }
-
         setCanMelt(canMelt)
 
     }, [ickbData, meltTBC]);
@@ -149,12 +148,9 @@ const IckbOrders: React.FC<{ walletConfig: WalletConfig, ickbData: IckbDateType,
                         {ickbData.myOrders.map((item, index) => {
                             const multiplier = item.info.isCkb2Udt ? item.info.ckbToUdt.ckbMultiplier : item.info.udtToCkb.udtMultiplier;
                             return (
-
                                 <IckbOrderItem
                                     walletConfig={walletConfig}
                                     key={index}
-                                    ickbData={ickbData}
-                                    onUpdate={onUpdate}
                                     item={
                                         {
                                             total: item.info.absTotal / multiplier,
