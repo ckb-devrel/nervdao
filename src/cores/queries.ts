@@ -481,6 +481,12 @@ export async function* getRecentIckbOrders(signer: ccc.Signer, config: ConfigAda
     const udtType = ickbUdtType(config);
     const ickbLogicType = ickbLogicScript(config);
     const ownedOwner = ownedOwnerScript(config);
+    const unoccupiedCkb = (tx: ccc.Transaction, outputIndex: number) => {
+        const dataBytes = ccc.bytesFrom(tx.outputsData[outputIndex]);
+        const occupiedCkb = BigInt(tx.outputs[outputIndex].occupiedSize + dataBytes.length) * CKB;
+        const ckbCapacity = tx.outputs[outputIndex].capacity;
+        return ckbCapacity - occupiedCkb;
+    };
     let recentOrders: RecentOrder[] = [];
     // Find all dao mint
     for await (const tx of signer.findTransactions({
@@ -530,7 +536,7 @@ export async function* getRecentIckbOrders(signer: ccc.Signer, config: ConfigAda
             if (daoWithdrawIndex === -1) {
                 continue;
             }
-            const ckbAmount = transaction.outputs[daoWithdrawIndex].capacity;
+            const ckbAmount = unoccupiedCkb(transaction, daoWithdrawIndex);
             const timestamp = header.timestamp;
             const order: RecentOrder = {
                 timestamp,
@@ -563,7 +569,7 @@ export async function* getRecentIckbOrders(signer: ccc.Signer, config: ConfigAda
             }
             const orderData = transaction.outputsData[orderIndex];
             const udtAmount = Uint128.unpack(orderData.slice(0, 2 + 16 * 2));
-            const ckbAmount = transaction.outputs[orderIndex].capacity;
+            const ckbAmount = unoccupiedCkb(transaction, orderIndex);
             const timestamp = header.timestamp;
             recentOrders.push({
                 timestamp,
