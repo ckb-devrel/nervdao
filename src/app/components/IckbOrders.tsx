@@ -48,7 +48,7 @@ const IckbOrders: React.FC<{ walletConfig: WalletConfig, ickbData: IckbDateType,
         }
     }
     useEffect(() => {
-        if (!signerCcc) { return }
+        if (!signerCcc||!walletConfig) { return }
         const { config } = walletConfig;
 
         setTxs([]);
@@ -64,7 +64,7 @@ const IckbOrders: React.FC<{ walletConfig: WalletConfig, ickbData: IckbDateType,
                 (async () => {
                     for await (const data of getRecentIckbOrders(signerCcc, config)) {
                         if (!data) { return }
-
+                        console.log(data)
                         if (txs.find((t) => t.timestamp === data?.timestamp)) {
                             break;
                         }
@@ -86,7 +86,7 @@ const IckbOrders: React.FC<{ walletConfig: WalletConfig, ickbData: IckbDateType,
         return () => clearInterval(interval);
 
 
-    }, [signerCcc,walletConfig]);
+    }, [signerCcc]);
     useEffect(() => {
         if (!txGenerator || !signerCcc || txs.length >= limit) {
             return;
