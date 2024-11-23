@@ -1,12 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { ArrowUp, Download, Info } from "lucide-react";
 import { WalletConfig } from "@/cores/config";
 import { HexNumber } from "@ckb-lumos/base";
 import { getHeadersByNumber } from "@/cores/queries";
-import CircularProgress from "./CircularProgress";
 import { CKB } from "@ickb/lumos-utils";
-
-
 interface IckbOrderItemItemProps {
     walletConfig: WalletConfig
     item: {
@@ -35,45 +31,25 @@ export function IckbOrderItem({
     }, [item, walletConfig]);
 
     return (
-        <div className="flex items-center justify-between py-2">
-            <div className="flex items-center">
-                <div className={item.isCkb2Udt ? "bg-cyan-600 rounded-full p-2 mr-3" : "bg-green-600 rounded-full p-2 mr-3"}>
-                    {item.isCkb2Udt ? <Download className="w-4 h-4" /> : <ArrowUp className="w-4 h-4" />}
-
-                </div>
-                <div>
-                    <p className="text-white font-work-sans  flex items-center">
-                        <span>{item.isCkb2Udt ? "Swap CKB to iCKB" : "Withdraw CKB from iCKB"}</span>
-                        <a data-tooltip-id="my-tooltip" data-tooltip-content="Order less than 100,000 iCKB relies on the 3rd-party market maker's participation">
-                            <Info className="w-4 h-4 cursor-pointer ml-2" />
-                        </a>
-                    </p>
-                    <p className="text-gray-400 font-work-sans text-sm">{orderDate}</p>
-                </div>
+        <div className="bg-gray-800 rounded-lg p-4 ">
+            <div className="flex items-center justify-between">
+                <span className="text-white text-body-2">You Receive</span>
+                {item.progress === item.total ?
+                    <span className="px-2 py-0.5 rounded text-xs bg-green-500/[.12] rounded text-green-500" >Completed</span>
+                    :
+                    <span className="px-2 py-0.5 rounded text-xs bg-yellow-500/[.12] rounded text-yellow-500">Pending</span>
+                }
             </div>
-            <div className="text-white mr-4 font-work-sans text-body-2 flex items-center" >
-
-                <CircularProgress
-                    percentage={parseFloat(((Number(item.progress) / Number(item.total)) * 100).toFixed(2))}
-                    size={48}
-                    strokeWidth={3}
-                    progressColor={'#3CFF97'}
-                />
-
-                <div className="ml-4">
-                    <p className="text-gray-400 flex items-center  justify-between">{
-                        (item.progress === item.total) ?
-                            <><span>Complete</span>
-                            </> : 'Pending'}</p>
-                    <p className="text-base font-bold font-play ">
-                        {parseFloat((Number(item.progress / CKB)).toString()).toFixed(2)}
-                        /
-                        {parseFloat((Number(item.total / CKB)).toString()).toFixed(2)}
-                        {item.isCkb2Udt ? ' CKB' : ' iCKB'}</p>
-                </div>
-
-
+            <div className="text-2xl font-bold text-white mb-4">
+                {parseFloat((Number(item.total / CKB)).toString()).toFixed(2)}
+                {item.isCkb2Udt ? ' CKB' : ' iCKB'}</div>
+            <div className="divide-y divide-white-200">
+                <p className="text-white font-work-sans mb-2 flex items-center">
+                    {item.isCkb2Udt ? "Swap CKB to iCKB" : "Withdraw CKB from iCKB"}
+                </p>
+                <p className="text-gray-400 font-work-sans  pt-2 text-sm">{orderDate}</p>
             </div>
+
         </div>
     );
 }

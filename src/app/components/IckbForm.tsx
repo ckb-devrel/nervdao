@@ -3,10 +3,11 @@ import IckbDeposit from "./IckbDeposit";
 import { type WalletConfig } from "@/cores/config";
 import IckbWithDraw from "./IckbWithdraw";
 import IckbStatus from "./IckbStatus";
-import IckbRecentOrders from "./IckbOrders";
 import { useQuery } from "@tanstack/react-query";
 import { l1StateOptions } from "@/cores/queries";
 import { IckbMaturityItems } from "./IckbMaturityItems";
+import IckbActiveOrders from "./IckbActiveOrders";
+import IckbHistoryOrders from "./IckbHistoryOrders";
 
 const IckbForm: React.FC<{ walletConfig: WalletConfig }> = ({ walletConfig }) => {
     const [status, setStatus] = useState<string>("deposit");
@@ -51,8 +52,9 @@ const IckbForm: React.FC<{ walletConfig: WalletConfig }> = ({ walletConfig }) =>
                         : <></>}
                 </div>
                 <div className="flex-1 flex-row">
+                    <IckbActiveOrders  ickbData={ickbData} walletConfig={walletConfig} onUpdate={handleChildEvent} />
                     <IckbStatus ickbData={ickbData} />
-                    {walletConfig && <IckbRecentOrders ickbData={ickbData} walletConfig={walletConfig}   onUpdate={handleChildEvent} />}
+                    {walletConfig && <IckbHistoryOrders  walletConfig={walletConfig}  />}
                 </div>
             </>
             }

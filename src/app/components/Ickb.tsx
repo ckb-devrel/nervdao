@@ -40,6 +40,18 @@ const Ickb: React.FC = () => {
 
       </div>
       <Tooltip id="my-tooltip" />
+      <Tooltip id="order-tooltip"
+        events={['click']}
+        place={"bottom"}
+        style={{
+          color: "#fff",
+          borderRadius: '8px',
+          borderWidth: '1px',
+          borderColor: '#FFFFFF33',
+          pointerEvents: 'inherit',
+          boxShadow: ' 0px 4px 6px -2px #88888814,0px 10px 15px -3px #8888881F',
+        }} />
+      
 
     </QueryClientProvider>
   )

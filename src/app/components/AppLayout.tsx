@@ -5,9 +5,12 @@ import React, { useState } from "react";
 import { Dashboard } from "./Dashboard";
 import Title from "./Ttitle";
 import Deposit from "./Deposit";
-import { icons, Menu } from "lucide-react";
+import { icons, Info, Menu } from "lucide-react";
 import { useGetExplorerLink } from "@/hooks/Explorer";
 import Ickb from "./Ickb";
+import { Tooltip } from "react-tooltip";
+import ReactDOMServer from "react-dom/server";
+import IckbInfo from "./IckbInfo";
 
 function NavItem({
   icon,
@@ -17,7 +20,7 @@ function NavItem({
   iconName
 }: {
   icon: keyof typeof icons;
-  iconName?:string;
+  iconName?: string;
   label: string;
   isActive?: boolean;
   onClick?: () => void;
@@ -25,13 +28,12 @@ function NavItem({
   const Icon = icons[icon]
   return (
     <li
-      className={`flex flex-col cursor-pointer flex-grow min-w-14 py-2 items-center  justify-center hover:bg-gray-700 hover:border-b-2 lg:border-l-2 lg:hover:border-b-0 lg:hover:border-l-2 hover:border-cyan-500 ${
-        isActive ? "bg-gray-700 border-b-2 lg:border-b-0 lg:border-l-2 border-cyan-500" : "border-gray-950"
-      }`}
+      className={`flex flex-col cursor-pointer flex-grow min-w-14 py-2 items-center  justify-center hover:bg-gray-700 hover:border-b-2 lg:border-l-2 lg:hover:border-b-0 lg:hover:border-l-2 hover:border-cyan-500 ${isActive ? "bg-gray-700 border-b-2 lg:border-b-0 lg:border-l-2 border-cyan-500" : "border-gray-950"
+        }`}
       onClick={onClick}
     >
-      {iconName?<img src={"/svg/icon-"+iconName+".svg"} alt="ickb" className="w-7 h-7" />:<Icon className="w-7 h-7" />}
-      
+      {iconName ? <img src={"/svg/icon-" + iconName + ".svg"} alt="ickb" className="w-7 h-7" /> : <Icon className="w-7 h-7" />}
+
       <p className="font-work-sans text-xs transform scale-75">{label}</p>
     </li>
   );
@@ -52,9 +54,8 @@ function NavItemMobile({
 
   return (
     <li
-      className={`flex flex-grow cursor-pointer min-w-14 pl-6 py-2 items-center border-cyan-500 ${
-        isActive ? "bg-gray-700 border-b-2 lg:border-b-0 lg:border-l-2" : ""
-      }`}
+      className={`flex flex-grow cursor-pointer min-w-14 pl-6 py-2 items-center border-cyan-500 ${isActive ? "bg-gray-700 border-b-2 lg:border-b-0 lg:border-l-2" : ""
+        }`}
       onClick={onClick}
     >
       <Icon className="w-7 h-7" />
@@ -71,11 +72,19 @@ const AppLayout: React.FC = () => {
   const getTitle = () => {
     switch (currentPage) {
       case "dashboard":
-        return "Dashboard";
+        return 'Dashboard';
       case "deposit":
         return "Deposit";
       case "ickb":
-          return <>iCKB <span className="ml-2 text-sm text-gray-400">1111111111111</span></>;
+        return <>
+          iCKB
+          <a
+            data-tooltip-id="top-tooltip"
+            data-tooltip-html={ReactDOMServer.renderToStaticMarkup(IckbInfo())}
+          >
+            <Info className="w-5 h-5 cursor-pointer ml-1 inline-block" />
+          </a>
+        </>;
       default:
         return currentPage.charAt(0).toUpperCase() + currentPage.slice(1);
     }
@@ -187,6 +196,18 @@ const AppLayout: React.FC = () => {
         <Title>{getTitle()}</Title>
         {renderContent()}
       </main>
+      <Tooltip id="top-tooltip"
+        events={['click']}
+        place={"bottom-start"}
+        style={{
+          color: "#fff",
+          borderRadius: '8px',
+          borderWidth: '1px',
+          borderColor: '#FFFFFF33',
+          pointerEvents: 'inherit',
+          boxShadow: ' 0px 4px 6px -2px #88888814,0px 10px 15px -3px #8888881F',
+        }}
+      />
     </div>
   );
 };

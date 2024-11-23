@@ -25,6 +25,7 @@
     "react-loader-spinner": "^6.1.6",
     "react-spinners": "^0.14.1",
     "react-tooltip": "^5.28.0",
+    "styled-components": "^6.1.13",
     "tailwindcss-pseudo-elements": "^2.0.0"
   },
   "devDependencies": {

@@ -110,7 +110,7 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
                 <div className="basis-1/2">
                     <p className="text-gray-400 mb-2 flex items-center">
                         <span className={"w-2 h-2 bg-yellow-500 mr-2"}></span>
-                        Pending <Info size={16} className="ml-1 inline-block" data-tooltip-id="my-tooltip" data-tooltip-content="Including the capacity of cell occupation" />
+                        Pending <Info size={16} className="ml-1 inline-block" data-tooltip-id="my-tooltip" data-tooltip-content="Pending CKB becomes available once the Nervos DAO maturity period ends or the active order is melted." />
                     </p>
                     <p className="text-2xl font-bold font-play mb-4 flex  items-center">
                         <span>

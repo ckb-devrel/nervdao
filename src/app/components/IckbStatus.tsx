@@ -55,7 +55,7 @@ const IckbStatus: React.FC<{ ickbData: IckbDateType }> = ({ ickbData }) => {
     return <SkeletonLoader />;
   }
   return (
-    <div className="bg-gray-900 rounded-lg p-6 mb-4">
+    <div className="bg-gray-900 rounded-lg p-6 mb-4 mt-4">
       <h3 className="text-xl font-play font-bold mb-4">Liquidity</h3>
       {/* <ReactApexChart options={ChartData} series={ChartData.series} type="area" height={350} /> */}
       <div className="flex item-center justify-between ">
