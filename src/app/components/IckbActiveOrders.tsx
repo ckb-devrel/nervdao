@@ -66,6 +66,7 @@ const IckbActiveOrders: React.FC<{ walletConfig: WalletConfig, ickbData: IckbDat
                 <h3 className="text-xl font-play font-bold mb-4 flex items-center justify-between pr-4">
                     <span>Active Orders  
                     <a
+                         className="hidden sm:block "
                         data-tooltip-id="order-tooltip"
                         data-tooltip-html={ReactDOMServer.renderToStaticMarkup(IckbOrderInfo())}
                     >

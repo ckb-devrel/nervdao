@@ -40,11 +40,13 @@ function NavItem({
 }
 
 function NavItemMobile({
+  iconName,
   icon,
   label,
   isActive,
   onClick,
 }: {
+  iconName?: string;
   icon: keyof typeof icons;
   label: string;
   isActive?: boolean;
@@ -58,7 +60,7 @@ function NavItemMobile({
         }`}
       onClick={onClick}
     >
-      <Icon className="w-7 h-7" />
+      {iconName ? <img src={"/svg/icon-" + iconName + ".svg"} alt="ickb" className="w-7 h-7" /> : <Icon className="w-7 h-7" />}
       <p className="font-work-sans transform scale-75">{label}</p>
     </li>
   );
@@ -80,6 +82,7 @@ const AppLayout: React.FC = () => {
           iCKB
           <a
             data-tooltip-id="top-tooltip"
+            className="hidden sm:block "
             data-tooltip-html={ReactDOMServer.renderToStaticMarkup(IckbInfo())}
           >
             <Info className="w-5 h-5 cursor-pointer ml-1 inline-block" />
@@ -172,6 +175,13 @@ const AppLayout: React.FC = () => {
                 label="Deposit"
                 isActive={currentPage === "deposit"}
                 onClick={() => setCurrentPage("deposit")}
+              />
+               <NavItemMobile
+                iconName="ickb"
+                icon="ChartBarBig"
+                label="iCKB"
+                isActive={currentPage === "ickb"}
+                onClick={() => setCurrentPage("ickb")}
               />
               <NavItemMobile
                 icon="ChartBarBig"

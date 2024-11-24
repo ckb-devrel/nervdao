@@ -58,8 +58,8 @@ const IckbStatus: React.FC<{ ickbData: IckbDateType }> = ({ ickbData }) => {
     <div className="bg-gray-900 rounded-lg p-6 mb-4 mt-4">
       <h3 className="text-xl font-play font-bold mb-4">Liquidity</h3>
       {/* <ReactApexChart options={ChartData} series={ChartData.series} type="area" height={350} /> */}
-      <div className="flex item-center justify-between ">
-        <div className="bg-gray-800 relative rounded-lg p-3 pr-5 mb-2  w-[30%]" >
+      <div className="flex flex-col  sm:flex-row item-center justify-between ">
+        <div className="bg-gray-800 relative rounded-lg p-3 pr-5 mb-2 w-full sm:w-[30%]" >
           <div className="flex justify-between items-center font-work-sans text-gray-400">
             <span>Total Liquidity</span>
           </div>
@@ -67,7 +67,7 @@ const IckbStatus: React.FC<{ ickbData: IckbDateType }> = ({ ickbData }) => {
             <span>{ickbData ? parseFloat((Number(ickbData.ickbUdtPoolBalance) / 100000000).toString()).toFixed(2) : '-'} iCKB</span>
           </div>
         </div>
-        <div className="bg-gray-800 relative rounded-lg p-3 pr-5 mb-2 w-[30%]">
+        <div className="bg-gray-800 relative rounded-lg p-3 pr-5 mb-2  w-full sm:w-[30%]">
           <div className="flex justify-between items-center font-work-sans text-gray-400">
             <span>Pool Balance <Info size={16} className="inline-block" data-tooltip-id="my-tooltip" data-tooltip-content="iCKB NervDao Balance" /></span>
           </div>
@@ -75,7 +75,7 @@ const IckbStatus: React.FC<{ ickbData: IckbDateType }> = ({ ickbData }) => {
             <span>{ickbData ? parseFloat((Number(ickbData.ickbDaoBalance) / 100000000).toString()).toFixed(2) : '-'} CKB</span>
           </div>
         </div>
-        <div className="bg-gray-800 relative rounded-lg p-3 pr-5 mb-2 w-[30%]">
+        <div className="bg-gray-800 relative rounded-lg p-3 pr-5 mb-2 w-full sm:w-[30%]">
           <div className="flex justify-between items-center font-work-sans text-gray-400">
             <span>APY</span>
           </div>
