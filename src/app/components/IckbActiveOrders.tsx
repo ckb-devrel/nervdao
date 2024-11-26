@@ -148,7 +148,7 @@ const IckbActiveOrders: React.FC<{ walletConfig: WalletConfig, ickbData: IckbDat
                     {canMelt &&
 
                         <button
-                            className="font-bold ml-2 bg-melt-gradient text-gray-800 text-body-2 w-full h-[44px] rounded-lg hover:bg-melt-gradient-hover transition duration-200 disabled:melt-disabled-gradient disabled:hover:bg-btn-gradient block sm:hidden "
+                            className="font-bold sm:ml-2 bg-melt-gradient text-gray-800 text-body-2 w-full h-[44px] rounded-lg hover:bg-melt-gradient-hover transition duration-200 disabled:melt-disabled-gradient disabled:hover:bg-btn-gradient block sm:hidden "
                             onClick={() => handleMelt()}
                             disabled={meltTBC}
                         >

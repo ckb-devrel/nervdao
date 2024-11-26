@@ -90,12 +90,12 @@ const IckbWithdraw: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }>
 
     return (
         <>
-            <div className="flex flex-row font-play mb-4 mt-8 text-left">
-                <div className="basis-1/2">
+            <div className="flex  flex-col sm:flex-row font-play mb-4 mt-8 text-left">
+                <div className="block sm:basis-1/2">
                     <p className="text-gray-400 mb-2 flex items-center"><span className="w-2 h-2 bg-green-500 mr-2"></span>Withdrawable iCKB</p>
                     <p className="text-2xl font-bold font-play mb-4">{(ickbData &&toText(ickbData.ickbRealUdtBalance||BigInt(0)) )} <span className="text-base font-normal">iCKB</span></p>
                 </div>
-                <div className="basis-1/2">
+                <div className="block sm:basis-1/2">
                     <p className="text-gray-400 mb-2 flex items-center">
                         <span className={"w-2 h-2 bg-yellow-500 mr-2"}></span>
                         Pending
