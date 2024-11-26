@@ -67,6 +67,10 @@ const Info = styled.div`
             font-weight:700
         }
     }
+    @media (max-width: 640px) {
+        width:100%;
+        padding:0
+    }
         
 `;
 

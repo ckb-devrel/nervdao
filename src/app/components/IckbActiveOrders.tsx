@@ -9,6 +9,7 @@ import { TailSpin } from "react-loader-spinner";
 import ReactDOMServer from "react-dom/server";
 import { Info } from "lucide-react";
 import IckbOrderInfo from "./IckbOrderInfo";
+import { IckbModal } from "./IckbModal";
 
 const IckbActiveOrders: React.FC<{ walletConfig: WalletConfig, ickbData: IckbDateType, onUpdate: VoidFunction }> = ({ walletConfig, ickbData, onUpdate }) => {
     const signerCcc = ccc.useSigner();
@@ -16,6 +17,7 @@ const IckbActiveOrders: React.FC<{ walletConfig: WalletConfig, ickbData: IckbDat
     const [meltTBC, setMeltTBC] = useState<boolean>(false);
     const [canMelt, setCanMelt] = useState<boolean>(false);
     const { showNotification, removeNotification } = useNotification();
+    const [infoOpen, setInfoOpen] = useState(false);
 
     const handleMelt = async () => {
         const txMelt = ickbData?.txBuilder("melt", BigInt(0));
@@ -66,17 +68,23 @@ const IckbActiveOrders: React.FC<{ walletConfig: WalletConfig, ickbData: IckbDat
                 <h3 className="text-xl font-play font-bold mb-4 flex items-center justify-between pr-4">
                     <span>Active Orders  
                     <a
-                         className="hidden sm:block "
+                        className="hidden sm:inline-block "
                         data-tooltip-id="order-tooltip"
                         data-tooltip-html={ReactDOMServer.renderToStaticMarkup(IckbOrderInfo())}
                     >
                         <Info className="w-5 h-5 cursor-pointer ml-1 inline-block" />
                     </a>
-
+                    <a
+                        className="inline-block sm:hidden "
+                        onClick={()=>{setInfoOpen(true)}}
+                    >
+                        <Info className="w-5 h-5 cursor-pointer ml-1 inline-block" />
+                    </a>
                     </span>
                     {canMelt &&
                         <button
-                            className="font-bold ml-2 bg-btn-gradient text-gray-800 text-body-2 w-[123px] h-[36px] rounded-lg hover:bg-btn-gradient-hover transition duration-200 disabled:opacity-50 disabled:hover:bg-btn-gradient"
+                            className="font-bold ml-2 bg-melt-gradient text-gray-800 text-body-2 w-[123px] h-[36px] rounded-lg hover:bg-melt-gradient-hover transition duration-200  disabled:melt-disabled-gradient disabled:hover:bg-btn-gradient hidden sm:block "
+
                             onClick={() => handleMelt()}
                             disabled={meltTBC}
                         >
@@ -136,8 +144,27 @@ const IckbActiveOrders: React.FC<{ walletConfig: WalletConfig, ickbData: IckbDat
                         })}
                     </div>
                     : <></>}
-            </div>
+                    {canMelt &&
 
+                        <button
+                            className="font-bold ml-2 bg-melt-gradient text-gray-800 text-body-2 w-full h-[44px] rounded-lg hover:bg-melt-gradient-hover transition duration-200 disabled:melt-disabled-gradient disabled:hover:bg-btn-gradient block sm:hidden "
+                            onClick={() => handleMelt()}
+                            disabled={meltTBC}
+                        >
+                            {meltTBC && <TailSpin
+                                height="12"
+                                width="12"
+                                color="#333333"
+                                ariaLabel="tail-spin-loading"
+                                radius="1"
+                                wrapperStyle={{ 'display': 'inline-block', 'marginRight': '10px' }}
+                                wrapperClass="inline-block"
+                            />}
+                            Melt all
+                        </button>}
+            </div>
+            {infoOpen&& <IckbModal isOpen={infoOpen} onClose={()=>setInfoOpen(false)} infos={IckbOrderInfo()} />}
+             
 
         </>
     )

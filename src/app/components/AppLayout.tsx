@@ -11,6 +11,7 @@ import Ickb from "./Ickb";
 import { Tooltip } from "react-tooltip";
 import ReactDOMServer from "react-dom/server";
 import IckbInfo from "./IckbInfo";
+import { IckbModal } from "./IckbModal";
 
 function NavItem({
   icon,
@@ -70,6 +71,7 @@ const AppLayout: React.FC = () => {
   const [currentPage, setCurrentPage] = useState("dashboard");
   const [isOpen, setIsOpen] = useState(false);
   const { index } = useGetExplorerLink();
+  const [infoOpen, setInfoOpen] = useState(false);
 
   const getTitle = () => {
     switch (currentPage) {
@@ -82,8 +84,15 @@ const AppLayout: React.FC = () => {
           iCKB
           <a
             data-tooltip-id="top-tooltip"
-            className="hidden sm:block "
+            className="hidden sm:inline-block "
             data-tooltip-html={ReactDOMServer.renderToStaticMarkup(IckbInfo())}
+          >
+            <Info className="w-5 h-5 cursor-pointer ml-1 inline-block" />
+          </a>
+          <a
+
+            className="inline-block sm:hidden "
+            onClick={()=>{setInfoOpen(true)}}
           >
             <Info className="w-5 h-5 cursor-pointer ml-1 inline-block" />
           </a>
@@ -218,6 +227,8 @@ const AppLayout: React.FC = () => {
           boxShadow: ' 0px 4px 6px -2px #88888814,0px 10px 15px -3px #8888881F',
         }}
       />
+      {infoOpen&& <IckbModal isOpen={infoOpen} onClose={()=>setInfoOpen(false)} infos={IckbInfo()} />
+    }
     </div>
   );
 };

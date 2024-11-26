@@ -48,7 +48,10 @@ const Info = styled.div`
     svg{
         margin-left:8px
     }
-        
+    @media (max-width: 640px) {
+        width:100%;
+        padding:0
+    }
 `;
 
 export function IckbInfo() {
@@ -64,7 +67,7 @@ export function IckbInfo() {
                 <li><strong>Greater Liquidity: </strong>Use or trade iCKB tokens anytime, unlike traditional locked NervosDAO deposits.</li>
             </ul>
             <a href="https://ickb.org/" target="_blank">Learn more <ExternalLink size={16} /></a>
-
+            
         </Info>
 
 

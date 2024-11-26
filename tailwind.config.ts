@@ -17,6 +17,14 @@ const config: Config = {
           "linear-gradient(to right, rgba(0, 184, 174, 1), rgba(51, 235, 226, 1), rgba(51, 235, 226, 1), rgba(0, 184, 174, 1))",
         "btn-disabled-gradient":
           "linear-gradient(to right, rgba(0, 204, 194, 1), rgba(71, 255, 246, 1), rgba(71, 255, 246, 1), rgba(0, 204, 194, 1))",
+        "melt-gradient":
+          "radial-gradient(49.59% 217.87% at 50.41% 100%, rgba(60, 255, 151, 1) 0%, rgba(0, 250, 237, 1) 100%)",
+        "melt-gradient-hover":
+          "radial-gradient(49.59% 217.87% at 50.41% 90%, rgba(60, 255, 151, 0.9) 0%,rgba(0, 250, 237, 0.9) 100%)",
+        "melt-disabled-gradient":
+          "radial-gradient(66.67% 205.13% at 50% 150%, #3CFF97 0%, #00FAED 100%) ",
+      
+      
       },
       colors: {
         white: {
