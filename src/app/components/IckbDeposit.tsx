@@ -100,14 +100,14 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
 
     return (
         <>
-            <div className="flex flex-row font-play mb-4 mt-8 text-left">
-                <div className="basis-1/2">
+            <div className="flex flex-col sm:flex-row font-play mb-4 mt-8 text-left">
+                <div className="block sm:basis-1/2">
                     <p className="text-gray-400 mb-2 flex items-center"><span className="w-2 h-2 bg-green-500 mr-2"></span>CKB Available </p>
                     {/* <p className="text-2xl font-bold font-play mb-4">{(ickbData && ickbData.ckbAvailable !== BigInt(6)*CKB*CKB) ? toText(ickbData?.ckbAvailable) : "-"} <span className="text-base font-normal">CKB</span></p> */}
                     <p className="text-2xl font-bold font-play mb-4">{balance ? balanceShow : '-'} <span className="text-base font-normal">CKB</span></p>
 
                 </div>
-                <div className="basis-1/2">
+                <div className="block sm:basis-1/2">
                     <p className="text-gray-400 mb-2 flex items-center">
                         <span className={"w-2 h-2 bg-yellow-500 mr-2"}></span>
                         Pending <Info size={16} className="ml-1 inline-block" data-tooltip-id="my-tooltip" data-tooltip-content="Pending CKB becomes available once the Nervos DAO maturity period ends or the active order is melted." />
