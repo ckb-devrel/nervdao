@@ -48,7 +48,8 @@ export function IckbHistoryOrderItems({
             <div className="text-white font-work-sans text-body-2 flex items-center" >
                 <div className="mr-4">
                     <p className="text-base font-bold font-play ">
-                        {ccc.fixedPointToString(item.amount)} {item.unit}
+                        
+                        {Number(ccc.fixedPointToString(item.amount)).toFixed(2)} {item.unit}
                         {/* {parseFloat((Number(item.amount / CKB)).toString()).toFixed(2)} {item.unit} */}
                     </p>
                 </div>

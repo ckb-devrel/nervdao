@@ -39,6 +39,7 @@ const IckbActiveOrders: React.FC<{ walletConfig: WalletConfig, ickbData: IckbDat
             showNotification("success", `Melt Success: ${txHash}`);
         } catch (error) {
             showNotification("error", `${error}`);
+            setMeltTBC(false)
 
         } finally {
             removeNotification(progressId + '')

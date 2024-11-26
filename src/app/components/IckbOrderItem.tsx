@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { WalletConfig } from "@/cores/config";
 import { HexNumber } from "@ckb-lumos/base";
 import { getHeadersByNumber } from "@/cores/queries";
-import { CKB } from "@ickb/lumos-utils";
+import { ccc } from "@ckb-ccc/connector-react";
 interface IckbOrderItemItemProps {
     walletConfig: WalletConfig
     item: {
@@ -41,7 +41,7 @@ export function IckbOrderItem({
                 }
             </div>
             <div className="text-2xl font-bold text-white mb-4">
-                {parseFloat((Number(item.total / CKB)).toString()).toFixed(2)}
+            {Number(ccc.fixedPointToString(item.total)).toFixed(2)} 
                 {item.isCkb2Udt ? ' CKB' : ' iCKB'}</div>
             <div className="divide-y divide-white-200">
                 <p className="text-white font-work-sans mb-2 flex items-center">
