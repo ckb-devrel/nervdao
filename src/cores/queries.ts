@@ -56,10 +56,10 @@ export function l1StateOptions(isFrozen: boolean) {
     const walletConfig = getWalletConfig();
 
     return queryOptions({
-        // retry: true,
-        refetchInterval: 15000,
-        // refetchOnWindowFocus: true,
-        // refetchOnMount: true,
+        retry: true,
+        refetchInterval:30000,
+        refetchOnWindowFocus: true,
+        refetchOnMount: true,
         refetchIntervalInBackground: false,
         // staleTime: 10000,
         queryKey: ["l1State"],
@@ -108,7 +108,6 @@ async function getL1State(walletConfig: WalletConfig) {
         return headerPlaceholder;
     };
     ickbSifter(mixedCells, expander, deferredGetHeader, config);
-    console.log(wanted)
     const headersPromise = getHeadersByNumber(wanted, walletConfig);
 
     // Prefetch txs outputs
