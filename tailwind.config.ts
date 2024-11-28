@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import type { PluginAPI } from 'tailwindcss/types/config'
 
 const config: Config = {
   content: [
@@ -16,6 +17,14 @@ const config: Config = {
           "linear-gradient(to right, rgba(0, 184, 174, 1), rgba(51, 235, 226, 1), rgba(51, 235, 226, 1), rgba(0, 184, 174, 1))",
         "btn-disabled-gradient":
           "linear-gradient(to right, rgba(0, 204, 194, 1), rgba(71, 255, 246, 1), rgba(71, 255, 246, 1), rgba(0, 204, 194, 1))",
+        "melt-gradient":
+          "radial-gradient(49.59% 217.87% at 50.41% 100%, rgba(60, 255, 151, 1) 0%, rgba(0, 250, 237, 1) 100%)",
+        "melt-gradient-hover":
+          "radial-gradient(49.59% 217.87% at 50.41% 90%, rgba(60, 255, 151, 0.9) 0%,rgba(0, 250, 237, 0.9) 100%)",
+        "melt-disabled-gradient":
+          "radial-gradient(66.67% 205.13% at 50% 150%, #3CFF97 0%, #00FAED 100%) ",
+      
+      
       },
       colors: {
         white: {
@@ -222,6 +231,22 @@ const config: Config = {
     "text-purple-400",
     "text-cyan-400",
   ],
-  plugins: [],
+  plugins: [
+    function ({ addUtilities }: PluginAPI) {
+      addUtilities({
+        //@ts-expect-error tailwind type
+        '.no-arrows': {
+          /* Styles to remove arrows in various browsers */
+          '&::-webkit-inner-spin-button, &::-webkit-outer-spin-button': {
+            '-webkit-appearance': 'none',
+            margin: 0,
+          },
+          '&::-moz-focus-inner': {
+            border: 0,
+          },
+        },
+      });
+    },
+  ],
 };
 export default config;

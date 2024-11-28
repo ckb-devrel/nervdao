@@ -8,9 +8,11 @@ import { formatBalance, truncateAddress } from "@/utils/stringUtils";
 import { useDaoDeposits, useDaoRedeems } from "@/hooks/DaoCollect";
 import SkeletonLoader from "./SkeletonLoader";
 import { User } from "lucide-react";
+import { getUserUdtCapacityBySigner } from "@/cores/queries";
 
 const DashboardProfile: React.FC = () => {
   const [balance, setBalance] = useState<string>("");
+  const [ickbBbalance, setIckbBbalance] = useState<string>("");
   const [address, setAddress] = useState<string>("");
   const [apy, setApy] = useState("-");
   const [isLoadingBalance, setIsLoadingBalance] = useState(true);
@@ -31,7 +33,11 @@ const DashboardProfile: React.FC = () => {
     if (!signer) {
       return;
     }
-
+    (async () => {
+      let ickb = BigInt(0)
+       ickb = await getUserUdtCapacityBySigner(signer);
+      setIckbBbalance(ccc.fixedPointToString(ickb))
+    })();
     (async () => {
       const addr = await signer.getRecommendedAddress();
       setAddress(addr);
@@ -56,9 +62,9 @@ const DashboardProfile: React.FC = () => {
                 ccc.numFrom(100) *
                 ccc.fixedPointFrom(1) *
                 times) /
-                past.dao.ar /
-                ccc.fixedPointFrom(1) /
-                ccc.fixedPointFrom(1, 6),
+              past.dao.ar /
+              ccc.fixedPointFrom(1) /
+              ccc.fixedPointFrom(1, 6),
               2
             )}%`
           );
@@ -84,9 +90,9 @@ const DashboardProfile: React.FC = () => {
   const profit = depositProfit + withdrawalProfit;
   const totalBalance = ccc.numMax(
     BigInt(ccc.fixedPointFrom(balance, 8)) +
-      depositSum +
-      withdrawalSum +
-      profit,
+    depositSum +
+    withdrawalSum +
+    profit,
     ccc.numFrom(1)
   );
   const availablePercentage =
@@ -107,7 +113,7 @@ const DashboardProfile: React.FC = () => {
             {formatBalance(ccc.fixedPointToString(totalBalance))} CKB
           </h2>
           <p className="font-work-sans text-gray-400 text-sm flex items-center gap-2">
-            {truncateAddress(address, 10, 6)} <User className="w-4 h-4"/>
+            {truncateAddress(address, 10, 6)} <User className="w-4 h-4" />
           </p>
         </div>
       </div>
@@ -151,6 +157,7 @@ const DashboardProfile: React.FC = () => {
           </div>
         </div>
       ))}
+       
       <div className="bg-gray-800 relative rounded-lg p-3 pr-5 mb-2">
         <div className="flex justify-between items-center font-work-sans text-gray-400">
           <span>Current Compensation</span>
@@ -161,6 +168,17 @@ const DashboardProfile: React.FC = () => {
           <span>{apy}</span>
         </div>
       </div>
+      <div className="bg-gray-800 relative rounded-lg p-3 mb-2">
+          <div className="flex justify-between items-center">
+            <span className="font-work-sans text-gray-400">iCKB Balance</span>
+          </div>
+          <div className="flex justify-between items-center mt-1">
+            <span className="font-play text-white text-lg font-bold">
+              {ccc.fixedPointToString(ickbBbalance, 8)} CKB
+            </span>
+          </div>
+          
+        </div>
     </div>
   );
 };

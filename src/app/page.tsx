@@ -3,6 +3,7 @@
 import { ccc } from "@ckb-ccc/connector-react";
 import ConnectWallet from "./components/ConnectWallet";
 import AppLayout from "./components/AppLayout";
+import 'react-tooltip/dist/react-tooltip.css'
 
 export default function Home() {
   const { wallet } = ccc.useCcc();
