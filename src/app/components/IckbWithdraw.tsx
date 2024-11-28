@@ -28,9 +28,9 @@ const IckbWithdraw: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }>
             const cccTx = ccc.Transaction.fromLumosSkeleton(txInfo.tx);
             txHash = await signerCcc.sendTransaction(cccTx);
             setTransTBC(true)
-            progressId = await showNotification("progress", `Withdraw in progress, wait for 60s`);
+            progressId = await showNotification("progress", `Withdraw in progress, wait for 90s`);
             setWithdrawPending(true)
-            await signerCcc.client.waitTransaction(txHash, 0, 60000)
+            await signerCcc.client.waitTransaction(txHash, 0, 90000)
             showNotification("success", `Withdraw Success: ${txHash}`);
             onUpdate()
         } catch (error) {
@@ -143,7 +143,7 @@ const IckbWithdraw: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }>
             <button
                 onClick={handleWithDraw}
                 className="mt-4 w-full font-bold bg-btn-gradient text-gray-800 text-body-2 py-3 rounded-lg hover:bg-btn-gradient-hover transition duration-200 disabled:opacity-50 disabled:hover:bg-btn-gradient"
-                disabled={transTBC}
+                disabled={transTBC&&amount.length>0}
             >
                 {transTBC ? (<>
                     <TailSpin

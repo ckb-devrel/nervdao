@@ -98,7 +98,7 @@ const IckbActiveOrders: React.FC<{ walletConfig: WalletConfig, ickbData: IckbDat
                                 wrapperStyle={{ 'display': 'inline-block', 'marginRight': '10px' }}
                                 wrapperClass="inline-block"
                             />}
-                            Melt all
+                            Extract
                         </button>}
                 </h3>
                 <div className="pb-2  grid lg:grid-cols-2 gap-2">

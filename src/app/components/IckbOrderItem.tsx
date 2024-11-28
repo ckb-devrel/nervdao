@@ -42,7 +42,7 @@ export function IckbOrderItem({
             </div>
             <div className="text-2xl font-bold text-white mb-4">
             {Number(ccc.fixedPointToString(item.total)).toFixed(2)} 
-                {item.isCkb2Udt ? ' CKB' : ' iCKB'}</div>
+                {item.isCkb2Udt ? ' iCKB' : ' CKB'}</div>
             <div className="divide-y divide-white-200">
                 <p className="text-white font-work-sans mb-2 flex items-center">
                     {item.isCkb2Udt ? "Swap CKB to iCKB" : "Withdraw CKB from iCKB"}
