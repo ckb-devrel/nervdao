@@ -174,7 +174,7 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
                     } catch (error) {
                       return true;
                     }
-                    return amount === "" || !!transTBC;
+                    return amount === ""|| amount === "0" || !!transTBC;
                   })()}
                 
             >
