@@ -57,7 +57,7 @@ export function l1StateOptions(isFrozen: boolean) {
 
     return queryOptions({
         retry: true,
-        refetchInterval: 5000,
+        refetchInterval:30000,
         refetchOnWindowFocus: true,
         refetchOnMount: true,
         refetchIntervalInBackground: false,
@@ -94,6 +94,7 @@ export function l1StateOptions(isFrozen: boolean) {
 
 async function getL1State(walletConfig: WalletConfig) {
     const { rpc, config, expander } = walletConfig;
+    console.log(11111)
     const mixedCells = await getMixedCells(walletConfig);
 
     // Prefetch feeRate and tipHeader

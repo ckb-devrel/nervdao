@@ -33,9 +33,9 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
         try {
             const cccTx = ccc.Transaction.fromLumosSkeleton(txInfo.tx);
             txHash = await signerCcc.sendTransaction(cccTx);
-            progressId = await showNotification("progress", `Deposit in progress, wait for 60s`);
+            progressId = await showNotification("progress", `Deposit in progress, wait for 90s`);
             setDepositPending(true)
-            await signerCcc.client.waitTransaction(txHash, 0, 60000);
+            await signerCcc.client.waitTransaction(txHash, 0, 90000);
             onUpdate()
             showNotification("success", `Deposit Success: ${txHash}`);
         } catch (error) {
@@ -110,7 +110,7 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
                 <div className="block sm:basis-1/2">
                     <p className="text-gray-400 mb-2 flex items-center">
                         <span className={"w-2 h-2 bg-yellow-500 mr-2"}></span>
-                        Pending <Info size={16} className="ml-1 inline-block" data-tooltip-id="my-tooltip" data-tooltip-content="Pending CKB becomes available once the Nervos DAO maturity period ends or the active order is melted." />
+                        Pending <Info size={16} className="ml-1 inline-block" data-tooltip-id="my-tooltip" data-tooltip-html="Pending CKB becomes available once<br /> the Nervos DAO maturity period ends or the active order is melted." />
                     </p>
                     <p className="text-2xl font-bold font-play mb-4 flex  items-center">
                         <span>
@@ -168,8 +168,17 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
             <button
                 onClick={handleSwap}
                 className="mt-4 w-full font-bold bg-btn-gradient text-gray-800 text-body-2 py-3 rounded-lg hover:bg-btn-gradient-hover transition duration-200 disabled:opacity-50 disabled:hover:bg-btn-gradient"
-                disabled={transTBC}
+                disabled={(() => {
+                    try {
+                      ccc.numFrom(amount);
+                    } catch (error) {
+                      return true;
+                    }
+                    return amount === ""|| amount === "0" || !!transTBC;
+                  })()}
+                
             >
+               
                 {transTBC ? (<>
                     <TailSpin
                         height="20"
