@@ -20,6 +20,7 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
     const [balance, setBalance] = useState<bigint>(BigInt(0));
     const [balanceShow, setBalanceShow] = useState<string>("");
     const [depositPending, setDepositPending] = useState<boolean>(false);
+
     async function handleSwap() {
         if (!txInfo || !signerCcc) {
             return
@@ -88,6 +89,7 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
     useEffect(() => {
         if (!ickbData) return;
         ickbData.ckbPendingBalance > 0 ? setPendingBalance(toText(BigInt(ickbData.ckbPendingBalance))) : setPendingBalance('0');
+        if(!ccc)return;
 
         // setPendingBalance(toText(BigInt(pending)) || '-');
         (async () => {
@@ -169,11 +171,11 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
                 onClick={handleSwap}
                 className="mt-4 w-full font-bold bg-btn-gradient text-gray-800 text-body-2 py-3 rounded-lg hover:bg-btn-gradient-hover transition duration-200 disabled:opacity-50 disabled:hover:bg-btn-gradient"
                 disabled={(() => {
-                    try {
-                      ccc.numFrom(amount);
-                    } catch (error) {
-                      return true;
-                    }
+                    // try {
+                    //   ccc.numFrom(amount);
+                    // } catch (error) {
+                    //   return true;
+                    // }
                     return amount === ""|| amount === "0" || !!transTBC;
                   })()}
                 

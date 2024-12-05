@@ -144,11 +144,11 @@ const IckbWithdraw: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }>
                 onClick={handleWithDraw}
                 className="mt-4 w-full font-bold bg-btn-gradient text-gray-800 text-body-2 py-3 rounded-lg hover:bg-btn-gradient-hover transition duration-200 disabled:opacity-50 disabled:hover:bg-btn-gradient"
                 disabled={(() => {
-                    try {
-                      ccc.numFrom(amount);
-                    } catch (error) {
-                      return true;
-                    }
+                    // try {
+                    //   ccc.numFrom(amount);
+                    // } catch (error) {
+                    //   return true;
+                    // }
                     return amount === ""|| amount === "0"|| !!transTBC;
                   })()}
             >
