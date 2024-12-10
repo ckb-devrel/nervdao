@@ -75,7 +75,7 @@ export function sanitize(text: string) {
     let i = 0;
     for (; i < text.length; i++) {
         const c = text[i];
-        if ("1" <= c && c <= "9") {
+        if ("1" <= c && c <= "9" || c === ".") {
             break;
         }
     }

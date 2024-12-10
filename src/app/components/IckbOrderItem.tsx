@@ -33,7 +33,7 @@ export function IckbOrderItem({
     return (
         <div className="bg-gray-800 rounded-lg p-4 ">
             <div className="flex items-center justify-between">
-                <span className="text-white text-body-2">You Receive</span>
+                <span className="text-white text-body-2">You {item.isCkb2Udt?'Swap':'Withdraw'}</span>
                 {item.progress === item.total ?
                     <span className="px-2 py-0.5 rounded text-xs bg-green-500/[.12] rounded text-green-500" >Completed</span>
                     :
