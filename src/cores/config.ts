@@ -15,9 +15,15 @@ export interface WalletConfig extends ChainConfig {
 
 let WalletConfig: WalletConfig | undefined = undefined;
 
+const chain2RpcUrl = Object.freeze({
+  mainnet: "https://mainnet.ckb.dev",
+  testnet: "https://testnet.ckb.dev",
+  devnet: "http://127.0.0.1:8114/",
+});
+
 export async function setupWalletConfig(signer: ccc.Signer,queryClient: QueryClient) {
     const chain = signer.client.addressPrefix === "ckb" ? "mainnet" : "testnet";
-    const chainConfig = await chainConfigFrom(chain, undefined, true, getIckbScriptConfigs);
+    const chainConfig = await chainConfigFrom(chain, chain2RpcUrl[chain], true, getIckbScriptConfigs);
     const addresses = await signer.getAddressObjs();
     let signerAddress = addresses[0];
     for (const address of addresses) {
