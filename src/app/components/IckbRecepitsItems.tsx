@@ -18,6 +18,8 @@ export function IckbRecepitsItems({
 }: IckbRecepitsItemProps) {
     const [orderDate, setOrderDate] = useState<string>('')
     useEffect(() => {
+        if(!item||!walletConfig){ return }
+
         const refresh = async () => {
             const hexArray: Set<HexNumber> = new Set();
 
@@ -29,7 +31,7 @@ export function IckbRecepitsItems({
             }
         };
         refresh();
-    }, [item, walletConfig]);
+    }, []);
     return (
         <div className="flex items-center justify-between py-2 ">
             <div className="flex items-center">
