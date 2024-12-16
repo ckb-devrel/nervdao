@@ -18,6 +18,7 @@ export function IckbRecepitsItems({
 }: IckbRecepitsItemProps) {
     const [orderDate, setOrderDate] = useState<string>('')
     useEffect(() => {
+        console.log(item)
         const refresh = async () => {
             const hexArray: Set<HexNumber> = new Set();
 
