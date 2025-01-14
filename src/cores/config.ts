@@ -1,4 +1,4 @@
-import { ccc } from "@ckb-ccc/core";
+import { ccc } from "@ckb-ccc/connector-react";
 import { Cell, Transaction, helpers } from "@ckb-lumos/lumos";
 import { ChainConfig, chainConfigFrom, I8Script, lockExpanderFrom, i8ScriptPadding } from "@ickb/lumos-utils";
 import { getIckbScriptConfigs } from "@ickb/v1-core";

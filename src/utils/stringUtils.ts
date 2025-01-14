@@ -9,7 +9,7 @@ export function truncateString(str: string, frontChars: number, endChars: number
   return `${str.slice(0, frontChars)}...${str.slice(-endChars)}`;
 }
 
-export function truncateAddress(address: string, frontChars: number = 6, endChars: number = 4): string {
+export function truncateAddress(address: string, frontChars = 6, endChars = 4): string {
   return truncateString(address, frontChars, endChars);
 }
 

@@ -48,7 +48,7 @@ import { addChange, base, convert } from "./transaction";
 import type { Cell, Header, HexNumber, Transaction } from "@ckb-lumos/base";
 import { parseAbsoluteEpochSince } from "@ckb-lumos/base/lib/since";
 import { getWalletConfig, type WalletConfig } from "./config";
-import { ccc } from "@ckb-ccc/core";
+import { ccc } from "@ckb-ccc/connector-react";
 
 const depositUsedCapacity = BigInt(82) * CKB;
 

@@ -1,7 +1,7 @@
 import React from "react";
 import { icons } from "lucide-react";
 import { RecentOrder } from "@/cores/utils";
-import { ccc } from "@ckb-ccc/core";
+import { ccc } from "@ckb-ccc/connector-react";
 
 interface IckbRecepitsItemProps {
     item: RecentOrder
