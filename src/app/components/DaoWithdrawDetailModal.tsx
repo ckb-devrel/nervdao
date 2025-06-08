@@ -136,21 +136,21 @@ export function DaoWithdrawDetailModal({
 
   return (
     <div
-      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 max-h-[100vh] "
       onClick={handleClose}
     >
       <div
-        className="bg-gray-800 rounded-lg p-6 w-full max-w-md relative"
+        className="bg-gray-800 rounded-lg p-6 w-full max-w-md relative max-h-full overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
         <button
           onClick={handleClose}
-          className="absolute top-4 right-4 bg-gray-950 rounded-full p-2 text-gray-400 hover:text-white"
+          className="absolute top-4 right-4 bg-gray-95  rounded-full p-2 text-gray-400 hover:text-white"
         >
           <img src="./svg/close.svg" alt="Close" width={18} height={18} />
         </button>
 
-        <h2 className="text-2xl font-bold font-play mb-4">Redemption</h2>
+        <h2 className="text-xl font-bold font-play mb-4">Redemption</h2>
 
         <div className="flex justify-center items-center mb-4">
           <div className="bg-purple-600 rounded-full p-3">
@@ -164,7 +164,7 @@ export function DaoWithdrawDetailModal({
         </div>
 
         <div className="text-center mb-4">
-          <p className="text-2xl font-play font-bold">{amount} CKB</p>
+          <p className="text-xl font-play font-bold">{amount} CKB</p>
         </div>
 
         <div className="bg-gray-700 rounded-lg p-4 mb-4">

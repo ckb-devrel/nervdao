@@ -104,11 +104,11 @@ export function DaoDepositDetailModal({
 
   return (
     <div
-      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+      className="fixed inset-0  max-h-[100vh]  bg-black bg-opacity-50 flex items-center justify-center z-50"
       onClick={handleClose}
     >
       <div
-        className="bg-gray-800 rounded-lg p-6 w-full max-w-md relative"
+        className="bg-gray-800 rounded-lg p-6 w-full max-w-md relative  max-h-full overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
         <button
