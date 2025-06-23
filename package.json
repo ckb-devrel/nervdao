@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@ckb-ccc/connector-react": "^1.0.11",
+    "@ckb-ccc/connector-react": "^1.0.18",
     "@ckb-lumos/base": "^0.23.0",
     "@ckb-lumos/lumos": "^0.23.0",
     "@ickb/lumos-utils": "1.4.2",
@@ -36,5 +36,11 @@
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"
-  }
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "secp256k1"
+    ]
+  },
+  "packageManager": "pnpm@10.8.1"
 }
