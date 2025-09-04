@@ -75,7 +75,7 @@ export function DaoWithdrawDetailModal({
 
   const withdraw = useCallback(async () => {
     if (!signer || !infos) return;
-    const [profit, depositTx, depositHeader] = infos;
+    const [, depositTx, depositHeader] = infos;
     if (!depositTx.blockHash) {
       showNotification("error", "Unknown error, invalid withdraw");
       return;
@@ -120,7 +120,6 @@ export function DaoWithdrawDetailModal({
 
     await tx.completeInputsByCapacity(signer);
     await tx.completeFeeChangeToOutput(signer, 0, 1000);
-    tx.outputs[0].capacity += profit;
     const result = await signer.sendTransaction(tx);
     showNotification("success", `Withdraw Success: ${result}`);
   }, [signer, infos, dao, showNotification]);
