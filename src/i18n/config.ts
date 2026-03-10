@@ -11,7 +11,7 @@ export const SUPPORTED_LANGUAGES = {
 
 export type SupportedLanguage = keyof typeof SUPPORTED_LANGUAGES;
 
-const LANGUAGE_STORAGE_KEY = "nervdao_language";
+const LANGUAGE_STORAGE_KEY = "nervdao-locale";
 
 i18n
   .use(LanguageDetector)
