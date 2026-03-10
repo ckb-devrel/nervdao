@@ -74,21 +74,31 @@ const Info = styled.div`
         
 `;
 
-export function IckbInfo() {
+interface IckbOrderInfoProps {
+    whatAreActiveOrders: string;
+    desc: string;
+    pendingOrders: string;
+    pendingOrdersDesc: string;
+    completedOrders: string;
+    completedOrdersDesc: string;
+    tip: string;
+    tipDesc: string;
+}
 
+export function IckbOrderInfo(props: IckbOrderInfoProps) {
     return (
 
 
         <Info >
-            <h4>What Are Active Orders?</h4>
-            <p>Active orders track your deposit and withdrawal transactions. They include:</p>
+            <h4>{props.whatAreActiveOrders}</h4>
+            <p>{props.desc}</p>
             <ul>
-                <li className="first"><strong>Pending Orders:  </strong>Orders awaiting 3rd-party market maker’s participation.</li>
-                <li className="second"><strong>Completed Orders: </strong>Orders ready to melt to update your balance.</li>
+                <li className="first"><strong>{props.pendingOrders}</strong>{props.pendingOrdersDesc}</li>
+                <li className="second"><strong>{props.completedOrders}</strong>{props.completedOrdersDesc}</li>
             </ul>
             <div className="tips">
-                <h5><Lightbulb size={18} /> Tip</h5>
-                <p>you don’t manually melt completed orders, they will be automatically melted during your next deposit or withdrawal. Pending orders will also be automatically canceled if not finalized.</p>
+                <h5><Lightbulb size={18} /> {props.tip}</h5>
+                <p>{props.tipDesc}</p>
             </div>
 
         </Info>
@@ -97,4 +107,4 @@ export function IckbInfo() {
     )
 }
 
-export default IckbInfo;
+export default IckbOrderInfo;

@@ -1,9 +1,11 @@
 /* eslint-disable @next/next/no-img-element */
 import React from "react";
 import { ccc } from "@ckb-ccc/connector-react";
+import { useTranslation } from "react-i18next";
 
 const ConnectWallet: React.FC = () => {
   const { open } = ccc.useCcc();
+  const { t } = useTranslation();
 
   return (
     <div className="flex flex-col lg:flex-row items-stretch h-dvh bg-black text-white">
@@ -19,13 +21,13 @@ const ConnectWallet: React.FC = () => {
       <div className="flex flex-1 flex-col items-center justify-center p-6">
         <img src="./svg/icon-text.svg" alt="nervdao" width={346} height={88} />
         <p className="font-work-sans text-white-50 mt-6 mb-12 text-center">
-          A Universal Wallet-Interfaced Nervos DAO Portal
+          {t("connectWalletPage.subtitle")}
         </p>
         <button
           onClick={open}
           className="font-bold bg-btn-gradient text-gray-800 text-body-2 py-3 px-8 rounded-lg hover:bg-btn-gradient-hover transition duration-200"
         >
-          Connect Wallet
+          {t("connectWalletPage.connectBtn")}
         </button>
       </div>
     </div>

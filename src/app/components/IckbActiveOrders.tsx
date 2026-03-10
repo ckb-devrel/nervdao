@@ -10,10 +10,11 @@ import ReactDOMServer from "react-dom/server";
 import { Info } from "lucide-react";
 import IckbOrderInfo from "./IckbOrderInfo";
 import { IckbModal } from "./IckbModal";
+import { useTranslation } from "react-i18next";
 
 const IckbActiveOrders: React.FC<{ walletConfig: WalletConfig, ickbData: IckbDateType, onUpdate: VoidFunction }> = ({ walletConfig, ickbData, onUpdate }) => {
     const signerCcc = ccc.useSigner();
-
+    const { t } = useTranslation();
     const [meltTBC, setMeltTBC] = useState<boolean>(false);
     const [canMelt, setCanMelt] = useState<boolean>(false);
     const { showNotification, removeNotification } = useNotification();
@@ -29,14 +30,14 @@ const IckbActiveOrders: React.FC<{ walletConfig: WalletConfig, ickbData: IckbDat
         try {
             const cccTx = ccc.Transaction.fromLumosSkeleton(txMelt.tx);
             txHash = await signerCcc.sendTransaction(cccTx);
-            progressId = await showNotification("progress", `Melt in progress, wait for 60s`);
+            progressId = await showNotification("progress", t("ickbActiveOrders.meltInProgress"));
 
             await signerCcc.client.waitTransaction(txHash, 0, 60000)
             removeNotification(progressId + '')
 
             onUpdate()
             // setMeltTBC(false)
-            showNotification("success", `Melt Success: ${txHash}`);
+            showNotification("success", t("ickbActiveOrders.meltSuccess", { hash: txHash }));
         } catch (error) {
             showNotification("error", `${error}`);
             setMeltTBC(false)
@@ -67,11 +68,11 @@ const IckbActiveOrders: React.FC<{ walletConfig: WalletConfig, ickbData: IckbDat
         <>
             <div className="bg-gray-900 rounded-lg p-4 flex flex-col mb-4 flex-grow">
                 <h3 className="text-xl font-play font-bold mb-4 flex items-center justify-between pr-4">
-                    <span>Active Orders  
+                    <span>{t("ickbActiveOrders.activeOrders")}
                     <a
                         className="hidden sm:inline-block "
                         data-tooltip-id="order-tooltip"
-                        data-tooltip-html={ReactDOMServer.renderToStaticMarkup(IckbOrderInfo())}
+                        data-tooltip-html={ReactDOMServer.renderToStaticMarkup(IckbOrderInfo({ whatAreActiveOrders: t("ickbOrderInfo.whatAreActiveOrders"), desc: t("ickbOrderInfo.desc"), pendingOrders: t("ickbOrderInfo.pendingOrders"), pendingOrdersDesc: t("ickbOrderInfo.pendingOrdersDesc"), completedOrders: t("ickbOrderInfo.completedOrders"), completedOrdersDesc: t("ickbOrderInfo.completedOrdersDesc"), tip: t("ickbOrderInfo.tip"), tipDesc: t("ickbOrderInfo.tipDesc") }))}
                     >
                         <Info className="w-5 h-5 cursor-pointer ml-1 inline-block" />
                     </a>
@@ -98,7 +99,7 @@ const IckbActiveOrders: React.FC<{ walletConfig: WalletConfig, ickbData: IckbDat
                                 wrapperStyle={{ 'display': 'inline-block', 'marginRight': '10px' }}
                                 wrapperClass="inline-block"
                             />}
-                            Extract
+                            {t("ickbActiveOrders.extract")}
                         </button>}
                 </h3>
                 <div className="pb-2  grid lg:grid-cols-2 gap-2">
@@ -122,7 +123,7 @@ const IckbActiveOrders: React.FC<{ walletConfig: WalletConfig, ickbData: IckbDat
 
                                 )
                             })}  
-                        </> : 'no active orders'
+                        </> : t("ickbActiveOrders.noActiveOrders")
                     }
                
                 </div>
@@ -161,10 +162,10 @@ const IckbActiveOrders: React.FC<{ walletConfig: WalletConfig, ickbData: IckbDat
                                 wrapperStyle={{ 'display': 'inline-block', 'marginRight': '10px' }}
                                 wrapperClass="inline-block"
                             />}
-                            Melt all
+                            {t("ickbActiveOrders.meltAll")}
                         </button>}
             </div>
-            {infoOpen&& <IckbModal isOpen={infoOpen} onClose={()=>setInfoOpen(false)} infos={IckbOrderInfo()} />}
+            {infoOpen&& <IckbModal isOpen={infoOpen} onClose={()=>setInfoOpen(false)} infos={IckbOrderInfo({ whatAreActiveOrders: t("ickbOrderInfo.whatAreActiveOrders"), desc: t("ickbOrderInfo.desc"), pendingOrders: t("ickbOrderInfo.pendingOrders"), pendingOrdersDesc: t("ickbOrderInfo.pendingOrdersDesc"), completedOrders: t("ickbOrderInfo.completedOrders"), completedOrdersDesc: t("ickbOrderInfo.completedOrdersDesc"), tip: t("ickbOrderInfo.tip"), tipDesc: t("ickbOrderInfo.tipDesc") })} />}
              
 
         </>

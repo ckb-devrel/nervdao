@@ -7,6 +7,7 @@ import CircularProgress from "./CircularProgress";
 import { useGetExplorerLink } from "@/hooks/Explorer";
 import { useNotification } from "@/context/NotificationProvider";
 import { getClaimEpoch } from "@/utils/epoch";
+import { useTranslation } from "react-i18next";
 
 interface DaoWithdrawDetailModalProps {
   isOpen: boolean;
@@ -40,6 +41,7 @@ export function DaoWithdrawDetailModal({
 }: DaoWithdrawDetailModalProps) {
   const { index } = useGetExplorerLink();
   const signer = ccc.useSigner();
+  const { t } = useTranslation();
 
   const [createTime, setCreateTime] = useState<string>("");
   const [withdrawTime, setWithdrawTime] = useState<string>("");
@@ -149,7 +151,7 @@ export function DaoWithdrawDetailModal({
           <img src="./svg/close.svg" alt="Close" width={18} height={18} />
         </button>
 
-        <h2 className="text-xl font-bold font-play mb-4">Redemption</h2>
+        <h2 className="text-xl font-bold font-play mb-4">{t("daoWithdrawModal.redemption")}</h2>
 
         <div className="flex justify-center items-center mb-4">
           <div className="bg-purple-600 rounded-full p-3">
@@ -168,35 +170,35 @@ export function DaoWithdrawDetailModal({
 
         <div className="bg-gray-700 rounded-lg p-4 mb-4">
           <div className="flex justify-between mb-2">
-            <span>Original Deposit</span>
+            <span>{t("daoWithdrawModal.originalDeposit")}</span>
             <span>{amount} CKB</span>
           </div>
           <div className="flex justify-between mb-2">
-            <span>Transaction Fee</span>
+            <span>{t("daoWithdrawModal.transactionFee")}</span>
             <span>-{transactionFee} CKB</span>
           </div>
           <div className="flex justify-between">
-            <span>Compensation</span>
+            <span>{t("daoWithdrawModal.compensation")}</span>
             <span className="text-green-400">+{profit} CKB</span>
           </div>
         </div>
 
         <div className="space-y-2 mb-4">
           <div className="flex justify-between">
-            <span className="text-gray-400">Transaction Hash</span>
+            <span className="text-gray-400">{t("daoWithdrawModal.transactionHash")}</span>
             <span>{truncateString(txHash, 6, 4)}</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-gray-400">Deposited Date</span>
+            <span className="text-gray-400">{t("daoWithdrawModal.depositedDate")}</span>
             <span>{createTime}</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-gray-400">Redeemed Date</span>
+            <span className="text-gray-400">{t("daoWithdrawModal.redeemedDate")}</span>
             <span>{withdrawTime}</span>
           </div>
           <div className="flex justify-between">
             <span className="text-gray-400">
-              {remainingDays >= 0 ? "Settle" : "Settled"} Date
+              {remainingDays >= 0 ? t("daoWithdrawModal.settleDate") : t("daoWithdrawModal.settledDate")}
             </span>
             <span>
               {!tip
@@ -210,29 +212,29 @@ export function DaoWithdrawDetailModal({
 
         <div className="space-y-2 mb-4">
           <div className="flex justify-between items-center">
-            <span className="text-gray-400">Status</span>
+            <span className="text-gray-400">{t("daoWithdrawModal.status")}</span>
             {infos?.[1].status === "committed" ? (
               remainingDays >= 0 ? (
                 <span className="bg-purple-900 text-purple-400 px-2 py-0.5 rounded text-xs flex items-center">
-                  Redeeming
+                  {t("daoWithdrawModal.redeeming")}
                 </span>
               ) : (
                 <span className="bg-green-900 text-green-400 px-2 py-0.5 rounded text-xs flex items-center">
-                  Withdrawable
+                  {t("daoWithdrawModal.withdrawable")}
                 </span>
               )
             ) : (
               <span className="bg-orange-300 text-orange-800 px-2 py-0.5 rounded text-xs flex items-center">
-                Pending
+                {t("daoWithdrawModal.pending")}
               </span>
             )}
           </div>
           <div className="flex justify-between">
-            <span className="text-gray-400">Cycle</span>
-            <span>Cycle #{Math.ceil(cycle)}</span>
+            <span className="text-gray-400">{t("daoWithdrawModal.cycle")}</span>
+            <span>{t("daoWithdrawModal.cycleNum", { num: Math.ceil(cycle) })}</span>
           </div>
           <div className="flex justify-between items-center">
-            <span className="text-gray-400">Settlement Period</span>
+            <span className="text-gray-400">{t("daoWithdrawModal.settlementPeriod")}</span>
             <div className="flex items-center gap-2">
               {remainingDays >= 0 ? (
                 <>
@@ -243,10 +245,10 @@ export function DaoWithdrawDetailModal({
                     strokeWidth={2}
                     progressColor="#8C76FF"
                   />
-                  <span>{Math.ceil(remainingDays)} days remaining</span>
+                  <span>{t("daoWithdrawModal.daysRemaining", { num: Math.ceil(remainingDays) })}</span>
                 </>
               ) : (
-                "Ended"
+                t("daoWithdrawModal.ended")
               )}
             </div>
           </div>
@@ -257,7 +259,7 @@ export function DaoWithdrawDetailModal({
           onClick={withdraw}
           disabled={remainingDays >= 0}
         >
-          Withdraw
+          {t("daoWithdrawModal.withdraw")}
         </button>
 
         <Link
@@ -279,7 +281,7 @@ export function DaoWithdrawDetailModal({
               d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
             />
           </svg>
-          <p>View on Explorer</p>
+          <p>{t("daoWithdrawModal.viewOnExplorer")}</p>
         </Link>
       </div>
     </div>

@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 const FAQItem: React.FC<{ question: string; answer: string }> = ({
   question,
@@ -15,27 +16,25 @@ const FAQItem: React.FC<{ question: string; answer: string }> = ({
 };
 
 const DepositFAQ: React.FC = () => {
+  const { t } = useTranslation();
   const faqs = [
     {
-      question: "When can I withdraw my deposit?",
-      answer:
-        "You can initiate a redemption from Nervos DAO at any time. However, redemptions will only settle when reaching checkpoints. Checkpoints happen every 180-epoch cycle (roughly 30 days) after depositing, so we recommend redeeming near the end of cycles for maximum profit. Once the settlement period ends, you can withdraw your CKB at any time, and you'll receive your initial deposit and all earned compensation.",
+      question: t("depositFaq.q1"),
+      answer: t("depositFaq.a1"),
     },
     {
-      question: "How are compensation calculated for my deposit?",
-      answer:
-        "Compensation is calculated based on the amount deposited and the duration of the deposit. The longer you keep your CKB in the Nervos DAO, the more compensation you'll earn.",
+      question: t("depositFaq.q2"),
+      answer: t("depositFaq.a2"),
     },
     {
-      question: "What are the benefits of depositing CKB into the Nervos DAO?",
-      answer:
-        "Depositing CKB into the Nervos DAO allows you to earn compensation and participate in the network's governance. It also helps to secure the network and maintain the value of CKB.",
+      question: t("depositFaq.q3"),
+      answer: t("depositFaq.a3"),
     },
   ];
 
   return (
     <div className="bg-gray-800 rounded-lg p-6 flex-1 self-start">
-      <h2 className="text-2xl mb-4">FAQ</h2>
+      <h2 className="text-2xl mb-4">{t("depositFaq.faq")}</h2>
       {faqs.map((faq, index) => (
         <FAQItem key={index} question={faq.question} answer={faq.answer} />
       ))}

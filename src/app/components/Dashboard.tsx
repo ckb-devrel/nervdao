@@ -5,6 +5,7 @@ import { DashboardRecentTransactions } from "./DashboardRecentTransactions";
 import DaoCard from "./DaoCard";
 import { useDaoCells } from "@/hooks/DaoCollect";
 import { ccc } from "@ckb-ccc/connector-react";
+import { useTranslation } from "react-i18next";
 
 export function Dashboard({
   setCurrentPage,
@@ -12,6 +13,7 @@ export function Dashboard({
   setCurrentPage: (page: string) => void;
 }) {
   const { cells: daos, tip } = useDaoCells();
+  const { t } = useTranslation();
 
   return (
     <div className="flex flex-col lg:flex-row flex-grow lg:items-stretch gap-6">
@@ -21,7 +23,7 @@ export function Dashboard({
       </div>
       <div className="bg-gray-900 rounded-lg p-6 flex flex-col flex-[2]">
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-bold">Manage Holdings in Nervos DAO</h2>
+          <h2 className="text-2xl font-bold">{t("dashboard.manageHoldings")}</h2>
         </div>
 
         {daos && daos.length > 0 ? (
@@ -44,15 +46,15 @@ export function Dashboard({
                 height={160}
               />
             </div>
-            <h3 className="text-xl font-bold mb-2">No Holdings Yet</h3>
+            <h3 className="text-xl font-bold mb-2">{t("dashboard.noHoldingsYet")}</h3>
             <p className="text-gray-400 mb-6 text-center lg:mx-4">
-              Accumulate compensation now through the Nervos DAO. You can redeem or withdraw your holdings after depositing.
+              {t("dashboard.noHoldingsDesc")}
             </p>
             <button
               className="font-bold bg-btn-gradient text-gray-800 text-body-2 py-3 px-6 rounded-lg hover:bg-btn-gradient-hover transition duration-200"
               onClick={() => setCurrentPage("deposit")}
             >
-              Make a Deposit
+              {t("dashboard.makeDeposit")}
             </button>
           </div>
         )}

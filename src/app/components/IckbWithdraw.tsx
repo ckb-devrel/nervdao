@@ -7,6 +7,7 @@ import { toText } from "@/utils/stringUtils";
 import { IckbDateType } from "@/cores/utils";
 import { CKB } from "@ickb/lumos-utils";
 import { TailSpin } from "react-loader-spinner";
+import { useTranslation } from "react-i18next";
 
 
 const IckbWithdraw: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = ({ ickbData, onUpdate }) => {
@@ -18,6 +19,7 @@ const IckbWithdraw: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }>
     const signerCcc = ccc.useSigner();
     // const pendingIckbs = ickbData?ickbData.myOrders;
     const { showNotification, removeNotification } = useNotification();
+    const { t } = useTranslation();
 
     async function handleWithDraw() {
         if (!txInfo || !signerCcc) {
@@ -28,13 +30,13 @@ const IckbWithdraw: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }>
             const cccTx = ccc.Transaction.fromLumosSkeleton(txInfo.tx);
             txHash = await signerCcc.sendTransaction(cccTx);
             setTransTBC(true)
-            progressId = await showNotification("progress", `Withdraw in progress, wait for 90s`);
+            progressId = await showNotification("progress", t("ickbWithdraw.withdrawInProgress"));
             setWithdrawPending(true)
             await signerCcc.client.waitTransaction(txHash, 0, 90000)
-            showNotification("success", `Withdraw Success: ${txHash}`);
+            showNotification("success", t("ickbWithdraw.withdrawSuccess", { hash: txHash }));
             onUpdate()
         } catch (error) {
-            showNotification("error", `Withdraw Error: ${error}`);
+            showNotification("error", t("ickbWithdraw.withdrawError", { error: `${error}` }));
         } finally {
             removeNotification(progressId + '')
             setAmount("")
@@ -92,13 +94,13 @@ const IckbWithdraw: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }>
         <>
             <div className="flex  flex-col sm:flex-row font-play mb-4 mt-8 text-left">
                 <div className="block sm:basis-1/2">
-                    <p className="text-gray-400 mb-2 flex items-center"><span className="w-2 h-2 bg-green-500 mr-2"></span>Withdrawable iCKB</p>
+                    <p className="text-gray-400 mb-2 flex items-center"><span className="w-2 h-2 bg-green-500 mr-2"></span>{t("ickbWithdraw.withdrawableIckb")}</p>
                     <p className="text-2xl font-bold font-play mb-4">{(ickbData &&toText(ickbData.ickbRealUdtBalance||BigInt(0)) )} <span className="text-base font-normal">iCKB</span></p>
                 </div>
                 <div className="block sm:basis-1/2">
                     <p className="text-gray-400 mb-2 flex items-center">
                         <span className={"w-2 h-2 bg-yellow-500 mr-2"}></span>
-                        Pending
+                        {t("ickbWithdraw.pending")}
                     </p>
                     <p className="text-2xl font-bold font-play mb-4 flex  items-center">
                         <span>
@@ -117,22 +119,22 @@ const IckbWithdraw: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }>
                     placeholder="0" />
                 <img src="/svg/icon-ickb-2.svg" className="absolute left-4 top-[18px]" alt="iCKB" />
                 <span className="absolute right-4 top-[7px] p-3 flex items-center text-teal-500 cursor-pointer" onClick={handleMax}>
-                    MAX
+                    {t("common.max")}
                 </span>
             </div>
 
-            <p className="text-center text-large font-bold text-center text-cyan-500 mb-4 pb-2 ">
+            <p className="text-center text-large font-bold text-cyan-500 mb-4 pb-2 ">
                 1 iCKB ≈ {ickbData?.tipHeader && approxConversion(CKB)} CKB
             </p>
             <div className="flex justify-between my-3 text-base">
-                <span>Receive </span>
+                <span>{t("ickbWithdraw.receive")}</span>
                 <span>{amount ? <>≈{approxConversion(BigInt(Math.trunc(parseFloat(amount) * Number(CKB))))}</> : 0} CKB</span>
             </div>
             {txInfo && Number(amount) > 0 &&
                 <div className="rounded border-1 border-yellow-500 p-4 bg-yellow-500/[.12]  my-3">
                     <h3 className="text-lg flex items-center">
                         <TriangleAlert size={24} className="block mr-1" />
-                        <span className="block">NOTE</span>
+                        <span className="block">{t("ickbWithdraw.note")}</span>
                     </h3>
                     <p className="mt-2 text-sm">
                         {txInfo.info
@@ -161,10 +163,10 @@ const IckbWithdraw: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }>
                         radius="1"
                         wrapperStyle={{ 'display': 'inline-block', 'marginRight': '10px' }}
                         wrapperClass="inline-block"
-                    /> {withdrawPending ? 'pending' : 'To be confirmed'}
+                    /> {withdrawPending ? t("depositForm.pending") : t("ickbWithdraw.toBeConfirmed")}
                 </>) :
 
-                    <>{amount ? 'Withdraw' : 'Enter an amount'}
+                    <>{amount ? t("ickbWithdraw.withdraw") : t("ickbWithdraw.enterAmount")}
                     </>}
 
 

@@ -5,6 +5,7 @@ import { NotificationProvider } from "@/context/NotificationProvider";
 import Notification from "@/app/components/Notification";
 import { CSSProperties } from "react";
 import React from "react";
+import { I18nProvider } from "@/i18n/I18nProvider";
 
 export  function  LayoutProvider({ children }: { children: React.ReactNode }) {
   const defaultClient = React.useMemo(() => {
@@ -43,10 +44,12 @@ export  function  LayoutProvider({ children }: { children: React.ReactNode }) {
       ]}
     >
        
-        <NotificationProvider>
-          {children}
-          <Notification />
-        </NotificationProvider>
+        <I18nProvider>
+          <NotificationProvider>
+            {children}
+            <Notification />
+          </NotificationProvider>
+        </I18nProvider>
      
     </ccc.Provider>
   );

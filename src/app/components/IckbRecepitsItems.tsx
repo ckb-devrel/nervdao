@@ -4,6 +4,7 @@ import { WalletConfig } from "@/cores/config";
 import { HexNumber } from "@ckb-lumos/base";
 import { getHeadersByNumber } from "@/cores/queries";
 import { CKB } from "@ickb/lumos-utils";
+import { useTranslation } from "react-i18next";
 
 interface IckbRecepitsItemProps {
     walletConfig: WalletConfig
@@ -17,6 +18,7 @@ export function IckbRecepitsItems({
     walletConfig, item
 }: IckbRecepitsItemProps) {
     const [orderDate, setOrderDate] = useState<string>('')
+    const { t } = useTranslation();
     useEffect(() => {
         if(!item||!walletConfig){ return }
 
@@ -40,8 +42,8 @@ export function IckbRecepitsItems({
 
                 </div>
                 <div>
-                    <p className="text-white font-work-sans flex items-center"> <span>Deposit into Nervos DAO</span>
-                        <a data-tooltip-id="my-tooltip" data-tooltip-content="Order more than 100,000 iCKB will directly deposit into Nervos DAO">
+                    <p className="text-white font-work-sans flex items-center"> <span>{t("ickbRecepitsItems.depositIntoNervosDAO")}</span>
+                        <a data-tooltip-id="my-tooltip" data-tooltip-content={t("ickbRecepitsItems.depositTooltip")}>
                             <Info className="w-4 h-4 cursor-pointer ml-2" />
                         </a>
                     </p>

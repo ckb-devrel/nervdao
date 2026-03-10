@@ -54,19 +54,28 @@ const Info = styled.div`
     }
 `;
 
-export function IckbInfo() {
+interface IckbInfoProps {
+    whatIsIckb: string;
+    desc: string;
+    fasterWithdrawals: string;
+    fasterWithdrawalsDesc: string;
+    greaterLiquidity: string;
+    greaterLiquidityDesc: string;
+    learnMore: string;
+}
 
+export function IckbInfo(props: IckbInfoProps) {
     return (
 
 
         <Info >
-            <h4>What is iCKB?</h4>
-            <p  >iCKB is a liquid representation of your deposits in the iCKB protocol. When you deposit through the iCKB protocol, it mints iCKB tokens to represent your deposits, which are pooled and managed by the protocol.</p>
+            <h4>{props.whatIsIckb}</h4>
+            <p>{props.desc}</p>
             <ul>
-                <li><strong>Faster Withdrawals: </strong>Access funds quickly by withdrawing from deposits closest to maturity, bypassing the ~30-day NervosDAO cycle.</li>
-                <li><strong>Greater Liquidity: </strong>Use or trade iCKB tokens anytime, unlike traditional locked NervosDAO deposits.</li>
+                <li><strong>{props.fasterWithdrawals}</strong>{props.fasterWithdrawalsDesc}</li>
+                <li><strong>{props.greaterLiquidity}</strong>{props.greaterLiquidityDesc}</li>
             </ul>
-            <a href="https://ickb.org/" target="_blank">Learn more <ExternalLink size={16} /></a>
+            <a href="https://ickb.org/" target="_blank">{props.learnMore} <ExternalLink size={16} /></a>
             
         </Info>
 
