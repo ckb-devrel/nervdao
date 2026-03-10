@@ -202,6 +202,18 @@ const en = {
     tip: "Tip",
     tipDesc: "you don't manually melt completed orders, they will be automatically melted during your next deposit or withdrawal. Pending orders will also be automatically canceled if not finalized.",
   },
+  notifications: {
+    invalidRedeem: "Unknown error, invalid redeem",
+    invalidWithdraw: "Unknown error, invalid withdraw",
+    missingDepositBlockInfo: "Missing deposit transaction block information",
+    missingRedeemTransaction: "Redeem transaction not found",
+    missingRedeemBlockHash: "Missing redeem transaction block hash",
+    redeemSuccess: "Redeem Success: {{hash}}",
+    withdrawSuccess: "Withdraw Success: {{hash}}",
+    minimalDepositAmount: "Minimal deposit amount is {{amount}}",
+    pendingTransaction: "Pending Transaction!",
+    committed: "Committed",
+  },
 };
 
 export default en;

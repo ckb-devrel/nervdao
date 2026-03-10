@@ -54,7 +54,7 @@ export function DaoDepositDetailModal({
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [_, _depositTx] = cell;
     if (!_depositTx.blockHash || !_depositTx.blockNumber) {
-      showNotification("error", "Unknown error, invalid redeem");
+      showNotification("error", t("notifications.missingDepositBlockInfo"));
       return;
     }
     const { blockHash, blockNumber } = _depositTx;
@@ -71,7 +71,7 @@ export function DaoDepositDetailModal({
     await tx.completeInputsByCapacity(signer);
     await tx.completeFeeBy(signer, 1000);
     const result = await signer.sendTransaction(tx);
-    showNotification("success", `Redeem Success: ${result}`);
+    showNotification("success", t("notifications.redeemSuccess", { hash: result }));
   };
 
   useEffect(() => {
