@@ -9,8 +9,10 @@ import { useDaoDeposits, useDaoRedeems } from "@/hooks/DaoCollect";
 import SkeletonLoader from "./SkeletonLoader";
 import { User } from "lucide-react";
 import { getUserUdtCapacityBySigner } from "@/cores/queries";
+import { useTranslation } from "react-i18next";
 
 const DashboardProfile: React.FC = () => {
+  const { t } = useTranslation();
   const [balance, setBalance] = useState<string>("");
   const [ickbBbalance, setIckbBbalance] = useState<string>("");
   const [address, setAddress] = useState<string>("");
@@ -120,19 +122,19 @@ const DashboardProfile: React.FC = () => {
 
       {[
         {
-          label: "Balance",
+          label: t("dashboardProfile.balance"),
           value: balance,
           percentage: availablePercentage,
           color: "#3CFF97",
         },
         {
-          label: "Deposited CKB",
+          label: t("dashboardProfile.depositedCkb"),
           value: ccc.fixedPointToString(depositSum),
           percentage: depositedPercentage,
           color: "#00FAED",
         },
         {
-          label: "Redeeming CKB",
+          label: t("dashboardProfile.redeemingCkb"),
           value: ccc.fixedPointToString(withdrawalSum),
           percentage: withdrawingPercentage,
           color: "#8C76FF",
@@ -160,8 +162,8 @@ const DashboardProfile: React.FC = () => {
        
       <div className="bg-gray-800 relative rounded-lg p-3 pr-5 mb-2">
         <div className="flex justify-between items-center font-work-sans text-gray-400">
-          <span>Current Compensation</span>
-          <span>APY</span>
+          <span>{t("dashboardProfile.currentCompensation")}</span>
+          <span>{t("dashboardProfile.apy")}</span>
         </div>
         <div className="flex justify-between items-center mt-1 font-play text-white text-lg font-bold">
           <span>{ccc.fixedPointToString(profit, 8)} CKB</span>
@@ -170,7 +172,7 @@ const DashboardProfile: React.FC = () => {
       </div>
       <div className="bg-gray-800 relative rounded-lg p-3 mb-2">
           <div className="flex justify-between items-center">
-            <span className="font-work-sans text-gray-400">iCKB Balance</span>
+            <span className="font-work-sans text-gray-400">{t("dashboardProfile.ickbBalance")}</span>
           </div>
           <div className="flex justify-between items-center mt-1">
             <span className="font-play text-white text-lg font-bold">

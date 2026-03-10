@@ -5,12 +5,13 @@ import React, { useEffect, useState } from "react";
 import { ccc } from "@ckb-ccc/connector-react";
 import SkeletonLoader from "./SkeletonLoader";
 import { IckbDateType } from "@/cores/utils";
+import { useTranslation } from "react-i18next";
 
 
 const IckbStatus: React.FC<{ ickbData: IckbDateType }> = ({ ickbData }) => {
   const [apy, setApy] = useState("-");
   const [isLoadingBalance, setIsLoadingBalance] = useState(true);
-
+  const { t } = useTranslation();
 
   const signer = ccc.useSigner();
   useEffect(() => {
@@ -56,12 +57,12 @@ const IckbStatus: React.FC<{ ickbData: IckbDateType }> = ({ ickbData }) => {
   }
   return (
     <div className="bg-gray-900 rounded-lg p-6 mb-4 mt-4">
-      <h3 className="text-xl font-play font-bold mb-4">Liquidity</h3>
+      <h3 className="text-xl font-play font-bold mb-4">{t("ickbStatus.liquidity")}</h3>
       {/* <ReactApexChart options={ChartData} series={ChartData.series} type="area" height={350} /> */}
       <div className="flex flex-col  sm:flex-row item-center justify-between ">
         <div className="bg-gray-800 relative rounded-lg p-3 pr-5 mb-2 w-full sm:w-[30%]" >
           <div className="flex justify-between items-center font-work-sans text-gray-400">
-            <span>Total Liquidity</span>
+            <span>{t("ickbStatus.totalLiquidity")}</span>
           </div>
           <div className="flex justify-between items-center mt-1 font-play text-white text-lg font-bold">
             <span>{ickbData ? parseFloat((Number(ickbData.ickbUdtPoolBalance) / 100000000).toString()).toFixed(2) : '-'} iCKB</span>
@@ -69,7 +70,7 @@ const IckbStatus: React.FC<{ ickbData: IckbDateType }> = ({ ickbData }) => {
         </div>
         <div className="bg-gray-800 relative rounded-lg p-3 pr-5 mb-2  w-full sm:w-[30%]">
           <div className="flex justify-between items-center font-work-sans text-gray-400">
-            <span>Pool Balance <Info size={16} className="inline-block" data-tooltip-id="my-tooltip" data-tooltip-content="iCKB NervDao Balance" /></span>
+            <span>{t("ickbStatus.poolBalance")} <Info size={16} className="inline-block" data-tooltip-id="my-tooltip" data-tooltip-content={t("ickbStatus.poolBalanceTooltip")} /></span>
           </div>
           <div className="flex justify-between items-center mt-1 font-play text-white text-lg font-bold">
             <span>{ickbData ? parseFloat((Number(ickbData.ickbDaoBalance) / 100000000).toString()).toFixed(2) : '-'} CKB</span>
@@ -77,7 +78,7 @@ const IckbStatus: React.FC<{ ickbData: IckbDateType }> = ({ ickbData }) => {
         </div>
         <div className="bg-gray-800 relative rounded-lg p-3 pr-5 mb-2 w-full sm:w-[30%]">
           <div className="flex justify-between items-center font-work-sans text-gray-400">
-            <span>APY</span>
+            <span>{t("ickbStatus.apy")}</span>
           </div>
           <div className="flex justify-between items-center mt-1 font-play text-white text-lg font-bold">
             <span>{apy}</span>

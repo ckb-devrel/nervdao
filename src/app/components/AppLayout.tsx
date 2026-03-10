@@ -12,6 +12,8 @@ import { Tooltip } from "react-tooltip";
 import ReactDOMServer from "react-dom/server";
 import IckbInfo from "./IckbInfo";
 import { IckbModal } from "./IckbModal";
+import { useTranslation } from "react-i18next";
+import LanguageSwitcher from "./LanguageSwitcher";
 
 function NavItem({
   icon,
@@ -72,20 +74,21 @@ const AppLayout: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { index } = useGetExplorerLink();
   const [infoOpen, setInfoOpen] = useState(false);
+  const { t } = useTranslation();
 
   const getTitle = () => {
     switch (currentPage) {
       case "dashboard":
-        return 'Dashboard';
+        return t("common.dashboard");
       case "deposit":
-        return "Deposit";
+        return t("common.deposit");
       case "ickb":
         return <>
           iCKB
           <a
             data-tooltip-id="top-tooltip"
             className="hidden sm:inline-block "
-            data-tooltip-html={ReactDOMServer.renderToStaticMarkup(IckbInfo())}
+            data-tooltip-html={ReactDOMServer.renderToStaticMarkup(IckbInfo({ whatIsIckb: t("ickbInfo.whatIsIckb"), desc: t("ickbInfo.desc"), fasterWithdrawals: t("ickbInfo.fasterWithdrawals"), fasterWithdrawalsDesc: t("ickbInfo.fasterWithdrawalsDesc"), greaterLiquidity: t("ickbInfo.greaterLiquidity"), greaterLiquidityDesc: t("ickbInfo.greaterLiquidityDesc"), learnMore: t("ickbInfo.learnMore") }))}
           >
             <Info className="w-5 h-5 cursor-pointer ml-1 inline-block" />
           </a>
@@ -124,38 +127,38 @@ const AppLayout: React.FC = () => {
             <div className="flex flex-col items-stretch gap-2">
               <NavItem
                 icon="House"
-                label="Dashboard"
+                label={t("common.dashboard")}
                 isActive={currentPage === "dashboard"}
                 onClick={() => setCurrentPage("dashboard")}
               />
               <NavItem
                 icon="Download"
-                label="Deposit"
+                label={t("common.deposit")}
                 isActive={currentPage === "deposit"}
                 onClick={() => setCurrentPage("deposit")}
               />
               <NavItem
                 iconName="ickb"
                 icon="ChartBarBig"
-                label="iCKB"
+                label={t("common.ickb")}
                 isActive={currentPage === "ickb"}
                 onClick={() => setCurrentPage("ickb")}
               />
               <NavItem
                 icon="ChartBarBig"
-                label="Explore"
+                label={t("common.explore")}
                 onClick={() => window.open(`${index}/nervosdao`, "_blank")}
               />
             </div>
             <div className="flex flex-col items-stretch gap-2">
               <NavItem
                 icon="Twitter"
-                label="About us"
+                label={t("common.aboutUs")}
                 onClick={() => window.open("https://x.com/CKBDevrel", "_blank")}
               />
               <NavItem
                 icon="Github"
-                label="Source"
+                label={t("common.source")}
                 onClick={() => window.open("https://github.com/ckb-devrel/nervdao", "_blank")}
               />
             </div>
@@ -165,46 +168,49 @@ const AppLayout: React.FC = () => {
       <aside className="bg-gray-950 border-b border-white-200 flex flex-col items-stretch sm:hidden">
         <div className="mx-4 py-2 flex justify-between items-center">
           <img src="./svg/plain-icon.svg" alt="logo" className="w-10 h-10" />
-          <Menu
-            className="w-8 h-8 cursor-pointer"
-            onClick={() => setIsOpen(!isOpen)}
-          />
+          <div className="flex items-center gap-2">
+            <LanguageSwitcher />
+            <Menu
+              className="w-8 h-8 cursor-pointer"
+              onClick={() => setIsOpen(!isOpen)}
+            />
+          </div>
         </div>
         {isOpen ? (
           <nav className="flex items-stretch flex-grow py-2">
             <ul className="flex gap-2 flex-col items-stretch justify-between flex-grow">
               <NavItemMobile
                 icon="House"
-                label="Dashboard"
+                label={t("common.dashboard")}
                 isActive={currentPage === "dashboard"}
                 onClick={() => setCurrentPage("dashboard")}
               />
               <NavItemMobile
                 icon="Download"
-                label="Deposit"
+                label={t("common.deposit")}
                 isActive={currentPage === "deposit"}
                 onClick={() => setCurrentPage("deposit")}
               />
                <NavItemMobile
                 iconName="ickb"
                 icon="ChartBarBig"
-                label="iCKB"
+                label={t("common.ickb")}
                 isActive={currentPage === "ickb"}
                 onClick={() => setCurrentPage("ickb")}
               />
               <NavItemMobile
                 icon="ChartBarBig"
-                label="Explore"
+                label={t("common.explore")}
                 onClick={() => window.open(`${index}/nervosdao`, "_blank")}
               />
               <NavItemMobile
                 icon="Twitter"
-                label="About us"
+                label={t("common.aboutUs")}
                 onClick={() => window.open("https://x.com/CKBDevrel", "_blank")}
               />
               <NavItemMobile
                 icon="Github"
-                label="Source"
+                label={t("common.source")}
                 onClick={() => window.open("https://x.com/CKBDevrel", "_blank")}
               />
             </ul>
@@ -212,7 +218,7 @@ const AppLayout: React.FC = () => {
         ) : undefined}
       </aside>
       <main className="flex-1 flex flex-col py-8 px-4 lg:px-8 overflow-auto">
-        <Title>{getTitle()}</Title>
+        <Title languageSwitcher={<LanguageSwitcher />}>{getTitle()}</Title>
         {renderContent()}
       </main>
       <Tooltip id="top-tooltip"
@@ -227,7 +233,7 @@ const AppLayout: React.FC = () => {
           boxShadow: ' 0px 4px 6px -2px #88888814,0px 10px 15px -3px #8888881F',
         }}
       />
-      {infoOpen&& <IckbModal isOpen={infoOpen} onClose={()=>setInfoOpen(false)} infos={IckbInfo()} />
+      {infoOpen&& <IckbModal isOpen={infoOpen} onClose={()=>setInfoOpen(false)} infos={IckbInfo({ whatIsIckb: t("ickbInfo.whatIsIckb"), desc: t("ickbInfo.desc"), fasterWithdrawals: t("ickbInfo.fasterWithdrawals"), fasterWithdrawalsDesc: t("ickbInfo.fasterWithdrawalsDesc"), greaterLiquidity: t("ickbInfo.greaterLiquidity"), greaterLiquidityDesc: t("ickbInfo.greaterLiquidityDesc"), learnMore: t("ickbInfo.learnMore") })} />
     }
     </div>
   );

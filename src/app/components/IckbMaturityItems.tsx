@@ -4,6 +4,7 @@ import { HexNumber } from "@ckb-lumos/base";
 import { getHeadersByNumber } from "@/cores/queries";
 import { CKB, I8Cell } from "@ickb/lumos-utils";
 import { WalletConfig } from "@/cores/config";
+import { useTranslation } from "react-i18next";
 type MyMaturity = {
     daoCell: I8Cell;
     ckbAmount: bigint;
@@ -18,6 +19,7 @@ export function IckbMaturityItems({
     item, walletConfig
 }: IckbRecepitsItemProps) {
     const [orderDate, setOrderDate] = useState<string>('')
+    const { t } = useTranslation();
     useEffect(() => {
         if(!item||!walletConfig){ return }
         const refresh = async () => {
@@ -40,8 +42,8 @@ export function IckbMaturityItems({
 
                 </div>
                 <div>
-                    <p className="text-white font-work-sans text-body-2 flex items-center"> Withdraw from Nervos DAO
-                        <a data-tooltip-id="my-tooltip" data-tooltip-content="Order more than 100,000 iCKB will directly withdraw from Nervos DAO">
+                    <p className="text-white font-work-sans text-body-2 flex items-center"> {t("ickbMaturityItems.withdrawFromNervosDAO")}
+                        <a data-tooltip-id="my-tooltip" data-tooltip-content={t("ickbMaturityItems.withdrawTooltip")}>
                             <Info className="w-4 h-4 cursor-pointer ml-2" />
                         </a>
                     </p>
@@ -54,7 +56,7 @@ export function IckbMaturityItems({
                         {parseFloat((Number(item.ckbAmount / CKB)).toString()).toFixed(2)} CKB
                     </p>
                     <p>
-                        {item.waitTime === 'matured' ? `(${item.waitTime})` : '< ' + item.waitTime}
+                        {item.waitTime === 'matured' ? `(${t("ickbMaturityItems.matured")})` : '< ' + item.waitTime}
                     </p>
                 </div>
 

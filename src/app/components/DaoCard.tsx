@@ -6,6 +6,7 @@ import { useState } from "react";
 import { DaoDepositDetailModal } from "./DaoDepositDetailModal";
 import { DaoWithdrawDetailModal } from "./DaoWithdrawDetailModal";
 import { DaoInfo } from "@/hooks/DaoCollect";
+import { useTranslation } from "react-i18next";
 
 export const DaoCard = ({
   tip,
@@ -15,6 +16,7 @@ export const DaoCard = ({
   dao: DaoInfo;
 }) => {
   const [modalOpen, setModalOpen] = useState(false);
+  const { t } = useTranslation();
 
   const amount = ccc.fixedPointToString(
     (cell.cellOutput.capacity / ccc.fixedPointFrom("0.01")) *
@@ -69,32 +71,31 @@ export const DaoCard = ({
         onClick={handleOpenModal}
       >
         <div className="flex flex-col-reverse gap-2 lg:flex-row justify-between items-start lg:items-center mb-1">
-          <span className="text-gray-400 text-sm">Amount</span>
+          <span className="text-gray-400 text-sm">{t("daoCard.amount")}</span>
           <span
             className={`px-2 py-0.5 rounded text-xs bg-${color}-900 text-${color}-400`}
           >
             {isRedeeming
               ? remainingDays <= 0
-                ? "Withdrawable"
-                : "Redeeming"
-              : "Deposited"}
+                ? t("daoCard.withdrawable")
+                : t("daoCard.redeeming")
+              : t("daoCard.deposited")}
           </span>
         </div>
         <div className="text-2xl font-bold text-white mb-4">{amount} CKB</div>
 
         <div className="flex justify-between items-center mb-1 text-sm">
           <span className="text-gray-400">
-            Cycle #
-            {remainingCycles === undefined ? "-" : Math.ceil(profitCycles)}
+            {remainingCycles === undefined ? "-" : t("daoCard.cycle", { num: Math.ceil(profitCycles) })}
           </span>
           <span className="text-gray-400">
             {remainingCycles === undefined
-              ? "Pending Transaction"
+              ? t("daoCard.pendingTransaction")
               : remainingDays >= 0
               ? isRedeeming
-                ? `Settle in ${Math.ceil(remainingDays)}d`
-                : `${Math.ceil(remainingDays)}d remaining`
-              : "Ended"}
+                ? t("daoCard.settleIn", { days: Math.ceil(remainingDays) })
+                : t("daoCard.daysRemaining", { days: Math.ceil(remainingDays) })
+              : t("daoCard.ended")}
           </span>
         </div>
 

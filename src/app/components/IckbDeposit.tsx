@@ -7,6 +7,7 @@ import { toText } from "@/utils/stringUtils";
 import { IckbDateType } from "@/cores/utils";
 import { CKB } from "@ickb/lumos-utils";
 import { TailSpin } from "react-loader-spinner";
+import { useTranslation } from "react-i18next";
 
 
 const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = ({ ickbData, onUpdate }) => {
@@ -17,6 +18,7 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
     const txInfo = (ickbData && debouncedAmount.length > 0) ? ickbData?.txBuilder("ckb2ickb", ccc.fixedPointFrom(debouncedAmount)) : null;
     const signerCcc = ccc.useSigner();
     const { showNotification, removeNotification } = useNotification();
+    const { t } = useTranslation();
     const [balance, setBalance] = useState<bigint>(BigInt(0));
     const [balanceShow, setBalanceShow] = useState<string>("");
     const [depositPending, setDepositPending] = useState<boolean>(false);
@@ -34,11 +36,11 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
         try {
             const cccTx = ccc.Transaction.fromLumosSkeleton(txInfo.tx);
             txHash = await signerCcc.sendTransaction(cccTx);
-            progressId = await showNotification("progress", `Deposit in progress, wait for 90s`);
+            progressId = await showNotification("progress", t("ickbDeposit.depositInProgress"));
             setDepositPending(true)
             await signerCcc.client.waitTransaction(txHash, 0, 90000);
             onUpdate()
-            showNotification("success", `Deposit Success: ${txHash}`);
+            showNotification("success", t("ickbDeposit.depositSuccess", { hash: txHash }));
         } catch (error) {
             showNotification("error", `${error}`);
 
@@ -104,7 +106,7 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
         <>
             <div className="flex flex-col sm:flex-row font-play mb-4 mt-8 text-left">
                 <div className="block sm:basis-1/2">
-                    <p className="text-gray-400 mb-2 flex items-center"><span className="w-2 h-2 bg-green-500 mr-2"></span>CKB Available </p>
+                    <p className="text-gray-400 mb-2 flex items-center"><span className="w-2 h-2 bg-green-500 mr-2"></span>{t("ickbDeposit.ckbAvailable")}</p>
                     {/* <p className="text-2xl font-bold font-play mb-4">{(ickbData && ickbData.ckbAvailable !== BigInt(6)*CKB*CKB) ? toText(ickbData?.ckbAvailable) : "-"} <span className="text-base font-normal">CKB</span></p> */}
                     <p className="text-2xl font-bold font-play mb-4">{balance ? balanceShow : '-'} <span className="text-base font-normal">CKB</span></p>
 
@@ -112,13 +114,12 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
                 <div className="block sm:basis-1/2">
                     <p className="text-gray-400 mb-2 flex items-center">
                         <span className={"w-2 h-2 bg-yellow-500 mr-2"}></span>
-                        Pending <Info size={16} className="ml-1 inline-block" data-tooltip-id="my-tooltip" data-tooltip-html="Pending CKB becomes available once<br /> the Nervos DAO maturity period ends or the active order is melted." />
+                        {t("ickbDeposit.pending")} <Info size={16} className="ml-1 inline-block" data-tooltip-id="my-tooltip" data-tooltip-html={t("ickbDeposit.pendingTooltip")} />
                     </p>
                     <p className="text-2xl font-bold font-play mb-4 flex  items-center">
                         <span>
                             {pendingBalance} <span className="text-base font-normal">CKB</span>
                         </span>
-                       
                     </p>
                 </div>
             </div>
@@ -130,7 +131,7 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
                     onChange={handleAmountChange}
                     placeholder="0" />
                 <span className="absolute right-4 bottom-2 p-3 flex items-center text-teal-500 cursor-pointer" onClick={handleMax}>
-                    MAX <Info size={16} className="inline-block ml-2" data-tooltip-id="my-tooltip" data-tooltip-html="<div>CKB Balance minus 1000 CKB </div>" />
+                    {t("common.max")} <Info size={16} className="inline-block ml-2" data-tooltip-id="my-tooltip" data-tooltip-html="<div>CKB Balance minus 1000 CKB </div>" />
                 </span>
             </div> */}
             <div className='relative mb-4 flex'>
@@ -142,14 +143,14 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
                     max={Number(balance/CKB)} />
                 <img src="/svg/icon-ckb.svg" className="absolute left-4 top-[18px]" alt="CKB" />
                 <span className="absolute right-4 top-[7px] p-3 flex items-center text-teal-500 cursor-pointer" onClick={handleMax}>
-                    MAX
+                    {t("common.max")}
                 </span>
             </div>
-            <p className="text-center text-large font-bold text-center text-cyan-500 mb-4 pb-2 ">
+            <p className="text-center text-large font-bold text-cyan-500 mb-4 pb-2 ">
                 1 CKB ≈ {ickbData?.tipHeader && approxConversion(CKB)} iCKB
             </p>
             <div className="flex justify-between my-3 text-base">
-                <span>Receive </span>
+                <span>{t("ickbDeposit.receive")}</span>
                 {/* 扣除0.1% 交易bot fee */}
                 <span>{amount ? <>≈{approxConversion(BigInt(Math.trunc(parseFloat(amount) * Number(CKB)/*99900000*/)))} iCKB</> : '0 iCKB'}</span>
             </div>
@@ -157,7 +158,7 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
                 <div className="rounded border-1 border-yellow-500 p-4 bg-yellow-500/[.12]  my-3">
                     <h3 className="text-lg flex items-center">
                         <TriangleAlert size={24} className="block mr-1" />
-                        <span className="block">NOTE</span>
+                        <span className="block">{t("ickbDeposit.note")}</span>
                     </h3>
                     <p className="mt-2 text-sm">
                         {txInfo.info
@@ -190,10 +191,10 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
                         radius="1"
                         wrapperStyle={{ 'display': 'inline-block', 'marginRight': '10px' }}
                         wrapperClass="inline-block"
-                    /> {depositPending ? 'pending' : 'To be confirmed'}
+                    /> {depositPending ? t("depositForm.pending") : t("ickbDeposit.toBeConfirmed")}
                 </>) :
 
-                    <>{debouncedAmount ? 'Swap' : 'Enter an amount'}
+                    <>{debouncedAmount ? t("ickbDeposit.swap") : t("ickbDeposit.enterAmount")}
                     </>}
             </button>
 

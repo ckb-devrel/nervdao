@@ -2,6 +2,7 @@ import React from "react";
 import { icons } from "lucide-react";
 import { RecentOrder } from "@/cores/utils";
 import { ccc } from "@ckb-ccc/connector-react";
+import { useTranslation } from "react-i18next";
 
 interface IckbRecepitsItemProps {
     item: RecentOrder
@@ -10,7 +11,7 @@ interface IckbRecepitsItemProps {
 export function IckbHistoryOrderItems({
     item
 }: IckbRecepitsItemProps) {
-
+    const { t } = useTranslation();
 
     const iconColor = {
         order_withdraw: "bg-green-600",
@@ -20,10 +21,10 @@ export function IckbHistoryOrderItems({
 
     }[item.operation];
     const actionText = {
-        order_deposit: "Swap CKB to iCKB",
-        order_withdraw: "Withdraw CKB from iCKB",
-        dao_deposit: "Nervos DAO Deposit",
-        dao_withdraw: "Nervos DAO Withdraw",
+        order_deposit: t("ickbHistoryOrderItems.swapCkbToIckb"),
+        order_withdraw: t("ickbHistoryOrderItems.withdrawCkbFromIckb"),
+        dao_deposit: t("ickbHistoryOrderItems.nervosDAODeposit"),
+        dao_withdraw: t("ickbHistoryOrderItems.nervosDAOWithdraw"),
     }[item.operation];
     const Icon = {
         order_deposit: icons["ArrowUp"],

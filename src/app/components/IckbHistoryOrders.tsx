@@ -4,10 +4,12 @@ import {  RecentOrder } from "@/cores/utils";
 import { ccc } from "@ckb-ccc/connector-react";
 import { getRecentIckbOrders } from "@/cores/queries";
 import { IckbHistoryOrderItems } from "./IckbHistoryOrderItems";
+import { useTranslation } from "react-i18next";
 
 
 const IckbHistoryOrders: React.FC<{ walletConfig: WalletConfig}> = ({ walletConfig}) => {
     const signerCcc = ccc.useSigner();
+    const { t } = useTranslation();
     const [limit, setLimit] = React.useState(5);
     const [txs, setTxs] = React.useState<RecentOrder[]>([]);
     const [txGenerator, setTxGenerator] = React.useState<
@@ -79,7 +81,7 @@ const IckbHistoryOrders: React.FC<{ walletConfig: WalletConfig}> = ({ walletConf
         <>
            
             <div className="bg-gray-900 rounded-lg p-4 flex flex-col flex-grow mt-6 text-left">
-                <h3 className="text-xl font-play font-bold mb-4">Recent Orders</h3>
+                <h3 className="text-xl font-play font-bold mb-4">{t("ickbHistoryOrders.recentOrders")}</h3>
                 {txs && txs.length > 0 ? <>
                     {txs.map((item, index) => {
                         return (
@@ -95,11 +97,11 @@ const IckbHistoryOrders: React.FC<{ walletConfig: WalletConfig}> = ({ walletConf
                             className="text-cyan-400 mt-4 hover:underline"
                             onClick={() => setLimit(limit + 5)}
                         >
-                            View all history
+                            {t("ickbHistoryOrders.viewAllHistory")}
                         </button>
                     ) : undefined}</>
                     : <div className={`flex flex-grow items-center justify-center bg-gray-800 rounded-lg p-4`}>
-                        <p className="text-gray-400">No recent transactions</p>
+                        <p className="text-gray-400">{t("ickbHistoryOrders.noRecentTransactions")}</p>
                     </div>}
             </div>
 

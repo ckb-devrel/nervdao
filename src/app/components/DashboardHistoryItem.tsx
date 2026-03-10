@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { ccc } from "@ckb-ccc/connector-react";
 import { icons } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 interface DashboardHistoryItemProps {
   transaction: ccc.ClientTransactionResponse;
@@ -10,6 +11,7 @@ export function DashboardHistoryItem({
   transaction,
 }: DashboardHistoryItemProps) {
   const { client } = ccc.useCcc();
+  const { t } = useTranslation();
   const [action, setAction] = useState<"Deposit" | "Redeem" | "Withdraw">("Deposit");
   const [formattedAmount, setFormattedAmount] = useState("-");
 
@@ -64,9 +66,9 @@ export function DashboardHistoryItem({
     Withdraw: "bg-green-600",
   }[action];
   const actionText = {
-    Deposit: "Deposit to Nervos DAO",
-    Redeem: "Redeem from Nervos DAO",
-    Withdraw: "Withdraw",
+    Deposit: t("recentTransactions.depositToNervosDAO"),
+    Redeem: t("recentTransactions.redeemFromNervosDAO"),
+    Withdraw: t("recentTransactions.withdraw"),
   }[action];
   const Icon = {
     Deposit: icons["Download"],

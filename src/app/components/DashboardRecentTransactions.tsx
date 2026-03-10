@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { DashboardHistoryItem } from "./DashboardHistoryItem";
 import { ccc } from "@ckb-ccc/connector-react";
+import { useTranslation } from "react-i18next";
 
 interface DashboardRecentTransactionsProps {
   isRedeeming?: boolean;
@@ -36,10 +37,12 @@ async function* getDaoTransactions(signer: ccc.Signer, isRedeeming?: boolean) {
 
 export function DashboardRecentTransactions({
   isRedeeming,
-  title = "Recent Transactions",
+  title,
   ...props
 }: DashboardRecentTransactionsProps & React.ComponentPropsWithoutRef<"div">) {
   const signer = ccc.useSigner();
+  const { t } = useTranslation();
+  const resolvedTitle = title ?? t("recentTransactions.recentTransactions");
 
   const [limit, setLimit] = React.useState(5);
   const [txs, setTxs] = React.useState<ccc.ClientTransactionResponse[]>([]);
@@ -112,7 +115,7 @@ export function DashboardRecentTransactions({
         {...props}
         className={`flex flex-grow items-center justify-center bg-gray-800 rounded-lg p-4  ${props.className}`}
       >
-        <p className="text-gray-400">No recent transactions</p>
+        <p className="text-gray-400">{t("recentTransactions.noRecentTransactions")}</p>
       </div>
     );
   }
@@ -122,7 +125,7 @@ export function DashboardRecentTransactions({
       {...props}
       className={`bg-gray-900 rounded-lg p-4 flex flex-col ${props.className}`}
     >
-      <h3 className="text-xl font-play font-bold mb-4">{title}</h3>
+      <h3 className="text-xl font-play font-bold mb-4">{resolvedTitle}</h3>
       <div>
         {txs.slice(0, limit).map((transaction, index) => (
           <DashboardHistoryItem key={index} transaction={transaction} />
@@ -132,7 +135,7 @@ export function DashboardRecentTransactions({
             className="text-cyan-400 mt-4 hover:underline"
             onClick={() => setLimit(limit + 5)}
           >
-            View all history
+            {t("recentTransactions.viewAllHistory")}
           </button>
         ) : undefined}
       </div>

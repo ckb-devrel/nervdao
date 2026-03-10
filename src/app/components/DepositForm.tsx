@@ -2,6 +2,7 @@ import React, { useEffect, useState  } from "react";
 import { ccc } from "@ckb-ccc/connector-react";
 import { useNotification } from "@/context/NotificationProvider";
 import { TailSpin } from "react-loader-spinner";
+import { useTranslation } from "react-i18next";
 
 const DepositForm: React.FC = () => {
   const [amount, setAmount] = useState<string>("");
@@ -11,6 +12,7 @@ const DepositForm: React.FC = () => {
   const [depositPending, setDepositPending] = useState<boolean>(false);
   const signer = ccc.useSigner();
   const { showNotification, removeNotification } = useNotification();
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (!signer) return;
@@ -142,9 +144,9 @@ const DepositForm: React.FC = () => {
     <div className="bg-gray-800 rounded-lg p-6">
 
       <h2 className="text-2xl font-play font-bold mb-4">
-        Deposit to Nervos DAO
+        {t("depositForm.depositToNervosDAO")}
       </h2>
-      <p className="text-gray-400 mb-2">Available CKB</p>
+      <p className="text-gray-400 mb-2">{t("depositForm.availableCkb")}</p>
       <p className="text-3xl font-bold font-play mb-4">{balance} CKB</p>
 
       <div className='relative flex items-center mb-4'>
@@ -152,19 +154,19 @@ const DepositForm: React.FC = () => {
           type="text"
           onChange={(e) => setAmount(e.target.value)}
           value={amount}
-          placeholder="Enter amount" />
+          placeholder={t("depositForm.enterAmount")} />
 
         <span className="absolute right-0 p-3 flex items-center text-teal-500 cursor-pointer" onClick={handleMax}>
-          MAX
+          {t("common.max")}
         </span>
 
       </div>
       <p className="text-gray-400 text-sm mb-4 border-b pb-2 border-white/20">
-        Max balance minus estimated transaction fee needed
+        {t("depositForm.maxBalanceHint")}
       </p>
 
       <div className="flex justify-between">
-        <span>Transaction Fee</span>
+        <span>{t("depositForm.transactionFee")}</span>
         <span>{transactionFee} CKB</span>
       </div>
 
@@ -189,8 +191,8 @@ const DepositForm: React.FC = () => {
             radius="1"
             wrapperStyle={{ 'display': 'inline-block', 'marginRight': '10px' }}
             wrapperClass="inline-block"
-          /> {depositPending?'pending':'To be confirmed'}
-        </> : 'Deposit'}
+          /> {depositPending ? t("depositForm.pending") : t("depositForm.toBeConfirmed")}
+        </> : t("depositForm.deposit")}
       </button>
 
     </div>

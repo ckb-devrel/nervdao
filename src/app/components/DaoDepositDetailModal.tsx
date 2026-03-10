@@ -4,6 +4,7 @@ import { truncateString } from "@/utils/stringUtils";
 import { ccc } from "@ckb-ccc/connector-react";
 import React, { useEffect, useState } from "react";
 import CircularProgress from "./CircularProgress";
+import { useTranslation } from "react-i18next";
 
 interface DaoDetailModalProps {
   isOpen: boolean;
@@ -40,6 +41,7 @@ export function DaoDepositDetailModal({
   const transaction = cell?.[1].transaction;
 
   const { index } = useGetExplorerLink();
+  const { t } = useTranslation();
 
   const signer = ccc.useSigner();
   const { showNotification } = useNotification();
@@ -118,7 +120,7 @@ export function DaoDepositDetailModal({
           <img src="./svg/close.svg" alt="Close" width={18} height={18} />
         </button>
 
-        <h2 className="text-2xl font-bold mb-4 font-play">Deposit</h2>
+        <h2 className="text-2xl font-bold mb-4 font-play">{t("daoDepositModal.deposit")}</h2>
 
         <div className="flex flex-col items-center mb-4">
           <div className="bg-cyan-500 rounded-full p-2 mb-2">
@@ -129,7 +131,7 @@ export function DaoDepositDetailModal({
 
         <div className="bg-gray-700 rounded-lg p-4 mb-4">
           <div className="flex justify-between mb-2 font-work-sans">
-            <span>Transaction Fee</span>
+            <span>{t("daoDepositModal.transactionFee")}</span>
             {isLoading ? (
               <span className="animate-pulse bg-gray-300 h-6 w-24 rounded"></span>
             ) : (
@@ -137,7 +139,7 @@ export function DaoDepositDetailModal({
             )}
           </div>
           <div className="flex justify-between font-work-sans">
-            <span>Total</span>
+            <span>{t("daoDepositModal.total")}</span>
             {isLoading ? (
               <span className="animate-pulse bg-gray-300 h-6 w-24 rounded"></span>
             ) : (
@@ -148,22 +150,22 @@ export function DaoDepositDetailModal({
 
         <div className="mb-4">
           <div className="flex justify-between mb-2 font-work-sans">
-            <span className="text-gray-400">Transaction Hash</span>
+            <span className="text-gray-400">{t("daoDepositModal.transactionHash")}</span>
             <span>{truncateString(txHash, 6, 4)} </span>
           </div>
           <div className="flex justify-between mb-2">
-            <span className="text-gray-400">Deposited Date</span>
+            <span className="text-gray-400">{t("daoDepositModal.depositedDate")}</span>
             <span> {createTime} </span>
           </div>
           <div className="flex justify-between mb-2">
-            <span className="text-gray-400">Status</span>
+            <span className="text-gray-400">{t("daoDepositModal.status")}</span>
             {cell?.[1].status === "committed" ? (
               <span className="bg-cyan-900 text-cyan-400 px-2 py-0.5 rounded text-xs flex items-center">
-                Success
+                {t("daoDepositModal.success")}
               </span>
             ) : (
               <span className="bg-orange-300 text-orange-800 px-2 py-0.5 rounded text-xs flex items-center">
-                Pending
+                {t("daoDepositModal.pending")}
               </span>
             )}
           </div>
@@ -171,11 +173,11 @@ export function DaoDepositDetailModal({
 
         <div className="border-t border-gray-700 pt-4 mb-4">
           <div className="flex justify-between mb-2">
-            <span className="text-gray-400">Current Cycle</span>
-            <span>Cycle #{Math.ceil(cycle)}</span>
+            <span className="text-gray-400">{t("daoDepositModal.currentCycle")}</span>
+            <span>{t("daoDepositModal.cycleNum", { num: Math.ceil(cycle) })}</span>
           </div>
           <div className="flex justify-between mb-2">
-            <span className="text-gray-400">Time Remaining</span>
+            <span className="text-gray-400">{t("daoDepositModal.timeRemaining")}</span>
             <span className="flex items-center gap-2">
               <CircularProgress
                 percentage={(3000 - remainingDays * 100) / 30}
@@ -184,11 +186,11 @@ export function DaoDepositDetailModal({
                 strokeWidth={2}
                 progressColor="#00FAED"
               />
-              {Math.ceil(remainingDays)} days
+              {t("daoDepositModal.days", { num: Math.ceil(remainingDays) })}
             </span>
           </div>
           <div className="flex justify-between">
-            <span className="text-gray-400">Estimated Compensation</span>
+            <span className="text-gray-400">{t("daoDepositModal.estimatedCompensation")}</span>
             <span>{profit} CKB</span>
           </div>
         </div>
@@ -197,7 +199,7 @@ export function DaoDepositDetailModal({
           className="w-full font-bold bg-btn-gradient text-gray-800 text-body-2 py-3 rounded-lg hover:bg-btn-gradient-hover transition duration-200"
           onClick={withdraw}
         >
-          Redeem
+          {t("daoDepositModal.redeem")}
         </button>
 
         <a
@@ -219,7 +221,7 @@ export function DaoDepositDetailModal({
               d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
             />
           </svg>
-          View on Explorer
+          {t("daoDepositModal.viewOnExplorer")}
         </a>
       </div>
     </div>
