@@ -79,17 +79,17 @@ export function DaoWithdrawDetailModal({
     if (!signer || !infos) return;
     const [, depositTx, depositHeader] = infos;
     if (!depositTx.blockHash) {
-      showNotification("error", "Unknown error, invalid withdraw");
+      showNotification("error", t("notifications.missingDepositBlockInfo"));
       return;
     }
     const { blockHash } = depositTx;
     if (!infos[3]) {
-      showNotification("error", "Unknown error, invalid withdraw");
+      showNotification("error", t("notifications.missingRedeemTransaction"));
       return;
     }
     const [withdrawTx, withdrawHeader] = infos[3];
     if (!withdrawTx?.blockHash) {
-      showNotification("error", "Unknown error, invalid withdraw");
+      showNotification("error", t("notifications.missingRedeemBlockHash"));
       return;
     }
     const tx = ccc.Transaction.from({
@@ -123,7 +123,7 @@ export function DaoWithdrawDetailModal({
     await tx.completeInputsByCapacity(signer);
     await tx.completeFeeChangeToOutput(signer, 0, 1000);
     const result = await signer.sendTransaction(tx);
-    showNotification("success", `Withdraw Success: ${result}`);
+    showNotification("success", t("notifications.withdrawSuccess", { hash: result }));
   }, [signer, infos, dao, showNotification]);
 
   const handleClose = (e: React.MouseEvent) => {

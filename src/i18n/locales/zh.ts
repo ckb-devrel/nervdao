@@ -202,6 +202,18 @@ const zh = {
     tip: "提示",
     tipDesc: "如果您不手动熔化已完成的订单，它们将在您下次存款或提取时自动熔化。待处理订单如未最终确定，也将自动取消。",
   },
+  notifications: {
+    invalidRedeem: "未知错误，无效的赎回",
+    invalidWithdraw: "未知错误，无效的提取",
+    missingDepositBlockInfo: "缺少存款交易区块信息",
+    missingRedeemTransaction: "未找到赎回交易",
+    missingRedeemBlockHash: "缺少赎回交易区块哈希",
+    redeemSuccess: "赎回成功：{{hash}}",
+    withdrawSuccess: "提取成功：{{hash}}",
+    minimalDepositAmount: "最小存款金额为 {{amount}} CKB",
+    pendingTransaction: "交易待确认！",
+    committed: "交易已提交，等待链上确认",
+  },
 };
 
 export default zh;

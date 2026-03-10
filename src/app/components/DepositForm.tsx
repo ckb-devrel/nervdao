@@ -80,8 +80,7 @@ const DepositForm: React.FC = () => {
     if (tx.outputs[0].capacity > ccc.fixedPointFrom(amount)) {
       showNotification(
         "error",
-        "Minimal deposit amount is",
-        ccc.fixedPointToString(tx.outputs[0].capacity)
+        t("notifications.minimalDepositAmount", { amount: ccc.fixedPointToString(tx.outputs[0].capacity) })
       );
       return;
     }
@@ -91,13 +90,13 @@ const DepositForm: React.FC = () => {
     setTransTbc(true)
     try {
       const txHash = await signer.sendTransaction(tx);
-      const progressId = await showNotification("progress", `Pending Transaction!`);
+      const progressId = await showNotification("progress", t("notifications.pendingTransaction"));
       setDepositPending(true)
       await signer.client.waitTransaction(txHash)
       setTransTbc(false)
       removeNotification(progressId + '')
       setDepositPending(false)
-      showNotification("success", ` Committed`);
+      showNotification("success", t("notifications.committed"));
       // showNotification("success", `Deposit Success: ${txHash}`);
     } catch (error) {
       setTransTbc(false)
