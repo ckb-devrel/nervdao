@@ -227,8 +227,8 @@ const AppLayout: React.FC = () => {
                     onClick={() => i18n.changeLanguage(lang)}
                     className={`flex-1 flex items-center justify-center gap-1.5 py-2 px-3 rounded-full text-sm transition-colors border ${
                       lang === currentLang
-                        ? "border-cyan-400 text-cyan-400"
-                        : "border-white/20 text-white/60"
+                        ? "border-cyan-400 text-white bg-[#00FAED1F]"
+                        : "border-white/20 text-white/60 bg-white/5"
                     }`}
                   >
                     {lang === currentLang && <Check className="w-3.5 h-3.5" />}
