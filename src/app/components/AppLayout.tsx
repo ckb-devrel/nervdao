@@ -124,7 +124,7 @@ const AppLayout: React.FC = () => {
         <div className="mb-6 flex justify-center items-center">
           <img src="./svg/plain-icon.svg" alt="logo" className="w-12 h-12" />
         </div>
-        <nav className="flex items-stretch flex-grow">
+        <nav className="flex items-stretch flex-grow w-16">
           <ul className="flex gap-2 flex-col items-stretch justify-between flex-grow">
             <div className="flex flex-col items-stretch gap-2">
               <NavItem
