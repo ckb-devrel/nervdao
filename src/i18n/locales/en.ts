@@ -7,7 +7,7 @@ const en = {
     explore: "Explore",
     aboutUs: "About us",
     source: "Source",
-    language: "English",
+    language: "Language",
     max: "MAX",
   },
   connectWalletPage: {

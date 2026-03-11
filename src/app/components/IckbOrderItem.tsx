@@ -41,9 +41,9 @@ export function IckbOrderItem({
             <div className="flex items-center justify-between">
                 <span className="text-white text-body-2">{item.isCkb2Udt ? t("ickbOrderItem.youSwap") : t("ickbOrderItem.youWithdraw")}</span>
                 {item.progress === item.total ?
-                    <span className="px-2 py-0.5 rounded text-xs bg-green-500/[.12] rounded text-green-500" >{t("ickbOrderItem.completed")}</span>
+                    <span className="px-2 py-0.5 rounded text-xs bg-green-500/[.12] text-green-500" >{t("ickbOrderItem.completed")}</span>
                     :
-                    <span className="px-2 py-0.5 rounded text-xs bg-yellow-500/[.12] rounded text-yellow-500">{t("ickbOrderItem.pending")}</span>
+                    <span className="px-2 py-0.5 rounded text-xs bg-yellow-500/[.12] text-yellow-500">{t("ickbOrderItem.pending")}</span>
                 }
             </div>
             <div className="text-2xl font-bold text-white mb-4">

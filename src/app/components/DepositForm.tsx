@@ -97,7 +97,6 @@ const DepositForm: React.FC = () => {
       removeNotification(progressId + '')
       setDepositPending(false)
       showNotification("success", t("notifications.committed"));
-      // showNotification("success", `Deposit Success: ${txHash}`);
     } catch (error) {
       setTransTbc(false)
     } finally {

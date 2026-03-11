@@ -160,8 +160,8 @@ const DashboardProfile: React.FC = () => {
         </div>
       ))}
        
-      <div className="bg-gray-800 relative rounded-lg p-3 pr-5 mb-2">
-        <div className="flex justify-between items-center font-work-sans text-gray-400">
+      <div className="bg-brand-to-green relative rounded-lg p-3 pr-5 mb-2">
+        <div className="flex justify-between items-center font-work-sans text-white">
           <span>{t("dashboardProfile.currentCompensation")}</span>
           <span>{t("dashboardProfile.apy")}</span>
         </div>
