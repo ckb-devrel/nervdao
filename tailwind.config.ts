@@ -23,8 +23,8 @@ const config: Config = {
           "radial-gradient(49.59% 217.87% at 50.41% 90%, rgba(60, 255, 151, 0.9) 0%,rgba(0, 250, 237, 0.9) 100%)",
         "melt-disabled-gradient":
           "radial-gradient(66.67% 205.13% at 50% 150%, #3CFF97 0%, #00FAED 100%) ",
-      
-      
+        "brand-to-green":
+          "linear-gradient(90deg, rgba(0, 204, 194, 0.7) 0%, rgba(45, 204, 102, 0.7) 100%) ",
       },
       colors: {
         white: {

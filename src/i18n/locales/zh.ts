@@ -7,7 +7,7 @@ const zh = {
     explore: "浏览",
     aboutUs: "关于我们",
     source: "源代码",
-    language: "简体中文",
+    language: "语言",
     max: "最大限度",
   },
   connectWalletPage: {

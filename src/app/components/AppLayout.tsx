@@ -5,7 +5,7 @@ import React, { useState } from "react";
 import { Dashboard } from "./Dashboard";
 import Title from "./Ttitle";
 import Deposit from "./Deposit";
-import { icons, Info, Menu } from "lucide-react";
+import { icons, Info, Menu, Globe, Check } from "lucide-react";
 import { useGetExplorerLink } from "@/hooks/Explorer";
 import Ickb from "./Ickb";
 import { Tooltip } from "react-tooltip";
@@ -13,6 +13,7 @@ import ReactDOMServer from "react-dom/server";
 import IckbInfo from "./IckbInfo";
 import { IckbModal } from "./IckbModal";
 import { useTranslation } from "react-i18next";
+import { SUPPORTED_LANGUAGES, SupportedLanguage } from "@/i18n/config";
 import LanguageSwitcher from "./LanguageSwitcher";
 
 function NavItem({
@@ -74,7 +75,8 @@ const AppLayout: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { index } = useGetExplorerLink();
   const [infoOpen, setInfoOpen] = useState(false);
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const currentLang = (Object.keys(SUPPORTED_LANGUAGES).includes(i18n.language) ? i18n.language : "en") as SupportedLanguage;
 
   const getTitle = () => {
     switch (currentPage) {
@@ -169,7 +171,6 @@ const AppLayout: React.FC = () => {
         <div className="mx-4 py-2 flex justify-between items-center">
           <img src="./svg/plain-icon.svg" alt="logo" className="w-10 h-10" />
           <div className="flex items-center gap-2">
-            <LanguageSwitcher />
             <Menu
               className="w-8 h-8 cursor-pointer"
               onClick={() => setIsOpen(!isOpen)}
@@ -177,7 +178,7 @@ const AppLayout: React.FC = () => {
           </div>
         </div>
         {isOpen ? (
-          <nav className="flex items-stretch flex-grow py-2">
+          <nav className="flex flex-col items-stretch flex-grow py-2">
             <ul className="flex gap-2 flex-col items-stretch justify-between flex-grow">
               <NavItemMobile
                 icon="House"
@@ -214,6 +215,28 @@ const AppLayout: React.FC = () => {
                 onClick={() => window.open("https://x.com/CKBDevrel", "_blank")}
               />
             </ul>
+            <div className="border-t border-white/10 mt-2 pt-4 px-6 pb-4">
+              <div className="flex items-center gap-1.5 text-white/50 text-sm mb-3 justify-center">
+                <Globe className="w-4 h-4" />
+                <span>{t("common.language")}</span>
+              </div>
+              <div className="flex gap-3">
+                {(Object.keys(SUPPORTED_LANGUAGES) as SupportedLanguage[]).map((lang) => (
+                  <button
+                    key={lang}
+                    onClick={() => i18n.changeLanguage(lang)}
+                    className={`flex-1 flex items-center justify-center gap-1.5 py-2 px-3 rounded-full text-sm transition-colors border ${
+                      lang === currentLang
+                        ? "border-cyan-400 text-cyan-400"
+                        : "border-white/20 text-white/60"
+                    }`}
+                  >
+                    {lang === currentLang && <Check className="w-3.5 h-3.5" />}
+                    {SUPPORTED_LANGUAGES[lang]}
+                  </button>
+                ))}
+              </div>
+            </div>
           </nav>
         ) : undefined}
       </aside>
