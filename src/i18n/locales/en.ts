@@ -232,8 +232,8 @@ const en = {
     redeemSuccess: "Redeem Success: {{hash}}",
     withdrawSuccess: "Withdraw Success: {{hash}}",
     minimalDepositAmount: "Minimal deposit amount is {{amount}}",
-    pendingTransaction: "Pending Transaction!",
-    committed: "Committed",
+    pendingTransaction: "Transaction sent, awaiting confirmation",
+    committed: "Transaction confirmed on-chain",
   },
 };
 

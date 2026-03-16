@@ -232,8 +232,8 @@ const zh = {
     redeemSuccess: "赎回成功：{{hash}}",
     withdrawSuccess: "提取成功：{{hash}}",
     minimalDepositAmount: "最小存款金额为 {{amount}} CKB",
-    pendingTransaction: "交易待确认！",
-    committed: "交易已提交，等待链上确认",
+    pendingTransaction: "交易已发送，等待上链",
+    committed: "交易已成功上链",
   },
 };
 
