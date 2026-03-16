@@ -120,7 +120,7 @@ const zh = {
     ckbAvailable: "可用 CKB",
     pending: "待处理",
     pendingTooltip: "待处理的 CKB 在 Nervos DAO 到期或活跃订单熔化后即可使用。",
-    receive: "获得",
+    receive: "将获得",
     note: "注意",
     swap: "兑换",
     enterAmount: "输入金额",
@@ -131,7 +131,7 @@ const zh = {
   ickbWithdraw: {
     withdrawableIckb: "可提取 iCKB",
     pending: "待处理",
-    receive: "获得",
+    receive: "将获得",
     note: "注意",
     withdraw: "提取",
     enterAmount: "输入金额",

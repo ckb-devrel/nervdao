@@ -120,7 +120,7 @@ const en = {
     ckbAvailable: "CKB Available",
     pending: "Pending",
     pendingTooltip: "Pending CKB becomes available once<br /> the Nervos DAO maturity period ends or the active order is melted.",
-    receive: "Receive",
+    receive: "Will receive",
     note: "NOTE",
     swap: "Swap",
     enterAmount: "Enter an amount",
@@ -131,7 +131,7 @@ const en = {
   ickbWithdraw: {
     withdrawableIckb: "Withdrawable iCKB",
     pending: "Pending",
-    receive: "Receive",
+    receive: "Will receive",
     note: "NOTE",
     withdraw: "Withdraw",
     enterAmount: "Enter an amount",
