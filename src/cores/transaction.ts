@@ -265,9 +265,8 @@ function convertAttempt(
             : ickb2Ckb(amount, tipHeader) -
             (amount * ratio.udtMultiplier) / ratio.ckbMultiplier;
         info = info.concat([{
-            i18nKey: "ickbTxInfo.creatingLimitOrder",
+            i18nKey: quantity > 0 ? "ickbTxInfo.creatingLimitOrderRemaining" : "ickbTxInfo.creatingLimitOrder",
             params: { 
-                remaining: quantity > 0 ? "remaining " : "", 
                 amount: toText(amount), 
                 unit: isCkb2Udt ? "CKB" : "iCKB", 
                 fee: toText(fee) 

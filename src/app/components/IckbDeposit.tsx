@@ -155,15 +155,24 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
                 <span>{amount ? <>≈{approxConversion(BigInt(Math.trunc(parseFloat(amount) * Number(CKB)/*99900000*/)))} iCKB</> : '0 iCKB'}</span>
             </div>
             {txInfo && Number(amount) > 0 &&
-                <div className="rounded border-1 border-yellow-500 p-4 bg-yellow-500/[.12]  my-3">
+                <div className="rounded border border-yellow-500 p-4 bg-yellow-500/[.12]  my-3">
                     <h3 className="text-lg flex items-center">
                         <TriangleAlert size={24} className="block mr-1" />
                         <span className="block">{t("ickbDeposit.note")}</span>
                     </h3>
-                    <p className="mt-2 text-sm">
-                        {txInfo.info.map((token) => t(token.i18nKey, token.params)).join(". ")}
-                        {txInfo.error !== null ? `. ${t(txInfo.error.i18nKey, txInfo.error.params)}` : ""}
-                    </p></div>
+                    <ul className="mt-2 text-sm">
+                        {
+                            txInfo.info.map((token, index) => (
+                                <li className="list-disc list-inside" key={`deposit-info-${index}`}>{t(token.i18nKey, token.params)}</li>
+                            ))
+                        }
+                        {
+                            txInfo.error && (
+                                <li className="list-disc list-inside text-red-500" key={"deposit-error"}>{t(txInfo.error.i18nKey, txInfo.error.params)}</li>
+                            )
+                        }
+                    </ul>
+                </div>
             }
 
 
