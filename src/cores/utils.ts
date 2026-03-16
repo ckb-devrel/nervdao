@@ -60,6 +60,7 @@ export type RecentOrder = {
     operation: "order_deposit" | "order_withdraw" | "dao_deposit" | "dao_withdraw";
     amount: bigint;
     unit: "CKB" | "iCKB";
+    txHash: string;
 }
 
 export function symbol2Direction(s: string) {

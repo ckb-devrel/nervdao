@@ -518,6 +518,7 @@ export async function* getRecentIckbOrders(signer: ccc.Signer, config: ConfigAda
                 operation: "dao_deposit",
                 amount: ckbAmount,
                 unit: "CKB",
+                txHash: tx.txHash,
             }
             recentOrders.push(order);
         }
@@ -548,6 +549,7 @@ export async function* getRecentIckbOrders(signer: ccc.Signer, config: ConfigAda
                 operation: "dao_withdraw",
                 amount: ckbAmount,
                 unit: "CKB",
+                txHash: transaction.hash(),
             }
             recentOrders.push(order);
         }
@@ -581,6 +583,7 @@ export async function* getRecentIckbOrders(signer: ccc.Signer, config: ConfigAda
                 operation: udtAmount > 0 ? "order_withdraw" : "order_deposit",
                 amount: udtAmount > 0 ? udtAmount : ckbAmount,
                 unit: udtAmount > 0 ? "iCKB" : "CKB",
+                txHash: transaction.hash(),
             });
             recentOrders = recentOrders.sort((a, b) => Number(a.timestamp - b.timestamp));
             yield recentOrders.pop();

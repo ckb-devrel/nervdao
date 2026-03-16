@@ -3,6 +3,7 @@ import { icons } from "lucide-react";
 import { RecentOrder } from "@/cores/utils";
 import { ccc } from "@ckb-ccc/connector-react";
 import { useTranslation } from "react-i18next";
+import { useGetExplorerLink } from "@/hooks/Explorer";
 
 interface IckbRecepitsItemProps {
     item: RecentOrder
@@ -12,6 +13,7 @@ export function IckbHistoryOrderItems({
     item
 }: IckbRecepitsItemProps) {
     const { t } = useTranslation();
+    const { index } = useGetExplorerLink();
 
     const iconColor = {
         order_withdraw: "bg-green-600",
@@ -34,15 +36,18 @@ export function IckbHistoryOrderItems({
     }[item.operation];
 
     return (
-        <div className="flex items-center justify-between py-2 ">
+        <a
+            href={`${index}/transaction/${item.txHash}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center justify-between py-2 rounded-lg px-2 -mx-2 transition-colors hover:bg-white/10"
+        >
             <div className="flex items-center">
                 <div className={`${iconColor}  rounded-full p-2 mr-3`}>
                     <Icon className="w-4 h-4" />
                 </div>
                 <div>
-                    <p className="text-white font-work-sans text-body-2 flex items-center"> {actionText}
-
-                    </p>
+                    <p className="text-white font-work-sans text-body-2 flex items-center"> {actionText}</p>
                     <p className="text-gray-400 font-work-sans text-sm">{new Date(Number(item.timestamp)).toLocaleString()}</p>
                 </div>
             </div>
@@ -54,9 +59,7 @@ export function IckbHistoryOrderItems({
                         {/* {parseFloat((Number(item.amount / CKB)).toString()).toFixed(2)} {item.unit} */}
                     </p>
                 </div>
-
-
             </div>
-        </div>
+        </a>
     );
 }
