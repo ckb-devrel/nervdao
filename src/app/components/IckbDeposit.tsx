@@ -27,8 +27,8 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
         if (!txInfo || !signerCcc) {
             return
         }
-        if (txInfo.error) {
-            showNotification("error", txInfo.error);
+        if (txInfo.error !== null) {
+            showNotification("error", t(txInfo.error.i18nKey, txInfo.error.params));
             return
         }
         let progressId, txHash;
@@ -161,9 +161,8 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
                         <span className="block">{t("ickbDeposit.note")}</span>
                     </h3>
                     <p className="mt-2 text-sm">
-                        {txInfo.info
-                            .concat(txInfo.error !== "" ? [txInfo.error, ""] : [""])
-                            .join(". ")}
+                        {txInfo.info.map((token) => t(token.i18nKey, token.params)).join(". ")}
+                        {txInfo.error !== null ? `. ${t(txInfo.error.i18nKey, txInfo.error.params)}` : ""}
                     </p></div>
             }
 

@@ -37,6 +37,7 @@ import {
     toText,
     txInfoFrom,
     type TxInfo,
+    type IckbTxInfoI18nToken,
 } from "./utils";
 import { ckbSoftCapPerDeposit } from "@ickb/v1-core";
 import { WalletConfig } from "./config.js";
@@ -59,7 +60,7 @@ export function base({
     myOrders: MyOrder[];
 }) {
     let tx = helpers.TransactionSkeleton();
-    const info: string[] = [];
+    const info: IckbTxInfoI18nToken[] = [];
 
     tx = orderMelt(tx, myOrders);
     const notCompleted = myOrders.reduce(
@@ -67,30 +68,42 @@ export function base({
         0,
     );
     if (notCompleted > 0) {
-        info.push(
-            `Cancelling ${notCompleted} Open Order${notCompleted > 1 ? "s" : ""}`,
-        );
+        info.push({ 
+            i18nKey: "ickbTxInfo.cancellingOrders", 
+            params: { 
+                count: notCompleted 
+            } 
+        });
     }
     const completed = myOrders.length - notCompleted;
     if (completed > 0) {
-        info.push(
-            `Melting ${completed} Completed Order${completed > 1 ? "s" : ""}`,
-        );
+        info.push({
+            i18nKey: "ickbTxInfo.meltingOrders", 
+            params: {
+                count: completed 
+            } 
+        });
     }
 
     tx = addCells(tx, "append", [capacities, udts, receipts].flat(), []);
     // Receipts need explanation, while capacities and udts do not
     if (receipts.length > 0) {
-        info.push(
-            `Converting ${receipts.length} Receipt${receipts.length > 1 ? "s" : ""} to iCKB`,
-        );
+        info.push({
+            i18nKey: "ickbTxInfo.convertingReceipts", 
+            params: {
+                count: receipts.length 
+            }
+        });
     }
 
     tx = addWithdrawalRequestGroups(tx, wrGroups);
     if (wrGroups.length > 0) {
-        info.push(
-            `Withdrawing from ${wrGroups.length} Withdrawal Request${wrGroups.length > 1 ? "s" : ""}`,
-        );
+        info.push({
+            i18nKey: "ickbTxInfo.withdrawingRequests", 
+            params: { 
+                count: wrGroups.length 
+            }
+        });
     }
 
     return txInfoFrom({ tx, info });
@@ -107,7 +120,7 @@ export function convert(
     feeRate: bigint,
     walletConfig: WalletConfig,
 ) {
-    if (txInfo.error !== "") {
+    if (txInfo.error !== null) {
         return txInfo;
     }
     const ickbPool: MyExtendedDeposit[] = [];
@@ -157,7 +170,7 @@ export function convert(
                 walletConfig,
             ));
     };
-    return attempt(binarySearch(N, (n) => attempt(n).error === ""));
+    return attempt(binarySearch(N, (n) => attempt(n).error === null));
 }
 
 function convertAttempt(
@@ -172,11 +185,11 @@ function convertAttempt(
     feeRate: bigint,
     walletConfig: WalletConfig,
 ) {
-    let { tx, info } = txInfo;
-    const { error } = txInfo
-    if (error !== "") {
+    if (txInfo.error !== null) {
         return txInfo;
     }
+    let { tx } = txInfo;
+    let info: IckbTxInfoI18nToken[] = [...txInfo.info];
 
     const { accountLock, config } = walletConfig;
     if (quantity > 0) {
@@ -184,24 +197,34 @@ function convertAttempt(
             amount -= depositAmount * BigInt(quantity);
             if (amount < BigInt(0)) {
                 return txInfoFrom({
-                    error: "Too many Deposits respectfully to the amount",
+                    error: { 
+                        i18nKey: "ickbTxInfo.errorTooManyDeposits" 
+                    },
                 });
             }
             tx = ickbDeposit(tx, quantity, depositAmount, config);
             tx = addReceiptDepositsChange(tx, accountLock, config);
-            info = info.concat([]);
-            info = info.concat([
-                `Creating ${quantity} standard deposit${quantity > 1 ? "s" : ""} (each amount is ${toText(depositAmount)} CKB) ` +
-                `and ${quantity > 1 ? "their" : "its"} Receipt`,
-            ]);
+            info = info.concat([{ 
+                i18nKey: "ickbTxInfo.creatingDeposits", 
+                params: { 
+                    count: quantity, 
+                    amount: toText(depositAmount) 
+                }
+            }]);
         } else {
             if (ickbPool.length < quantity) {
-                return txInfoFrom({ error: "Not enough Deposits to withdraw from" });
+                return txInfoFrom({ 
+                    error: { 
+                        i18nKey: "ickbTxInfo.errorNotEnoughDeposits" 
+                    }
+                });
             }
             amount -= ickbPool[quantity - 1].ickbCumulative;
             if (amount < BigInt(0)) {
                 return txInfoFrom({
-                    error: "Too many Withdrawal Requests respectfully to the amount",
+                    error: {
+                        i18nKey: "ickbTxInfo.errorTooManyWithdrawals" 
+                    },
                 });
             }
             ickbPool = ickbPool.slice(0, quantity);
@@ -212,10 +235,13 @@ function convertAttempt(
                 ickbPool.map((d) => d.estimatedMaturity),
                 tipHeader,
             );
-            info = info.concat([
-                `Requesting the Withdrawal from ${quantity} Deposit${quantity > 1 ? "s" : ""}` +
-                ` with maturity in ${waitTime}`,
-            ]);
+            info = info.concat([{ 
+                i18nKey: "ickbTxInfo.requestingWithdrawal", 
+                params: { 
+                    count: quantity, 
+                    waitTime 
+                }
+            }]);
         }
     }
 
@@ -238,11 +264,15 @@ function convertAttempt(
             )
             : ickb2Ckb(amount, tipHeader) -
             (amount * ratio.udtMultiplier) / ratio.ckbMultiplier;
-        info = info.concat([
-            `Creating a Limit Order for ${quantity > 0 ? "the remaining" : ""} ` +
-            `${toText(amount)} ${isCkb2Udt ? "CKB" : "iCKB"}. ` +
-            `Paying an extra Order Fee of ${toText(fee)} CKB`,
-        ]);
+        info = info.concat([{
+            i18nKey: "ickbTxInfo.creatingLimitOrder",
+            params: { 
+                remaining: quantity > 0 ? "remaining " : "", 
+                amount: toText(amount), 
+                unit: isCkb2Udt ? "CKB" : "iCKB", 
+                fee: toText(fee) 
+            },
+        }]);
     }
 
     return addChange(txInfoFrom({ tx, info }), feeRate, walletConfig);
@@ -253,11 +283,10 @@ export function addChange(
     feeRate: bigint,
     walletConfig: WalletConfig,
 ) {
-    let { tx, info } = txInfo;
-    const { error } = txInfo
-    if (error !== "") {
+    if (txInfo.error !== null) {
         return txInfo;
     }
+    let { tx, info } = txInfo;
 
     const { accountLock, addPlaceholders, config } = walletConfig;
     // eslint-disable-next-line
@@ -280,21 +309,36 @@ export function addChange(
         config,
     ));
     if (freeCkb < BigInt(0)) {
-        return txInfoFrom({ info, error: "Not enough CKB" });
+        return txInfoFrom({ 
+            info, 
+            error: {
+                i18nKey: "ickbTxInfo.errorNotEnoughCKB" 
+            } 
+        });
     }
 
     if (freeIckbUdt < BigInt(0)) {
-        return txInfoFrom({ info, error: "Not enough iCKB" });
+        return txInfoFrom({ 
+            info, 
+            error: { 
+                i18nKey: "ickbTxInfo.errorNotEnoughICKB" 
+            } 
+        });
     }
 
     if (tx.outputs.size > 64) {
         return txInfoFrom({
             info,
-            error: "More than 64 output cells",
+            error: { 
+                i18nKey: "ickbTxInfo.errorTooManyOutputs" 
+            },
         });
     }
 
-    info = info.concat([`Paying an extra Network Fee of ${toText(txFee)} CKB`]);
+    info = info.concat([{ 
+        i18nKey: "ickbTxInfo.payingNetworkFee", 
+        params: { fee: toText(txFee) } 
+    }]);
 
     return txInfoFrom({ tx, info });
 }
@@ -302,17 +346,20 @@ export function addChange(
 export function meltOrder(myOrders: MyOrder[], myReceipts: MyReceipt[], feeRate: bigint, walletConfig: WalletConfig): TxInfo {
     console.log(myOrders, myReceipts);
     const validOrders = myOrders.filter((o) => o.info.absProgress === o.info.absTotal);
-    const info = validOrders.map((o) => {
-        if (o.info.isCkb2Udt) {
-            return `Extract ${toText(o.info.absTotal / CKB)} iCKB from order`;
-        } else {
-            return `Extract ${toText(o.info.absTotal / CKB)} CKB from order`;
-        }
-    });
+    const info: IckbTxInfoI18nToken[] = validOrders.map((o) => ({
+        i18nKey: "ickbTxInfo.extractFromOrder",
+        params: {
+            amount: toText(o.info.absTotal / CKB), 
+            unit: o.info.isCkb2Udt ? "iCKB" : "CKB" 
+        },
+    }));
     myReceipts.forEach((receipt) => {
         const ckbValue = toText(receipt.depositAmount * BigInt(receipt.depositQuantity) / CKB);
         const ickbValue = toText(receipt.ickbAmount);
-        info.push(`Convert ${ckbValue} CKB to ${ickbValue} iCKB from receipt`);
+        info.push({ 
+            i18nKey: "ickbTxInfo.convertFromReceipt", 
+            params: { ckb: ckbValue, ickb: ickbValue } 
+        });
     });
     let tx = helpers.TransactionSkeleton();
     if (myOrders.length > 0) {

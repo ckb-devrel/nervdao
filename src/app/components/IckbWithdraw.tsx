@@ -137,9 +137,8 @@ const IckbWithdraw: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }>
                         <span className="block">{t("ickbWithdraw.note")}</span>
                     </h3>
                     <p className="mt-2 text-sm">
-                        {txInfo.info
-                            .concat(txInfo.error !== "" ? [txInfo.error, ""] : [""])
-                            .join(". ")}
+                        {txInfo.info.map((token) => t(token.i18nKey, token.params)).join(". ")}
+                        {txInfo.error !== null ? `. ${t(txInfo.error.i18nKey, txInfo.error.params)}` : ""}
                     </p></div>
             }
             <button
