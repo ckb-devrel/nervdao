@@ -148,7 +148,7 @@ const DepositForm: React.FC = () => {
       <p className="text-3xl font-bold font-play mb-4">{balance} CKB</p>
 
       <div className='relative flex items-center mb-4'>
-        <input className="w-full text-left border border-[#777] bg-gray-700 rounded text-lg p-3 pr-16"
+        <input className="w-full text-left border-white/10 focus:border-cyan-500 bg-white/5 hover:bg-white/10 focus:bg-white/5 rounded text-base p-3 pr-16"
           type="text"
           onChange={(e) => setAmount(e.target.value)}
           value={amount}
