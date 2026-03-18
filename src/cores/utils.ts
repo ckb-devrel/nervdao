@@ -60,6 +60,7 @@ export type RecentOrder = {
     operation: "order_deposit" | "order_withdraw" | "dao_deposit" | "dao_withdraw";
     amount: bigint;
     unit: "CKB" | "iCKB";
+    txHash: string;
 }
 
 export function symbol2Direction(s: string) {
@@ -137,22 +138,27 @@ export function maturityWaitTime(e: EpochSinceValue, tipHeader: I8Header) {
     return `${String(1 + Math.ceil(epochs / 6))} days`;
 }
 
+export type IckbTxInfoI18nToken = {
+    i18nKey: string;
+    params?: Record<string, string | number>;
+};
+
 export type TxInfo = {
     tx: helpers.TransactionSkeletonType;
-    info: readonly string[];
-    error: string;
+    info: readonly IckbTxInfoI18nToken[];
+    error: IckbTxInfoI18nToken | null;
     isEmpty: boolean;
 };
 
 export function txInfoFrom({
     tx = helpers.TransactionSkeleton(),
-    info = <readonly string[]>[],
-    error = "",
+    info = <readonly IckbTxInfoI18nToken[]>[],
+    error = null as IckbTxInfoI18nToken | null,
 }): Readonly<TxInfo> {
-    if (error.length > 0) {
+    if (error !== null) {
         tx = helpers.TransactionSkeleton();
     }
 
-    const isEmpty = !isPopulated(tx) && info.length === 0 && error.length === 0;
+    const isEmpty = !isPopulated(tx) && info.length === 0 && error === null;
     return Object.freeze({ tx, info: Object.freeze(info), error, isEmpty });
 }

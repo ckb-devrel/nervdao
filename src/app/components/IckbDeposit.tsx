@@ -27,8 +27,8 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
         if (!txInfo || !signerCcc) {
             return
         }
-        if (txInfo.error) {
-            showNotification("error", txInfo.error);
+        if (txInfo.error !== null) {
+            showNotification("error", t(txInfo.error.i18nKey, txInfo.error.params));
             return
         }
         let progressId, txHash;
@@ -135,7 +135,7 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
                 </span>
             </div> */}
             <div className='relative mb-4 flex'>
-                <input className="w-full text-left rounded border no-arrows  border-[#777] bg-gray-700  hover:border-cyan-500 focus:border-cyan-500  text-lg p-3 mt-1 pr-16 pl-14"
+                <input className="w-full text-left rounded no-arrows border-white/10 focus:border-cyan-500 bg-white/5 hover:bg-white/10 focus:bg-white/5 text-base p-3 mt-1 pr-16 pl-14"
                     type="number"
                     value={amount}
                     onChange={handleAmountChange}
@@ -155,16 +155,24 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
                 <span>{amount ? <>≈{approxConversion(BigInt(Math.trunc(parseFloat(amount) * Number(CKB)/*99900000*/)))} iCKB</> : '0 iCKB'}</span>
             </div>
             {txInfo && Number(amount) > 0 &&
-                <div className="rounded border-1 border-yellow-500 p-4 bg-yellow-500/[.12]  my-3">
+                <div className="rounded border border-yellow-500 p-4 bg-yellow-500/[.12]  my-3">
                     <h3 className="text-lg flex items-center">
                         <TriangleAlert size={24} className="block mr-1" />
                         <span className="block">{t("ickbDeposit.note")}</span>
                     </h3>
-                    <p className="mt-2 text-sm">
-                        {txInfo.info
-                            .concat(txInfo.error !== "" ? [txInfo.error, ""] : [""])
-                            .join(". ")}
-                    </p></div>
+                    <ul className="mt-2 text-sm">
+                        {
+                            txInfo.info.map((token, index) => (
+                                <li className="list-disc list-inside" key={`deposit-info-${index}`}>{t(token.i18nKey, token.params)}</li>
+                            ))
+                        }
+                        {
+                            txInfo.error && (
+                                <li className="list-disc list-inside text-red-500" key={"deposit-error"}>{t(txInfo.error.i18nKey, txInfo.error.params)}</li>
+                            )
+                        }
+                    </ul>
+                </div>
             }
 
 

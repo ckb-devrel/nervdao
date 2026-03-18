@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { ccc } from "@ckb-ccc/connector-react";
 import { icons } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { useGetExplorerLink } from "@/hooks/Explorer";
 
 interface DashboardHistoryItemProps {
   transaction: ccc.ClientTransactionResponse;
@@ -12,6 +13,7 @@ export function DashboardHistoryItem({
 }: DashboardHistoryItemProps) {
   const { client } = ccc.useCcc();
   const { t } = useTranslation();
+  const { index } = useGetExplorerLink();
   const [action, setAction] = useState<"Deposit" | "Redeem" | "Withdraw">("Deposit");
   const [formattedAmount, setFormattedAmount] = useState("-");
 
@@ -99,7 +101,12 @@ export function DashboardHistoryItem({
   }, [client, transaction]);
 
   return (
-    <div className="flex items-center justify-between py-2">
+    <a
+      href={`${index}/transaction/${transaction.transaction.hash()}`}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="flex items-center justify-between py-2 rounded-lg px-2 -mx-2 transition-colors hover:bg-white/10"
+    >
       <div className="flex items-center">
         <div className={`${iconColor} rounded-full p-2 mr-3`}>
           <Icon className="w-4 h-4" />
@@ -112,6 +119,6 @@ export function DashboardHistoryItem({
       <div className="text-white font-work-sans text-body-2">
         {formattedAmount} CKB
       </div>
-    </div>
+    </a>
   );
 }

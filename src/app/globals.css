@@ -5,8 +5,8 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
-  --border-hover: #aaaaaa;
-  --border-focus: #dddddd;
+  --border-hover: #FFFFFF1A;
+  --border-focus: #00FAED;
   --font-work-sans: var(--font-work-sans), sans-serif;
   --font-play: var(--font-play), sans-serif;
 }

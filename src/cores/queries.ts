@@ -43,6 +43,7 @@ import {
     MyMaturity,
     txInfoFrom,
     RecentOrder,
+    type IckbTxInfoI18nToken,
 } from "./utils";
 import { addChange, base, convert } from "./transaction";
 import type { Cell, Header, HexNumber, Transaction } from "@ckb-lumos/base";
@@ -209,10 +210,10 @@ async function getL1State(walletConfig: WalletConfig) {
         );
 
         info = Object.freeze(
-            [
-                `Excluding ${notMature.length} Withdrawal Request${notMature.length > 1 ? "s" : ""}` +
-                ` with maturity in ${wrWaitTime}`,
-            ].concat(info),
+            ([{ 
+                i18nKey: "ickbTxInfo.excludingRequests", 
+                params: { count: notMature.length, waitTime: wrWaitTime } 
+            }] as IckbTxInfoI18nToken[]).concat(info),
         );
     }
 
@@ -239,7 +240,10 @@ async function getL1State(walletConfig: WalletConfig) {
             return addChange(txInfo, feeRate, walletConfig);
         }
 
-        return txInfoFrom({ info, error: "Nothing to convert" });
+        return txInfoFrom({ 
+            info, 
+            error: { i18nKey: "ickbTxInfo.errorNothingToConvert" } 
+        });
     };
 
     // Calculate total and real ickb udt liquidity
@@ -514,6 +518,7 @@ export async function* getRecentIckbOrders(signer: ccc.Signer, config: ConfigAda
                 operation: "dao_deposit",
                 amount: ckbAmount,
                 unit: "CKB",
+                txHash: tx.txHash,
             }
             recentOrders.push(order);
         }
@@ -544,6 +549,7 @@ export async function* getRecentIckbOrders(signer: ccc.Signer, config: ConfigAda
                 operation: "dao_withdraw",
                 amount: ckbAmount,
                 unit: "CKB",
+                txHash: transaction.hash(),
             }
             recentOrders.push(order);
         }
@@ -577,6 +583,7 @@ export async function* getRecentIckbOrders(signer: ccc.Signer, config: ConfigAda
                 operation: udtAmount > 0 ? "order_withdraw" : "order_deposit",
                 amount: udtAmount > 0 ? udtAmount : ckbAmount,
                 unit: udtAmount > 0 ? "iCKB" : "CKB",
+                txHash: transaction.hash(),
             });
             recentOrders = recentOrders.sort((a, b) => Number(a.timestamp - b.timestamp));
             yield recentOrders.pop();

@@ -112,7 +112,7 @@ const IckbWithdraw: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }>
             </div>
             <div className='relative mb-4 flex'>
                 {/* <label className="flex px-2 items-center"><img src="/svg/icon-ckb.svg" alt="CKB" className="mr-2" /> CKB</label> */}
-                <input className="w-full text-left rounded border no-arrows  border-[#777] bg-gray-700  hover:border-cyan-500 focus:border-cyan-500  text-lg p-3 mt-1 pr-16 pl-14"
+                <input className="w-full text-left rounded no-arrows  border-white/10 focus:border-cyan-500 bg-white/5 hover:bg-white/10 focus:bg-white/5 text-base p-3 mt-1 pr-16 pl-14"
                     type="number"
                     value={amount}
                     onChange={handleAmountChange}
@@ -136,11 +136,19 @@ const IckbWithdraw: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }>
                         <TriangleAlert size={24} className="block mr-1" />
                         <span className="block">{t("ickbWithdraw.note")}</span>
                     </h3>
-                    <p className="mt-2 text-sm">
-                        {txInfo.info
-                            .concat(txInfo.error !== "" ? [txInfo.error, ""] : [""])
-                            .join(". ")}
-                    </p></div>
+                    <ul className="mt-2 text-sm">
+                        {
+                            txInfo.info.map((token, index) => (
+                                <li className="list-disc list-inside" key={`withdraw-info-${index}`}>{t(token.i18nKey, token.params)}</li>
+                            ))
+                        }
+                        {
+                            txInfo.error && (
+                                <li className="list-disc list-inside text-red-500" key={"withdraw-error"}>{t(txInfo.error.i18nKey, txInfo.error.params)}</li>
+                            )
+                        }
+                    </ul>
+                </div>
             }
             <button
                 onClick={handleWithDraw}

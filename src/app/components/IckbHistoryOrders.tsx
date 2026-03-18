@@ -78,8 +78,7 @@ const IckbHistoryOrders: React.FC<{ walletConfig: WalletConfig}> = ({ walletConf
     }, [txGenerator, limit, txs, signerCcc]);
     
     return (
-        <>
-           
+        <>   
             <div className="bg-gray-900 rounded-lg p-4 flex flex-col flex-grow mt-6 text-left">
                 <h3 className="text-xl font-play font-bold mb-4">{t("ickbHistoryOrders.recentOrders")}</h3>
                 {txs && txs.length > 0 ? <>
@@ -88,7 +87,6 @@ const IckbHistoryOrders: React.FC<{ walletConfig: WalletConfig}> = ({ walletConf
                             <IckbHistoryOrderItems
                                 key={index}
                                 item={item}
-
                             />
                         )
                     })}
@@ -104,7 +102,6 @@ const IckbHistoryOrders: React.FC<{ walletConfig: WalletConfig}> = ({ walletConf
                         <p className="text-gray-400">{t("ickbHistoryOrders.noRecentTransactions")}</p>
                     </div>}
             </div>
-
         </>
     )
 }
