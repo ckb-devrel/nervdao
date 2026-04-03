@@ -3,6 +3,7 @@ import { ccc } from "@ckb-ccc/connector-react";
 import { useNotification } from "@/context/NotificationProvider";
 import { TailSpin } from "react-loader-spinner";
 import { useTranslation } from "react-i18next";
+import { sanitizeNumericInput } from "@/utils/stringUtils";
 
 const DepositForm: React.FC = () => {
   const [amount, setAmount] = useState<string>("");
@@ -10,6 +11,7 @@ const DepositForm: React.FC = () => {
   const [balance, setBalance] = useState<string>("-");
   const [transTbc, setTransTbc] = useState<boolean>(false);
   const [depositPending, setDepositPending] = useState<boolean>(false);
+  const [showMaxBalanceHint, setShowMaxBalanceHint] = useState<boolean>(false);
   const signer = ccc.useSigner();
   const { showNotification, removeNotification } = useNotification();
   const { t } = useTranslation();
@@ -112,6 +114,20 @@ const DepositForm: React.FC = () => {
     })();
   }, [signer]);
 
+  const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let value = sanitizeNumericInput(e.target.value);
+
+    const amountValue = parseFloat(value);
+
+    if (amountValue > parseFloat(balance)) {
+      handleMax();
+      return;
+    }
+
+    setAmount(value);
+    setShowMaxBalanceHint(false);
+  };
+
   const handleMax = async () => {
     if (!signer) return;
     const { script: lock } = await signer.getRecommendedAddressObj();
@@ -136,6 +152,7 @@ const DepositForm: React.FC = () => {
     await tx.completeFeeChangeToOutput(signer, 0, 1000);
     const amount = ccc.fixedPointToString(tx.outputs[0].capacity);
     setAmount(amount);
+    setShowMaxBalanceHint(true);
   };
 
   return (
@@ -150,7 +167,8 @@ const DepositForm: React.FC = () => {
       <div className='relative flex items-center mb-4'>
         <input className="w-full text-left border-white/10 focus:border-cyan-500 bg-white/5 hover:bg-white/10 focus:bg-white/5 rounded text-base p-3 pr-16"
           type="text"
-          onChange={(e) => setAmount(e.target.value)}
+          inputMode="decimal"
+          onChange={handleAmountChange}
           value={amount}
           placeholder={t("depositForm.enterAmount")} />
 
@@ -159,11 +177,11 @@ const DepositForm: React.FC = () => {
         </span>
 
       </div>
-      <p className="text-gray-400 text-sm mb-4 border-b pb-2 border-white/20">
+      {showMaxBalanceHint && <p className="text-gray-400 text-sm mb-4 -mt-3">
         {t("depositForm.maxBalanceHint")}
-      </p>
+      </p>}
 
-      <div className="flex justify-between">
+      <div className="flex justify-between border-t border-white/20 pt-4">
         <span>{t("depositForm.transactionFee")}</span>
         <span>{transactionFee} CKB</span>
       </div>
@@ -177,7 +195,7 @@ const DepositForm: React.FC = () => {
           // } catch (error) {
           //   return true;
           // }
-          return amount === "" || !!transTbc;
+          return amount === "" || amount === "0" || !!transTbc;
         })()}
       >
         {transTbc ? <>

@@ -68,16 +68,16 @@ const IckbActiveOrders: React.FC<{ walletConfig: WalletConfig, ickbData: IckbDat
         <>
             <div className="bg-gray-900 rounded-lg p-4 flex flex-col mb-4 flex-grow">
                 <h3 className="text-xl font-play font-bold mb-4 flex items-center justify-between pr-4">
-                    <span>{t("ickbActiveOrders.activeOrders")}
+                    <span className="flex items-center">{t("ickbActiveOrders.activeOrders")}
                     <a
-                        className="hidden sm:inline-block "
+                        className="hidden sm:flex"
                         data-tooltip-id="order-tooltip"
                         data-tooltip-html={ReactDOMServer.renderToStaticMarkup(IckbOrderInfo({ whatAreActiveOrders: t("ickbOrderInfo.whatAreActiveOrders"), desc: t("ickbOrderInfo.desc"), pendingOrders: t("ickbOrderInfo.pendingOrders"), pendingOrdersDesc: t("ickbOrderInfo.pendingOrdersDesc"), completedOrders: t("ickbOrderInfo.completedOrders"), completedOrdersDesc: t("ickbOrderInfo.completedOrdersDesc"), tip: t("ickbOrderInfo.tip"), tipDesc: t("ickbOrderInfo.tipDesc") }))}
                     >
                         <Info className="w-5 h-5 cursor-pointer ml-1 inline-block" />
                     </a>
                     <a
-                        className="inline-block sm:hidden "
+                        className="flex sm:hidden"
                         onClick={()=>{setInfoOpen(true)}}
                     >
                         <Info className="w-5 h-5 cursor-pointer ml-1 inline-block" />
