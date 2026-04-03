@@ -7,7 +7,7 @@ export function useGetExplorerLink() {
   const prefix =
     client.addressPrefix === "ckb"
       ? "https://explorer.nervos.org"
-      : "https://pudge.explorer.nervos.org";
+      : "https://testnet.explorer.nervos.org";
 
   return {
     index: prefix,

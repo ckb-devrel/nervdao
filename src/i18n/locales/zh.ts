@@ -127,6 +127,7 @@ const zh = {
     toBeConfirmed: "待确认",
     depositInProgress: "存款进行中，请等待 90 秒",
     depositSuccess: "存款成功：{{hash}}",
+    multiAddressHint: "您的余额分布在多个地址中，单次交易仅能使用其中一个地址的余额。",
   },
   ickbWithdraw: {
     withdrawableIckb: "可提取 iCKB",
