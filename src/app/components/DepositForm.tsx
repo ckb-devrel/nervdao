@@ -115,7 +115,7 @@ const DepositForm: React.FC = () => {
   }, [signer]);
 
   const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    let value = sanitizeNumericInput(e.target.value);
+    const value = sanitizeNumericInput(e.target.value);
 
     const amountValue = parseFloat(value);
 
