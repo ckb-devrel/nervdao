@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { ccc } from "@ckb-ccc/connector-react";
 import { useNotification } from "@/context/NotificationProvider";
-import { ckb2Ickb } from "@ickb/v1-core";
+import { ckb2Ickb, limitOrderScript } from "@ickb/v1-core";
 import { Info, TriangleAlert } from "lucide-react";
-import { toText } from "@/utils/stringUtils";
+import { toText, sanitizeNumericInput } from "@/utils/stringUtils";
 import { IckbDateType } from "@/cores/utils";
 import { CKB } from "@ickb/lumos-utils";
 import { TailSpin } from "react-loader-spinner";
 import { useTranslation } from "react-i18next";
+import { getWalletConfig } from "@/cores/config";
 
 
 const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = ({ ickbData, onUpdate }) => {
@@ -22,6 +23,7 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
     const [balance, setBalance] = useState<bigint>(BigInt(0));
     const [balanceShow, setBalanceShow] = useState<string>("");
     const [depositPending, setDepositPending] = useState<boolean>(false);
+    const [showMultiAddressHint, setShowMultiAddressHint] = useState<boolean>(false);
 
     async function handleSwap() {
         if (!txInfo || !signerCcc) {
@@ -52,33 +54,72 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
         }
     }
 
-    function approxConversion(
-        amount: bigint,
-    ) {
+    function approxConversion(amount: bigint) {
         if (!ickbData?.tipHeader) {
             return
         }
+
         const [convertedAmount] = [ckb2Ickb(amount, ickbData?.tipHeader, false)]
         return `${toText((convertedAmount === BigInt(100000000)) ? BigInt(0) : convertedAmount)}`;
     }
 
-    const handleMax = () => {
-        if (!balance) return;
-        const maxBalance = balance + (ickbData ? ickbData.ckbPendingBalance : BigInt(0));
-        setAmount(Number(maxBalance/CKB)*0.998+'');
-    };
-    const handleAmountChange = (e: { target: { value: React.SetStateAction<string>; }; }) => {
-        if (Number(e.target.value)  >= (Number(balanceShow))) {
-            setAmount(Number(balanceShow)*0.998+'')
-            return
-        }
-        //超出1千万的输入会引起内核VM卡死,暂时限定最大值为10000000
-        if (Number(e.target.value)  >= 100000000) {
-            setAmount('100000000')
-            return
-        }
-        setAmount(e.target.value)
+    const getMinCellOccupiedSize = (lock: ccc.ScriptLike, type?: ccc.ScriptLike): number => {
+        const minimalCell = ccc.CellOutput.from({  
+            lock,  
+            type,
+        });
 
+        return minimalCell.occupiedSize;
+    }
+
+    const handleMax = async () => {
+        if (!balance || !signerCcc) {
+            return;
+        }
+
+        const walletConfig = getWalletConfig();
+        const minOccupiedSize = getMinCellOccupiedSize(walletConfig.accountLock);  
+    
+        const actualBalance = await signerCcc.client.getBalance([walletConfig.accountLock]);
+        const maxBalance = actualBalance + (ickbData ? ickbData.ckbPendingBalance : BigInt(0));
+        
+        setShowMultiAddressHint(actualBalance < balance);
+
+        const limitOrderType = limitOrderScript(walletConfig.config);
+        const orderCellSize = getMinCellOccupiedSize(walletConfig.accountLock, ccc.Script.from(limitOrderType));
+        
+        // 0xc707b6107b0b1355fcd74a1ee709f2b304cd642b52c853b01ec3cf2dcb57d6b6:1
+        const ICKB_CELL_SIZE = 199;
+
+        // 最大可存储余额 = maxBalance - CKB转iCKB的bot fee（0.01%） - orderCellSize - ICKB_CELL_SIZE - minOccupiedSize - 1 CKB 手续费预留 ;
+        const maxDepositShannon = (maxBalance * BigInt(999)) / BigInt(1000) - BigInt(orderCellSize) * CKB - BigInt(ICKB_CELL_SIZE) * CKB - BigInt(minOccupiedSize) * CKB - CKB;
+        
+        //超出1千万的输入会引起内核VM卡死,暂时限定最大值为100000000
+        if (maxDepositShannon >= BigInt(10000000) * CKB) {
+            setAmount("100000000");
+            return;
+        }
+
+        setAmount(ccc.fixedPointToString(maxDepositShannon > BigInt(0) ? maxDepositShannon : BigInt(0)));
+    };
+
+    const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        let value = sanitizeNumericInput(e.target.value);
+
+        const amountValue = parseFloat(value);
+
+        if (amountValue > parseFloat(balanceShow)) {
+            handleMax();
+            return;
+        }
+
+        //超出1千万的输入会引起内核VM卡死,暂时限定最大值为100000000
+        if (amountValue >= 100000000) {
+            value = "100000000";
+        }
+
+        setAmount(value);
+        setShowMultiAddressHint(false);
     }
     useEffect(() => {
         const handler = setTimeout(() => {
@@ -91,16 +132,16 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
     useEffect(() => {
         if (!ickbData) return;
         ickbData.ckbPendingBalance > 0 ? setPendingBalance(toText(BigInt(ickbData.ckbPendingBalance))) : setPendingBalance('0');
-        if(!ccc)return;
+    }, [ickbData]);
 
-        // setPendingBalance(toText(BigInt(pending)) || '-');
+    useEffect(() => {
+        if (!signerCcc) return;
         (async () => {
-            if (!signerCcc) return;
             const balanceCCC = await signerCcc.getBalance();
             setBalance(balanceCCC);
             setBalanceShow(ccc.fixedPointToString(balanceCCC));
         })();
-    }, [ickbData, signerCcc]);
+    }, [signerCcc]);
 
     return (
         <>
@@ -135,17 +176,20 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
                 </span>
             </div> */}
             <div className='relative mb-4 flex'>
-                <input className="w-full text-left rounded no-arrows border-white/10 focus:border-cyan-500 bg-white/5 hover:bg-white/10 focus:bg-white/5 text-base p-3 mt-1 pr-16 pl-14"
-                    type="number"
+                <input className="w-full text-left rounded border-white/10 focus:border-cyan-500 bg-white/5 hover:bg-white/10 focus:bg-white/5 text-base p-3 mt-1 pr-16 pl-14"
+                    type="text"
+                    inputMode="decimal"
                     value={amount}
                     onChange={handleAmountChange}
-                    placeholder="0"
-                    max={Number(balance/CKB)} />
+                    placeholder="0" />
                 <img src="/svg/icon-ckb.svg" className="absolute left-4 top-[18px]" alt="CKB" />
                 <span className="absolute right-4 top-[7px] p-3 flex items-center text-teal-500 cursor-pointer" onClick={handleMax}>
                     {t("common.max")}
                 </span>
             </div>
+            {showMultiAddressHint && <p className="text-gray-400 text-sm mb-4 -mt-3">
+                {t("ickbDeposit.multiAddressHint")}
+            </p>}
             <p className="text-center text-large font-bold text-cyan-500 mb-4 pb-2 ">
                 1 CKB ≈ {ickbData?.tipHeader && approxConversion(CKB)} iCKB
             </p>

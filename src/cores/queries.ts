@@ -99,7 +99,7 @@ async function getL1State(walletConfig: WalletConfig) {
     const mixedCells = await getMixedCells(walletConfig);
 
     // Prefetch feeRate and tipHeader
-    const feeRatePromise = rpc.getFeeRate(BigInt(1));
+    // const feeRatePromise = rpc.getFeeRate(BigInt(1));
     const tipHeaderPromise = rpc.getTipHeader();
 
     // Prefetch headers
@@ -217,7 +217,9 @@ async function getL1State(walletConfig: WalletConfig) {
         );
     }
 
-    const feeRate = BigInt(Number(await feeRatePromise) + 1000);
+    // const feeRate = BigInt(Number(await feeRatePromise) + 1000);
+    // Reduce request overhead, fixed 2000.
+    const feeRate = BigInt(2000);
     const txBuilder = (direction: IckbDirection, amount: bigint) => {
         const txInfo = txInfoFrom({ tx: baseTx, info });
 

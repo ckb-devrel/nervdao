@@ -127,6 +127,7 @@ const en = {
     toBeConfirmed: "To be confirmed",
     depositInProgress: "Deposit in progress, wait for 90s",
     depositSuccess: "Deposit Success: {{hash}}",
+    multiAddressHint: "Your balance is spread across multiple addresses. Only the balance from a single address can be used per transaction.",
   },
   ickbWithdraw: {
     withdrawableIckb: "Withdrawable iCKB",

@@ -9,7 +9,7 @@ import { MutatingDots } from "react-loader-spinner";
 
 const Ickb: React.FC = () => {
   const [walletConfig, setWalletConfig] = useState<WalletConfig>();
-  const queryClient = new QueryClient()
+  const [queryClient] = useState(() => new QueryClient())
   const signer = ccc.useSigner()
   useEffect(() => {
     if (!signer || !queryClient) return;
@@ -17,7 +17,7 @@ const Ickb: React.FC = () => {
       const walletConfig = await setupWalletConfig(signer, queryClient)
       setWalletConfig(walletConfig)
     })();
-  }, [signer,queryClient]);
+  }, [signer]);
   return (
     <QueryClientProvider client={queryClient}>
 

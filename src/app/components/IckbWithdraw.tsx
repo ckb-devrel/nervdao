@@ -3,7 +3,7 @@ import { ccc } from "@ckb-ccc/connector-react";
 import { useNotification } from "@/context/NotificationProvider";
 import { ickb2Ckb } from "@ickb/v1-core";
 import { TriangleAlert } from "lucide-react";
-import { toText } from "@/utils/stringUtils";
+import { sanitizeNumericInput, toText } from "@/utils/stringUtils";
 import { IckbDateType } from "@/cores/utils";
 import { CKB } from "@ickb/lumos-utils";
 import { TailSpin } from "react-loader-spinner";
@@ -62,14 +62,23 @@ const IckbWithdraw: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }>
         const udtBalance = ickbData?.ickbRealUdtBalance + ickbData?.ickbPendingBalance;
         setAmount(ccc.fixedPointToString(udtBalance));
     };
-    const handleAmountChange = (e: { target: { value: React.SetStateAction<string>; }; }) => {
-        if(!ickbData){ return}
-        if (Number(e.target.value)  >= Number(ccc.fixedPointToString(ickbData.ickbRealUdtBalance))) {
-            setAmount(ccc.fixedPointToString(ickbData.ickbRealUdtBalance))
-            return
+    
+    const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (!ickbData) {
+            return;
         }
-        setAmount(e.target.value)
-    }
+
+        let value = sanitizeNumericInput(e.target.value);
+
+        const udtBalance = ickbData?.ickbRealUdtBalance + ickbData?.ickbPendingBalance;
+        const max = Number(ccc.fixedPointToString(udtBalance));
+        const v = Number(value);
+        if (Number.isFinite(v) && v >= max) {
+            value = ccc.fixedPointToString(udtBalance);
+        }
+
+        setAmount(value);
+    };
    
     useEffect(() => {
         if (!ickbData) return;
@@ -112,8 +121,9 @@ const IckbWithdraw: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }>
             </div>
             <div className='relative mb-4 flex'>
                 {/* <label className="flex px-2 items-center"><img src="/svg/icon-ckb.svg" alt="CKB" className="mr-2" /> CKB</label> */}
-                <input className="w-full text-left rounded no-arrows  border-white/10 focus:border-cyan-500 bg-white/5 hover:bg-white/10 focus:bg-white/5 text-base p-3 mt-1 pr-16 pl-14"
-                    type="number"
+                <input className="w-full text-left rounded border-white/10 focus:border-cyan-500 bg-white/5 hover:bg-white/10 focus:bg-white/5 text-base p-3 mt-1 pr-16 pl-14"
+                    type="text"
+                    inputMode="decimal"
                     value={amount}
                     onChange={handleAmountChange}
                     placeholder="0" />

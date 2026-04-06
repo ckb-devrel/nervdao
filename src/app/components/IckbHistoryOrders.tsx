@@ -1,5 +1,5 @@
 import { WalletConfig } from "@/cores/config";
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import {  RecentOrder } from "@/cores/utils";
 import { ccc } from "@ckb-ccc/connector-react";
 import { getRecentIckbOrders } from "@/cores/queries";
@@ -15,56 +15,69 @@ const IckbHistoryOrders: React.FC<{ walletConfig: WalletConfig}> = ({ walletConf
     const [txGenerator, setTxGenerator] = React.useState<
         AsyncGenerator | undefined
     >(undefined);
+    const txsRef = useRef<RecentOrder[]>([]);
+    txsRef.current = txs;
 
-
-   
     useEffect(() => {
         if (!signerCcc||!walletConfig) { return }
         const { config } = walletConfig;
+        let cancelled = false;
 
         setTxs([]);
         setLimit(5);
         setTxGenerator(getRecentIckbOrders(signerCcc, config));
 
         const refresh = async () => {
-            setTxs((txs) => {
-                if (txs.length === 0) {
-                    return txs;
-                }
+            if (cancelled) return;
+            const currentTxs = txsRef.current;
+            if (currentTxs.length === 0) return;
 
-                (async () => {
-                    for await (const data of getRecentIckbOrders(signerCcc, config)) {
-                        if (!data) { return }
-                        console.log(data)
-                        if (txs.find((t) => t.timestamp === data?.timestamp)) {
-                            break;
-                        }
-
-                        setTxs((txs) => {
-                            if (txs.find((t) => t.timestamp === data?.timestamp)) {
-                                return txs;
-                            }
-                            return [data, ...txs];
-                        });
+            try {
+                for await (const data of getRecentIckbOrders(signerCcc, config)) {
+                    if (cancelled || !data) break;
+                    if (currentTxs.find((t) => t.timestamp === data.timestamp)) {
+                        break;
                     }
-                })();
 
-                return txs;
-            });
+                    setTxs((prev) => {
+                        if (prev.find((t) => t.timestamp === data.timestamp)) {
+                            return prev;
+                        }
+                        return [data, ...prev];
+                    });
+                }
+            } catch (e) {
+                console.error("refresh error:", e);
+            }
         };
-        refresh()
-        const interval = setInterval(refresh, 15000);
-        return () => clearInterval(interval);
 
+        // 用 setTimeout 链代替 setInterval，确保上一次完成后再安排下一次，避免请求堆积
+        let timerId: ReturnType<typeof setTimeout>;
+        const scheduleRefresh = async () => {
+            await refresh();
+            if (!cancelled) {
+                timerId = setTimeout(scheduleRefresh, 15000);
+            }
+        };
+        // 首次延迟 15s 后开始 refresh（初始加载由 txGenerator 处理）
+        timerId = setTimeout(scheduleRefresh, 15000);
+
+        return () => {
+            cancelled = true;
+            clearTimeout(timerId);
+        };
 
     }, [signerCcc]);
+
     useEffect(() => {
-        if (!txGenerator || !signerCcc || txs.length >= limit) {
+        if (!txGenerator || !signerCcc || txsRef.current.length >= limit) {
             return;
         }
 
+        let cancelled = false;
         (async () => {
             const { value, done } = await txGenerator.next();
+            if (cancelled) return;
             if (done) {
                 setTxGenerator(undefined);
                 return;
@@ -75,6 +88,8 @@ const IckbHistoryOrders: React.FC<{ walletConfig: WalletConfig}> = ({ walletConf
             //@ts-expect-error 暂时屏蔽
             setTxs((txs) => [...txs, value]);
         })();
+
+        return () => { cancelled = true; };
     }, [txGenerator, limit, txs, signerCcc]);
     
     return (
