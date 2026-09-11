@@ -3,20 +3,43 @@
 import { ccc } from "@ckb-ccc/connector-react";
 import { NotificationProvider } from "@/context/NotificationProvider";
 import Notification from "@/app/components/Notification";
-import { CSSProperties } from "react";
-import React from "react";
+import { CSSProperties, useEffect, useState } from "react";
 import { I18nProvider } from "@/i18n/I18nProvider";
 
-export  function  LayoutProvider({ children }: { children: React.ReactNode }) {
-  const defaultClient = React.useMemo(() => {
-    return process.env.NEXT_PUBLIC_IS_MAINNET === "true"
-      ? new ccc.ClientPublicMainnet()
-      : new ccc.ClientPublicTestnet();
+interface ClientOption {
+  name: string;
+  client: ccc.Client;
+}
+
+export function LayoutProvider({ children }: { children: React.ReactNode }) {
+  const [clientOptions, setClientOptions] = useState<ClientOption[]>();
+
+  useEffect(() => {
+    const owner = ccc.OwnerAggregated.from([
+      ccc.ClientPublicTestnet.open(),
+      ccc.ClientPublicMainnet.open(),
+    ] as const);
+    const [testnet, mainnet] = owner.value;
+
+    setClientOptions([
+      { name: "CKB Testnet", client: testnet },
+      { name: "CKB Mainnet", client: mainnet },
+    ]);
+
+    return () => {
+      void owner.dispose().catch(() => {});
+    };
   }, []);
-  
+
+  if (!clientOptions) {
+    return null;
+  }
+
+  const defaultClient =
+    clientOptions[process.env.NEXT_PUBLIC_IS_MAINNET === "true" ? 1 : 0].client;
+
   return (
     <ccc.Provider
-
       connectorProps={{
         style: {
           "--background": "#232323",
@@ -32,25 +55,14 @@ export  function  LayoutProvider({ children }: { children: React.ReactNode }) {
         } as CSSProperties,
       }}
       defaultClient={defaultClient}
-      clientOptions={[
-        {
-          name: "CKB Testnet",
-          client: new ccc.ClientPublicTestnet(),
-        },
-        {
-          name: "CKB Mainnet",
-          client: new ccc.ClientPublicMainnet(),
-        },
-      ]}
+      clientOptions={clientOptions}
     >
-       
-        <I18nProvider>
-          <NotificationProvider>
-            {children}
-            <Notification />
-          </NotificationProvider>
-        </I18nProvider>
-     
+      <I18nProvider>
+        <NotificationProvider>
+          {children}
+          <Notification />
+        </NotificationProvider>
+      </I18nProvider>
     </ccc.Provider>
   );
 }
