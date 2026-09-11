@@ -11,6 +11,39 @@ interface ClientOption {
   client: ccc.Client;
 }
 
+function LoadingScreen() {
+  return (
+    <div
+      className="flex h-dvh flex-col items-stretch bg-black text-white lg:flex-row"
+      aria-busy="true"
+    >
+      <div className="flex h-[33dvh] flex-1 p-6 lg:h-full">
+        <div className="flex h-full flex-1 items-stretch justify-center overflow-hidden rounded-lg">
+          <img
+            src="./svg/none-login-bg.svg"
+            alt=""
+            className="w-full object-cover lg:h-full lg:w-auto"
+          />
+        </div>
+      </div>
+      <div className="flex flex-1 flex-col items-center justify-center p-6">
+        <img src="./svg/icon-text.svg" alt="NervDAO" width={346} height={88} />
+        <div
+          className="mt-12 flex items-center gap-3 text-white/60"
+          role="status"
+          aria-live="polite"
+        >
+          <span
+            className="h-5 w-5 animate-spin rounded-full border-2 border-white/20 border-t-cyan-400"
+            aria-hidden="true"
+          />
+          <span className="font-work-sans text-body-2">Loading...</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function LayoutProvider({ children }: { children: React.ReactNode }) {
   const [clientOptions, setClientOptions] = useState<ClientOption[]>();
 
@@ -32,7 +65,7 @@ export function LayoutProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   if (!clientOptions) {
-    return null;
+    return <LoadingScreen />;
   }
 
   const defaultClient =

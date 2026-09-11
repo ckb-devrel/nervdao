@@ -58,6 +58,7 @@ const en = {
     days: "{{num}} days",
     estimatedCompensation: "Estimated Compensation",
     redeem: "Redeem",
+    confirming: "Confirm in wallet",
     viewOnExplorer: "View on Explorer",
   },
   daoWithdrawModal: {
@@ -80,6 +81,7 @@ const en = {
     daysRemaining: "{{num}} days remaining",
     ended: "Ended",
     withdraw: "Withdraw",
+    confirming: "Confirm in wallet",
     viewOnExplorer: "View on Explorer",
   },
   recentTransactions: {

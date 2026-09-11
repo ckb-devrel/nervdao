@@ -49,60 +49,69 @@ const DepositForm: React.FC = () => {
             tx.getOutputsCapacity()
           )
         );
-      } catch (error) {
+      } catch {
         setTransactionFee("-");
       }
     })();
   }, [signer, amount]);
 
   const handleDeposit = async () => {
-    if (!signer) {
-
+    if (!signer || transTbc) {
       return;
     }
 
-    const { script: lock } = await signer.getRecommendedAddressObj();
-    const tx = ccc.Transaction.from({
-      outputs: [
-        {
-          lock,
-          type: await ccc.Script.fromKnownScript(
-            signer.client,
-            ccc.KnownScript.NervosDao,
-            "0x"
-          ),
-        },
-      ],
-      outputsData: ["00".repeat(8)],
-    });
-    await tx.addCellDepsOfKnownScripts(
-      signer.client,
-      ccc.KnownScript.NervosDao
-    );
-    if (tx.outputs[0].capacity > ccc.fixedPointFrom(amount)) {
-      showNotification(
-        "error",
-        t("notifications.minimalDepositAmount", { amount: ccc.fixedPointToString(tx.outputs[0].capacity) })
-      );
-      return;
-    }
-    tx.outputs[0].capacity = ccc.fixedPointFrom(amount);
-    await tx.completeInputsByCapacity(signer);
-    await tx.completeFeeBy(signer);
-    setTransTbc(true)
+    setTransTbc(true);
+    setDepositPending(false);
+    let progressId: string | undefined;
+
     try {
+      const { script: lock } = await signer.getRecommendedAddressObj();
+      const tx = ccc.Transaction.from({
+        outputs: [
+          {
+            lock,
+            type: await ccc.Script.fromKnownScript(
+              signer.client,
+              ccc.KnownScript.NervosDao,
+              "0x"
+            ),
+          },
+        ],
+        outputsData: ["00".repeat(8)],
+      });
+      await tx.addCellDepsOfKnownScripts(
+        signer.client,
+        ccc.KnownScript.NervosDao
+      );
+      if (tx.outputs[0].capacity > ccc.fixedPointFrom(amount)) {
+        showNotification(
+          "error",
+          t("notifications.minimalDepositAmount", {
+            amount: ccc.fixedPointToString(tx.outputs[0].capacity),
+          })
+        );
+        return;
+      }
+      tx.outputs[0].capacity = ccc.fixedPointFrom(amount);
+      await tx.completeInputsByCapacity(signer);
+      await tx.completeFeeBy(signer);
       const txHash = await signer.sendTransaction(tx);
-      const progressId = await showNotification("progress", t("notifications.pendingTransaction"));
-      setDepositPending(true)
-      await signer.client.waitTransaction(txHash)
-      setTransTbc(false)
-      removeNotification(progressId + '')
-      setDepositPending(false)
+      progressId = showNotification(
+        "progress",
+        t("notifications.pendingTransaction")
+      );
+      setDepositPending(true);
+      await signer.client.waitTransaction(txHash);
       showNotification("success", t("notifications.committed"));
     } catch (error) {
-      setTransTbc(false)
+      showNotification(
+        "error",
+        error instanceof Error ? error.message : String(error)
+      );
     } finally {
-      setTransTbc(false)
+      if (progressId) removeNotification(progressId);
+      setTransTbc(false);
+      setDepositPending(false);
     }
   };
 

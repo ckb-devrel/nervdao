@@ -5,6 +5,7 @@ import { ccc } from "@ckb-ccc/connector-react";
 import React, { useEffect, useState } from "react";
 import CircularProgress from "./CircularProgress";
 import { useTranslation } from "react-i18next";
+import { TailSpin } from "react-loader-spinner";
 
 interface DaoDetailModalProps {
   isOpen: boolean;
@@ -38,16 +39,18 @@ export function DaoDepositDetailModal({
   const [transactionFee, setTransactionFee] = useState<string>("");
   const [createTime, setCreateTime] = useState<string>("");
   const [txHash, setTxHash] = useState<string>("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isPending, setIsPending] = useState(false);
   const transaction = cell?.[1].transaction;
 
   const { index } = useGetExplorerLink();
   const { t } = useTranslation();
 
   const signer = ccc.useSigner();
-  const { showNotification } = useNotification();
+  const { showNotification, removeNotification } = useNotification();
 
   const withdraw = async () => {
-    if (!signer || !cell) {
+    if (!signer || !cell || isSubmitting) {
       return;
     }
 
@@ -58,20 +61,41 @@ export function DaoDepositDetailModal({
       return;
     }
     const { blockHash, blockNumber } = _depositTx;
-    const tx = ccc.Transaction.from({
-      headerDeps: [blockHash],
-      inputs: [{ previousOutput: dao.outPoint }],
-      outputs: [dao.cellOutput],
-      outputsData: [ccc.numLeToBytes(blockNumber, 8)],
-    });
-    await tx.addCellDepsOfKnownScripts(
-      signer.client,
-      ccc.KnownScript.NervosDao
-    );
-    await tx.completeInputsByCapacity(signer);
-    await tx.completeFeeBy(signer);
-    const result = await signer.sendTransaction(tx);
-    showNotification("success", t("notifications.redeemSuccess", { hash: result }));
+    setIsSubmitting(true);
+    setIsPending(false);
+    let progressId: string | undefined;
+
+    try {
+      const tx = ccc.Transaction.from({
+        headerDeps: [blockHash],
+        inputs: [{ previousOutput: dao.outPoint }],
+        outputs: [dao.cellOutput],
+        outputsData: [ccc.numLeToBytes(blockNumber, 8)],
+      });
+      await tx.addCellDepsOfKnownScripts(
+        signer.client,
+        ccc.KnownScript.NervosDao
+      );
+      await tx.completeInputsByCapacity(signer);
+      await tx.completeFeeBy(signer);
+      const result = await signer.sendTransaction(tx);
+      progressId = showNotification(
+        "progress",
+        t("notifications.pendingTransaction")
+      );
+      setIsPending(true);
+      await signer.client.waitTransaction(result);
+      showNotification("success", t("notifications.redeemSuccess", { hash: result }));
+    } catch (error) {
+      showNotification(
+        "error",
+        error instanceof Error ? error.message : String(error)
+      );
+    } finally {
+      if (progressId) removeNotification(progressId);
+      setIsSubmitting(false);
+      setIsPending(false);
+    }
   };
 
   useEffect(() => {
@@ -101,6 +125,7 @@ export function DaoDepositDetailModal({
 
   const handleClose = (e: React.MouseEvent) => {
     e.stopPropagation();
+    if (isSubmitting) return;
     onClose();
   };
 
@@ -115,7 +140,8 @@ export function DaoDepositDetailModal({
       >
         <button
           onClick={handleClose}
-          className="absolute top-4 right-4 bg-gray-950 rounded-full p-2 text-gray-400 hover:text-white"
+          disabled={isSubmitting}
+          className="absolute top-4 right-4 bg-gray-950 rounded-full p-2 text-gray-400 hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
         >
           <img src="./svg/close.svg" alt="Close" width={18} height={18} />
         </button>
@@ -196,10 +222,26 @@ export function DaoDepositDetailModal({
         </div>
 
         <button
-          className="w-full font-bold bg-btn-gradient text-gray-800 text-body-2 py-3 rounded-lg hover:bg-btn-gradient-hover transition duration-200"
+          className="w-full font-bold bg-btn-gradient text-gray-800 text-body-2 py-3 rounded-lg hover:bg-btn-gradient-hover transition duration-200 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-btn-gradient"
           onClick={withdraw}
+          disabled={isSubmitting}
         >
-          {t("daoDepositModal.redeem")}
+          {isSubmitting ? (
+            <>
+              <TailSpin
+                height="20"
+                width="20"
+                color="#333333"
+                ariaLabel="tail-spin-loading"
+                wrapperStyle={{ display: "inline-block", marginRight: "10px" }}
+              />
+              {isPending
+                ? t("daoDepositModal.pending")
+                : t("daoDepositModal.confirming")}
+            </>
+          ) : (
+            t("daoDepositModal.redeem")
+          )}
         </button>
 
         <a

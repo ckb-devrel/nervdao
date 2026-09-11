@@ -26,19 +26,20 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
     const [showMultiAddressHint, setShowMultiAddressHint] = useState<boolean>(false);
 
     async function handleSwap() {
-        if (!txInfo || !signerCcc) {
+        if (!txInfo || !signerCcc || transTBC) {
             return
         }
         if (txInfo.error !== null) {
             showNotification("error", t(txInfo.error.i18nKey, txInfo.error.params));
             return
         }
-        let progressId, txHash;
         setTransTBC(true)
+        setDepositPending(false)
+        let progressId: string | undefined;
         try {
             const cccTx = ccc.Transaction.fromLumosSkeleton(txInfo.tx);
-            txHash = await signerCcc.sendTransaction(cccTx);
-            progressId = await showNotification("progress", t("ickbDeposit.depositInProgress"));
+            const txHash = await signerCcc.sendTransaction(cccTx);
+            progressId = showNotification("progress", t("ickbDeposit.depositInProgress"));
             setDepositPending(true)
             await signerCcc.client.waitTransaction(txHash, 0, 90000);
             onUpdate()
@@ -49,7 +50,7 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
         } finally {
             setTransTBC(false)
             setDepositPending(false)
-            removeNotification(progressId + '')
+            if (progressId) removeNotification(progressId)
             setAmount("")
         }
     }
@@ -131,7 +132,11 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
   
     useEffect(() => {
         if (!ickbData) return;
-        ickbData.ckbPendingBalance > 0 ? setPendingBalance(toText(BigInt(ickbData.ckbPendingBalance))) : setPendingBalance('0');
+        setPendingBalance(
+            ickbData.ckbPendingBalance > 0
+                ? toText(BigInt(ickbData.ckbPendingBalance))
+                : "0"
+        );
     }, [ickbData]);
 
     useEffect(() => {
@@ -255,4 +260,3 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
 };
 
 export default IckbSwap;
-

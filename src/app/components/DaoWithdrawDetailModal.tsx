@@ -8,6 +8,7 @@ import { useGetExplorerLink } from "@/hooks/Explorer";
 import { useNotification } from "@/context/NotificationProvider";
 import { getClaimEpoch } from "@/utils/epoch";
 import { useTranslation } from "react-i18next";
+import { TailSpin } from "react-loader-spinner";
 
 interface DaoWithdrawDetailModalProps {
   isOpen: boolean;
@@ -48,7 +49,9 @@ export function DaoWithdrawDetailModal({
   const [txHash, setTxHash] = useState<string>("");
   const transaction = infos?.[3][0]?.transaction;
   const [transactionFee, setTransactionFee] = useState<string>("");
-  const { showNotification } = useNotification();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isPending, setIsPending] = useState(false);
+  const { showNotification, removeNotification } = useNotification();
 
   useEffect(() => {
     if (!transaction || !signer) {
@@ -76,7 +79,7 @@ export function DaoWithdrawDetailModal({
   }, [transaction, signer, infos]);
 
   const withdraw = useCallback(async () => {
-    if (!signer || !infos) return;
+    if (!signer || !infos || isSubmitting) return;
     const [, depositTx, depositHeader] = infos;
     if (!depositTx.blockHash) {
       showNotification("error", t("notifications.missingDepositBlockInfo"));
@@ -92,42 +95,72 @@ export function DaoWithdrawDetailModal({
       showNotification("error", t("notifications.missingRedeemBlockHash"));
       return;
     }
-    const tx = ccc.Transaction.from({
-      headerDeps: [withdrawTx.blockHash, blockHash],
-      inputs: [
-        {
-          previousOutput: dao.outPoint,
-          since: {
-            relative: "absolute",
-            metric: "epoch",
-            value: ccc.epochToHex(getClaimEpoch(depositHeader, withdrawHeader)),
-          },
-        },
-      ],
-      outputs: [
-        {
-          lock: (await signer.getRecommendedAddressObj()).script,
-        },
-      ],
-      witnesses: [
-        ccc.WitnessArgs.from({
-          inputType: ccc.numLeToBytes(1, 8),
-        }).toBytes(),
-      ],
-    });
-    await tx.addCellDepsOfKnownScripts(
-      signer.client,
-      ccc.KnownScript.NervosDao
-    );
+    setIsSubmitting(true);
+    setIsPending(false);
+    let progressId: string | undefined;
 
-    await tx.completeInputsByCapacity(signer);
-    await tx.completeFeeChangeToOutput(signer, 0);
-    const result = await signer.sendTransaction(tx);
-    showNotification("success", t("notifications.withdrawSuccess", { hash: result }));
-  }, [signer, infos, dao, showNotification]);
+    try {
+      const tx = ccc.Transaction.from({
+        headerDeps: [withdrawTx.blockHash, blockHash],
+        inputs: [
+          {
+            previousOutput: dao.outPoint,
+            since: {
+              relative: "absolute",
+              metric: "epoch",
+              value: ccc.epochToHex(getClaimEpoch(depositHeader, withdrawHeader)),
+            },
+          },
+        ],
+        outputs: [
+          {
+            lock: (await signer.getRecommendedAddressObj()).script,
+          },
+        ],
+        witnesses: [
+          ccc.WitnessArgs.from({
+            inputType: ccc.numLeToBytes(1, 8),
+          }).toBytes(),
+        ],
+      });
+      await tx.addCellDepsOfKnownScripts(
+        signer.client,
+        ccc.KnownScript.NervosDao
+      );
+
+      await tx.completeInputsByCapacity(signer);
+      await tx.completeFeeChangeToOutput(signer, 0);
+      const result = await signer.sendTransaction(tx);
+      progressId = showNotification(
+        "progress",
+        t("notifications.pendingTransaction")
+      );
+      setIsPending(true);
+      await signer.client.waitTransaction(result);
+      showNotification("success", t("notifications.withdrawSuccess", { hash: result }));
+    } catch (error) {
+      showNotification(
+        "error",
+        error instanceof Error ? error.message : String(error)
+      );
+    } finally {
+      if (progressId) removeNotification(progressId);
+      setIsSubmitting(false);
+      setIsPending(false);
+    }
+  }, [
+    signer,
+    infos,
+    isSubmitting,
+    dao,
+    showNotification,
+    removeNotification,
+    t,
+  ]);
 
   const handleClose = (e: React.MouseEvent) => {
     e.stopPropagation();
+    if (isSubmitting) return;
     onClose();
   };
 
@@ -146,7 +179,8 @@ export function DaoWithdrawDetailModal({
       >
         <button
           onClick={handleClose}
-          className="absolute top-4 right-4 bg-gray-95  rounded-full p-2 text-gray-400 hover:text-white"
+          disabled={isSubmitting}
+          className="absolute top-4 right-4 bg-gray-95 rounded-full p-2 text-gray-400 hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
         >
           <img src="./svg/close.svg" alt="Close" width={18} height={18} />
         </button>
@@ -257,9 +291,24 @@ export function DaoWithdrawDetailModal({
         <button
           className="w-full font-bold bg-btn-gradient text-gray-800 text-body-2 py-3 rounded-lg hover:bg-btn-gradient-hover transition duration-200 disabled:opacity-50 disabled:hover:bg-btn-gradient"
           onClick={withdraw}
-          disabled={remainingDays >= 0}
+          disabled={remainingDays >= 0 || isSubmitting}
         >
-          {t("daoWithdrawModal.withdraw")}
+          {isSubmitting ? (
+            <>
+              <TailSpin
+                height="20"
+                width="20"
+                color="#333333"
+                ariaLabel="tail-spin-loading"
+                wrapperStyle={{ display: "inline-block", marginRight: "10px" }}
+              />
+              {isPending
+                ? t("daoWithdrawModal.pending")
+                : t("daoWithdrawModal.confirming")}
+            </>
+          ) : (
+            t("daoWithdrawModal.withdraw")
+          )}
         </button>
 
         <Link

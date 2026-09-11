@@ -22,28 +22,26 @@ const IckbActiveOrders: React.FC<{ walletConfig: WalletConfig, ickbData: IckbDat
 
     const handleMelt = async () => {
         const txMelt = ickbData?.txBuilder("melt", BigInt(0));
-        if (!txMelt || !signerCcc) {
+        if (!txMelt || !signerCcc || meltTBC) {
             return
         }
-        let progressId, txHash;
         setMeltTBC(true)
+        let progressId: string | undefined;
         try {
             const cccTx = ccc.Transaction.fromLumosSkeleton(txMelt.tx);
-            txHash = await signerCcc.sendTransaction(cccTx);
-            progressId = await showNotification("progress", t("ickbActiveOrders.meltInProgress"));
+            const txHash = await signerCcc.sendTransaction(cccTx);
+            progressId = showNotification("progress", t("ickbActiveOrders.meltInProgress"));
 
             await signerCcc.client.waitTransaction(txHash, 0, 60000)
-            removeNotification(progressId + '')
 
             onUpdate()
             // setMeltTBC(false)
             showNotification("success", t("ickbActiveOrders.meltSuccess", { hash: txHash }));
         } catch (error) {
             showNotification("error", `${error}`);
-            setMeltTBC(false)
 
         } finally {
-            removeNotification(progressId + '')
+            if (progressId) removeNotification(progressId)
             setMeltTBC(false)
 
         }

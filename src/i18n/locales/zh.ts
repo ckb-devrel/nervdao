@@ -58,6 +58,7 @@ const zh = {
     days: "{{num}} 天",
     estimatedCompensation: "预估补偿",
     redeem: "赎回",
+    confirming: "请在钱包中确认",
     viewOnExplorer: "在浏览器中查看",
   },
   daoWithdrawModal: {
@@ -80,6 +81,7 @@ const zh = {
     daysRemaining: "剩余 {{num}} 天",
     ended: "已结束",
     withdraw: "提取",
+    confirming: "请在钱包中确认",
     viewOnExplorer: "在浏览器中查看",
   },
   recentTransactions: {

@@ -22,15 +22,21 @@ const IckbWithdraw: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }>
     const { t } = useTranslation();
 
     async function handleWithDraw() {
-        if (!txInfo || !signerCcc) {
+        if (!txInfo || !signerCcc || transTBC) {
             return
         }
-        let progressId, txHash
+        if (txInfo.error) {
+            showNotification("error", t(txInfo.error.i18nKey, txInfo.error.params));
+            return;
+        }
+
+        setTransTBC(true)
+        setWithdrawPending(false)
+        let progressId: string | undefined
         try {
             const cccTx = ccc.Transaction.fromLumosSkeleton(txInfo.tx);
-            txHash = await signerCcc.sendTransaction(cccTx);
-            setTransTBC(true)
-            progressId = await showNotification("progress", t("ickbWithdraw.withdrawInProgress"));
+            const txHash = await signerCcc.sendTransaction(cccTx);
+            progressId = showNotification("progress", t("ickbWithdraw.withdrawInProgress"));
             setWithdrawPending(true)
             await signerCcc.client.waitTransaction(txHash, 0, 90000)
             showNotification("success", t("ickbWithdraw.withdrawSuccess", { hash: txHash }));
@@ -38,7 +44,7 @@ const IckbWithdraw: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }>
         } catch (error) {
             showNotification("error", t("ickbWithdraw.withdrawError", { error: `${error}` }));
         } finally {
-            removeNotification(progressId + '')
+            if (progressId) removeNotification(progressId)
             setAmount("")
             setTransTBC(false)
             setWithdrawPending(false)
@@ -95,7 +101,7 @@ const IckbWithdraw: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }>
                 pending += Number(item.ickbAmount);
             });
         }
-        pending > 0 ? setPendingBalance(toText(BigInt(pending))) : setPendingBalance('0');
+        setPendingBalance(pending > 0 ? toText(BigInt(pending)) : "0");
 
     }, [ickbData]);
 
