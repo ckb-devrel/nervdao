@@ -170,11 +170,11 @@ export function DaoWithdrawDetailModal({
 
   return (
     <div
-      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 max-h-[100vh] "
+      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 max-h-[100vh] overscroll-none"
       onClick={handleClose}
     >
       <div
-        className="bg-gray-800 rounded-lg p-6 w-full max-w-md relative max-h-full overflow-y-auto"
+        className="bg-gray-800 rounded-lg p-6 w-full max-w-md relative max-h-full overflow-y-auto overscroll-contain"
         onClick={(e) => e.stopPropagation()}
       >
         <button

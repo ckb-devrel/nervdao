@@ -2,7 +2,7 @@
 
 import { getClaimEpoch, parseEpoch } from "@/utils/epoch";
 import { ccc } from "@ckb-ccc/connector-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { DaoDepositDetailModal } from "./DaoDepositDetailModal";
 import { DaoWithdrawDetailModal } from "./DaoWithdrawDetailModal";
 import { DaoInfo } from "@/hooks/DaoCollect";
@@ -58,6 +58,36 @@ export const DaoCard = ({
   const handleCloseModal = () => {
     setModalOpen(false);
   };
+
+  useEffect(() => {
+    if (!modalOpen) return;
+
+    const scrollTargets: HTMLElement[] = [
+      document.documentElement,
+      document.body,
+    ];
+    const main = document.querySelector<HTMLElement>("main");
+    if (main) scrollTargets.push(main);
+
+    const previousStyles = scrollTargets.map((target) => ({
+      target,
+      overflow: target.style.overflow,
+      overscrollBehavior: target.style.overscrollBehavior,
+    }));
+
+    scrollTargets.forEach((target) => {
+      target.style.overflow = "hidden";
+      target.style.overscrollBehavior = "none";
+    });
+
+    return () => {
+      previousStyles.forEach(({ target, overflow, overscrollBehavior }) => {
+        target.style.overflow = overflow;
+        target.style.overscrollBehavior = overscrollBehavior;
+      });
+    };
+  }, [modalOpen]);
+
   const color = isRedeeming
     ? remainingDays <= 0
       ? "emerald"
