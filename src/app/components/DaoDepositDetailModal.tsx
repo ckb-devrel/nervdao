@@ -126,7 +126,6 @@ export function DaoDepositDetailModal({
 
   const handleClose = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (isSubmitting) return;
     onClose();
   };
 
@@ -141,8 +140,7 @@ export function DaoDepositDetailModal({
       >
         <button
           onClick={handleClose}
-          disabled={isSubmitting}
-          className="absolute top-4 right-4 bg-gray-950 rounded-full p-2 text-gray-400 hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
+          className="absolute top-4 right-4 bg-gray-950 rounded-full p-2 text-gray-400 hover:text-white"
         >
           <img src="./svg/close.svg" alt="Close" width={18} height={18} />
         </button>
