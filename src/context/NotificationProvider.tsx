@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
+import { formatError } from '@/utils/errorUtils';
 
 type NotificationType = 'success' | 'error' | 'info' | 'warning' | 'progress';
 
@@ -38,17 +39,7 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
 
   useEffect(() => {
     const handler = (event: PromiseRejectionEvent) => {
-      const msg = (() => {
-        if (typeof event.reason === "object" && event.reason !== null) {
-          const { name, message, stack, cause } = event.reason;
-          return JSON.stringify({ name, message, stack, cause });
-        }
-        if (typeof event.reason === "string") {
-          return event.reason;
-        }
-        return JSON.stringify(event);
-      })();
-      showNotification("error", "Unknown error", msg);
+      showNotification("error", formatError(event.reason));
     };
 
     window.addEventListener("unhandledrejection", handler);

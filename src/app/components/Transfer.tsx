@@ -2,14 +2,11 @@
 
 import React, { useCallback, useEffect, useState } from "react";
 import { ccc } from "@ckb-ccc/connector-react";
-import { TailSpin } from "react-loader-spinner";
 import { useTranslation } from "react-i18next";
 import { useNotification } from "@/context/NotificationProvider";
 import { sanitizeNumericInput } from "@/utils/stringUtils";
-
-function errorMessage(error: unknown): string {
-  return error instanceof Error ? error.message : String(error);
-}
+import { formatError } from "@/utils/errorUtils";
+import { ButtonLoadingContent } from "./ButtonLoadingContent";
 
 const Transfer: React.FC = () => {
   const signer = ccc.useSigner();
@@ -89,7 +86,7 @@ const Transfer: React.FC = () => {
         setTransactionFee("-");
         try {
           await getRecipient();
-          const message = errorMessage(error);
+          const message = formatError(error);
           setAmountError(
             /insufficient|not enough capacity/i.test(message)
               ? t("transferForm.insufficientBalanceWithFee")
@@ -149,7 +146,7 @@ const Transfer: React.FC = () => {
       setAmountError("");
       setShowMaxBalanceHint(true);
     } catch (error) {
-      showNotification("error", errorMessage(error));
+      showNotification("error", formatError(error));
     }
   };
 
@@ -181,7 +178,7 @@ const Transfer: React.FC = () => {
       setShowMaxBalanceHint(false);
       await refreshBalance();
     } catch (error) {
-      showNotification("error", errorMessage(error));
+      showNotification("error", formatError(error));
     } finally {
       if (progressId) removeNotification(progressId);
       setIsSubmitting(false);
@@ -259,7 +256,7 @@ const Transfer: React.FC = () => {
 
         <button
           onClick={handleTransfer}
-          className="mt-4 w-full font-bold bg-btn-gradient text-gray-800 text-body-2 py-3 rounded-lg hover:bg-btn-gradient-hover transition duration-200 disabled:opacity-50 disabled:hover:bg-btn-gradient"
+          className="mt-4 flex h-12 w-full items-center justify-center rounded-lg bg-btn-gradient font-bold text-body-2 text-gray-800 transition duration-200 hover:bg-btn-gradient-hover disabled:opacity-50 disabled:hover:bg-btn-gradient"
           disabled={
             !address.trim() ||
             !amount ||
@@ -271,20 +268,11 @@ const Transfer: React.FC = () => {
           }
         >
           {isSubmitting ? (
-            <>
-              <TailSpin
-                height="20"
-                width="20"
-                color="#333333"
-                ariaLabel="tail-spin-loading"
-                radius="1"
-                wrapperStyle={{ display: "inline-block", marginRight: "10px" }}
-                wrapperClass="inline-block"
-              />
+            <ButtonLoadingContent>
               {isPending
                 ? t("transferForm.pending")
                 : t("transferForm.toBeConfirmed")}
-            </>
+            </ButtonLoadingContent>
           ) : (
             t("transferForm.send")
           )}

@@ -6,9 +6,10 @@ import { Info, TriangleAlert } from "lucide-react";
 import { toText, sanitizeNumericInput } from "@/utils/stringUtils";
 import { IckbDateType } from "@/cores/utils";
 import { CKB } from "@ickb/lumos-utils";
-import { TailSpin } from "react-loader-spinner";
 import { useTranslation } from "react-i18next";
 import { getWalletConfig } from "@/cores/config";
+import { formatError } from "@/utils/errorUtils";
+import { ButtonLoadingContent } from "./ButtonLoadingContent";
 
 
 const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = ({ ickbData, onUpdate }) => {
@@ -45,7 +46,7 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
             onUpdate()
             showNotification("success", t("ickbDeposit.depositSuccess", { hash: txHash }));
         } catch (error) {
-            showNotification("error", `${error}`);
+            showNotification("error", formatError(error));
 
         } finally {
             setTransTBC(false)
@@ -227,7 +228,7 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
 
             <button
                 onClick={handleSwap}
-                className="mt-4 w-full font-bold bg-btn-gradient text-gray-800 text-body-2 py-3 rounded-lg hover:bg-btn-gradient-hover transition duration-200 disabled:opacity-50 disabled:hover:bg-btn-gradient"
+                className="mt-4 flex h-12 w-full items-center justify-center rounded-lg bg-btn-gradient font-bold text-body-2 text-gray-800 transition duration-200 hover:bg-btn-gradient-hover disabled:opacity-50 disabled:hover:bg-btn-gradient"
                 disabled={(() => {
                     // try {
                     //   ccc.numFrom(amount);
@@ -239,17 +240,11 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
                 
             >
                
-                {transTBC ? (<>
-                    <TailSpin
-                        height="20"
-                        width="20"
-                        color="#333333"
-                        ariaLabel="tail-spin-loading"
-                        radius="1"
-                        wrapperStyle={{ 'display': 'inline-block', 'marginRight': '10px' }}
-                        wrapperClass="inline-block"
-                    /> {depositPending ? t("depositForm.pending") : t("ickbDeposit.toBeConfirmed")}
-                </>) :
+                {transTBC ? (
+                    <ButtonLoadingContent>
+                        {depositPending ? t("depositForm.pending") : t("ickbDeposit.toBeConfirmed")}
+                    </ButtonLoadingContent>
+                ) :
 
                     <>{debouncedAmount ? t("ickbDeposit.swap") : t("ickbDeposit.enterAmount")}
                     </>}

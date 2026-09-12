@@ -1,9 +1,10 @@
 import React, { useEffect, useState  } from "react";
 import { ccc } from "@ckb-ccc/connector-react";
 import { useNotification } from "@/context/NotificationProvider";
-import { TailSpin } from "react-loader-spinner";
 import { useTranslation } from "react-i18next";
 import { sanitizeNumericInput } from "@/utils/stringUtils";
+import { formatError } from "@/utils/errorUtils";
+import { ButtonLoadingContent } from "./ButtonLoadingContent";
 
 const DepositForm: React.FC = () => {
   const [amount, setAmount] = useState<string>("");
@@ -106,7 +107,7 @@ const DepositForm: React.FC = () => {
     } catch (error) {
       showNotification(
         "error",
-        error instanceof Error ? error.message : String(error)
+        formatError(error)
       );
     } finally {
       if (progressId) removeNotification(progressId);
@@ -197,7 +198,7 @@ const DepositForm: React.FC = () => {
 
       <button
         onClick={handleDeposit}
-        className="mt-4 w-full font-bold bg-btn-gradient text-gray-800 text-body-2 py-3 rounded-lg hover:bg-btn-gradient-hover transition duration-200 disabled:opacity-50 disabled:hover:bg-btn-gradient"
+        className="mt-4 flex h-12 w-full items-center justify-center rounded-lg bg-btn-gradient font-bold text-body-2 text-gray-800 transition duration-200 hover:bg-btn-gradient-hover disabled:opacity-50 disabled:hover:bg-btn-gradient"
         disabled={(() => {
           // try {
           //   ccc.numFrom(amount);
@@ -207,17 +208,15 @@ const DepositForm: React.FC = () => {
           return amount === "" || amount === "0" || !!transTbc;
         })()}
       >
-        {transTbc ? <>
-          <TailSpin
-            height="20"
-            width="20"
-            color="#333333"
-            ariaLabel="tail-spin-loading"
-            radius="1"
-            wrapperStyle={{ 'display': 'inline-block', 'marginRight': '10px' }}
-            wrapperClass="inline-block"
-          /> {depositPending ? t("depositForm.pending") : t("depositForm.toBeConfirmed")}
-        </> : t("depositForm.deposit")}
+        {transTbc ? (
+          <ButtonLoadingContent>
+            {depositPending
+              ? t("depositForm.pending")
+              : t("depositForm.toBeConfirmed")}
+          </ButtonLoadingContent>
+        ) : (
+          t("depositForm.deposit")
+        )}
       </button>
 
     </div>

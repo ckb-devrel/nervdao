@@ -1,11 +1,12 @@
 import { useGetExplorerLink } from "@/hooks/Explorer";
 import { useNotification } from "@/context/NotificationProvider";
 import { truncateString } from "@/utils/stringUtils";
+import { formatError } from "@/utils/errorUtils";
 import { ccc } from "@ckb-ccc/connector-react";
 import React, { useEffect, useState } from "react";
 import CircularProgress from "./CircularProgress";
 import { useTranslation } from "react-i18next";
-import { TailSpin } from "react-loader-spinner";
+import { ButtonLoadingContent } from "./ButtonLoadingContent";
 
 interface DaoDetailModalProps {
   isOpen: boolean;
@@ -89,7 +90,7 @@ export function DaoDepositDetailModal({
     } catch (error) {
       showNotification(
         "error",
-        error instanceof Error ? error.message : String(error)
+        formatError(error)
       );
     } finally {
       if (progressId) removeNotification(progressId);
@@ -222,23 +223,16 @@ export function DaoDepositDetailModal({
         </div>
 
         <button
-          className="w-full font-bold bg-btn-gradient text-gray-800 text-body-2 py-3 rounded-lg hover:bg-btn-gradient-hover transition duration-200 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-btn-gradient"
+          className="flex h-12 w-full items-center justify-center rounded-lg bg-btn-gradient font-bold text-body-2 text-gray-800 transition duration-200 hover:bg-btn-gradient-hover disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-btn-gradient"
           onClick={withdraw}
           disabled={isSubmitting}
         >
           {isSubmitting ? (
-            <>
-              <TailSpin
-                height="20"
-                width="20"
-                color="#333333"
-                ariaLabel="tail-spin-loading"
-                wrapperStyle={{ display: "inline-block", marginRight: "10px" }}
-              />
+            <ButtonLoadingContent>
               {isPending
                 ? t("daoDepositModal.pending")
                 : t("daoDepositModal.confirming")}
-            </>
+            </ButtonLoadingContent>
           ) : (
             t("daoDepositModal.redeem")
           )}

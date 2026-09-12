@@ -6,8 +6,9 @@ import { TriangleAlert } from "lucide-react";
 import { sanitizeNumericInput, toText } from "@/utils/stringUtils";
 import { IckbDateType } from "@/cores/utils";
 import { CKB } from "@ickb/lumos-utils";
-import { TailSpin } from "react-loader-spinner";
 import { useTranslation } from "react-i18next";
+import { formatError } from "@/utils/errorUtils";
+import { ButtonLoadingContent } from "./ButtonLoadingContent";
 
 
 const IckbWithdraw: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = ({ ickbData, onUpdate }) => {
@@ -42,7 +43,7 @@ const IckbWithdraw: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }>
             showNotification("success", t("ickbWithdraw.withdrawSuccess", { hash: txHash }));
             onUpdate()
         } catch (error) {
-            showNotification("error", t("ickbWithdraw.withdrawError", { error: `${error}` }));
+            showNotification("error", t("ickbWithdraw.withdrawError", { error: formatError(error) }));
         } finally {
             if (progressId) removeNotification(progressId)
             setAmount("")
@@ -168,7 +169,7 @@ const IckbWithdraw: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }>
             }
             <button
                 onClick={handleWithDraw}
-                className="mt-4 w-full font-bold bg-btn-gradient text-gray-800 text-body-2 py-3 rounded-lg hover:bg-btn-gradient-hover transition duration-200 disabled:opacity-50 disabled:hover:bg-btn-gradient"
+                className="mt-4 flex h-12 w-full items-center justify-center rounded-lg bg-btn-gradient font-bold text-body-2 text-gray-800 transition duration-200 hover:bg-btn-gradient-hover disabled:opacity-50 disabled:hover:bg-btn-gradient"
                 disabled={(() => {
                     // try {
                     //   ccc.numFrom(amount);
@@ -178,17 +179,11 @@ const IckbWithdraw: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }>
                     return amount === ""|| amount === "0"|| !!transTBC;
                   })()}
             >
-                {transTBC ? (<>
-                    <TailSpin
-                        height="20"
-                        width="20"
-                        color="#333333"
-                        ariaLabel="tail-spin-loading"
-                        radius="1"
-                        wrapperStyle={{ 'display': 'inline-block', 'marginRight': '10px' }}
-                        wrapperClass="inline-block"
-                    /> {withdrawPending ? t("depositForm.pending") : t("ickbWithdraw.toBeConfirmed")}
-                </>) :
+                {transTBC ? (
+                    <ButtonLoadingContent>
+                        {withdrawPending ? t("depositForm.pending") : t("ickbWithdraw.toBeConfirmed")}
+                    </ButtonLoadingContent>
+                ) :
 
                     <>{amount ? t("ickbWithdraw.withdraw") : t("ickbWithdraw.enterAmount")}
                     </>}

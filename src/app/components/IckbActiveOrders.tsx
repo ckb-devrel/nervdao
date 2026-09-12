@@ -5,12 +5,13 @@ import { IckbDateType } from "@/cores/utils";
 import { IckbRecepitsItems } from "./IckbRecepitsItems";
 import { ccc } from "@ckb-ccc/connector-react";
 import { useNotification } from "@/context/NotificationProvider";
-import { TailSpin } from "react-loader-spinner";
 import ReactDOMServer from "react-dom/server";
 import { Info } from "lucide-react";
 import IckbOrderInfo from "./IckbOrderInfo";
 import { IckbModal } from "./IckbModal";
 import { useTranslation } from "react-i18next";
+import { formatError } from "@/utils/errorUtils";
+import { ButtonLoadingContent } from "./ButtonLoadingContent";
 
 const IckbActiveOrders: React.FC<{ walletConfig: WalletConfig, ickbData: IckbDateType, onUpdate: VoidFunction }> = ({ walletConfig, ickbData, onUpdate }) => {
     const signerCcc = ccc.useSigner();
@@ -38,7 +39,7 @@ const IckbActiveOrders: React.FC<{ walletConfig: WalletConfig, ickbData: IckbDat
             // setMeltTBC(false)
             showNotification("success", t("ickbActiveOrders.meltSuccess", { hash: txHash }));
         } catch (error) {
-            showNotification("error", `${error}`);
+            showNotification("error", formatError(error));
 
         } finally {
             if (progressId) removeNotification(progressId)
@@ -83,21 +84,16 @@ const IckbActiveOrders: React.FC<{ walletConfig: WalletConfig, ickbData: IckbDat
                     </span>
                     {canMelt &&
                         <button
-                            className="font-bold ml-2 bg-melt-gradient text-gray-800 text-body-2 w-[123px] h-[36px] rounded-lg hover:bg-melt-gradient-hover transition duration-200  disabled:melt-disabled-gradient disabled:hover:bg-btn-gradient hidden sm:block "
+                            className="ml-2 hidden h-[36px] w-[123px] items-center justify-center rounded-lg bg-melt-gradient font-bold text-body-2 text-gray-800 transition duration-200 hover:bg-melt-gradient-hover disabled:melt-disabled-gradient disabled:hover:bg-btn-gradient sm:flex"
 
                             onClick={() => handleMelt()}
                             disabled={meltTBC}
                         >
-                            {meltTBC && <TailSpin
-                                height="12"
-                                width="12"
-                                color="#333333"
-                                ariaLabel="tail-spin-loading"
-                                radius="1"
-                                wrapperStyle={{ 'display': 'inline-block', 'marginRight': '10px' }}
-                                wrapperClass="inline-block"
-                            />}
-                            {t("ickbActiveOrders.extract")}
+                            {meltTBC ? (
+                                <ButtonLoadingContent size={12}>
+                                    {t("ickbActiveOrders.extract")}
+                                </ButtonLoadingContent>
+                            ) : t("ickbActiveOrders.extract")}
                         </button>}
                 </h3>
                 <div className="pb-2  grid lg:grid-cols-2 gap-2">
@@ -147,20 +143,15 @@ const IckbActiveOrders: React.FC<{ walletConfig: WalletConfig, ickbData: IckbDat
                     {canMelt &&
 
                         <button
-                            className="font-bold sm:ml-2 bg-melt-gradient text-gray-800 text-body-2 w-full h-[44px] rounded-lg hover:bg-melt-gradient-hover transition duration-200 disabled:melt-disabled-gradient disabled:hover:bg-btn-gradient block sm:hidden "
+                            className="flex h-[44px] w-full items-center justify-center rounded-lg bg-melt-gradient font-bold text-body-2 text-gray-800 transition duration-200 hover:bg-melt-gradient-hover disabled:melt-disabled-gradient disabled:hover:bg-btn-gradient sm:ml-2 sm:hidden"
                             onClick={() => handleMelt()}
                             disabled={meltTBC}
                         >
-                            {meltTBC && <TailSpin
-                                height="12"
-                                width="12"
-                                color="#333333"
-                                ariaLabel="tail-spin-loading"
-                                radius="1"
-                                wrapperStyle={{ 'display': 'inline-block', 'marginRight': '10px' }}
-                                wrapperClass="inline-block"
-                            />}
-                            {t("ickbActiveOrders.meltAll")}
+                            {meltTBC ? (
+                                <ButtonLoadingContent size={12}>
+                                    {t("ickbActiveOrders.meltAll")}
+                                </ButtonLoadingContent>
+                            ) : t("ickbActiveOrders.meltAll")}
                         </button>}
             </div>
             {infoOpen&& <IckbModal isOpen={infoOpen} onClose={()=>setInfoOpen(false)} infos={IckbOrderInfo({ whatAreActiveOrders: t("ickbOrderInfo.whatAreActiveOrders"), desc: t("ickbOrderInfo.desc"), pendingOrders: t("ickbOrderInfo.pendingOrders"), pendingOrdersDesc: t("ickbOrderInfo.pendingOrdersDesc"), completedOrders: t("ickbOrderInfo.completedOrders"), completedOrdersDesc: t("ickbOrderInfo.completedOrdersDesc"), tip: t("ickbOrderInfo.tip"), tipDesc: t("ickbOrderInfo.tipDesc") })} />}

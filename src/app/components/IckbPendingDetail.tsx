@@ -1,5 +1,6 @@
 'use client'
 import React from "react";
+import { formatError } from "@/utils/errorUtils";
 
 import UseSorter, { SortDirection, ArrowProps, Column, SorterObj } from "@/hooks/UseSorter";
 import ClipLoader from "react-spinners/ClipLoader";
@@ -36,7 +37,7 @@ const IckbPendingDetail: React.FC<PendingLisrProps> = (props: PendingLisrProps) 
             const diffInHoutrs = Math.floor(diffInMilliseconds / (1000 * 60 * 60));
             return diffInHoutrs;
         } catch (error) {
-            return "Error calculating days difference: " + error;
+            return "Error calculating days difference: " + formatError(error);
         }
     };
     const handleOnClick = (

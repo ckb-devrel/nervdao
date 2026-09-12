@@ -2,13 +2,14 @@ import React, { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
 import { ccc } from "@ckb-ccc/connector-react";
 import { truncateString } from "@/utils/stringUtils";
+import { formatError } from "@/utils/errorUtils";
 import Link from "next/link";
 import CircularProgress from "./CircularProgress";
 import { useGetExplorerLink } from "@/hooks/Explorer";
 import { useNotification } from "@/context/NotificationProvider";
 import { getClaimEpoch } from "@/utils/epoch";
 import { useTranslation } from "react-i18next";
-import { TailSpin } from "react-loader-spinner";
+import { ButtonLoadingContent } from "./ButtonLoadingContent";
 
 interface DaoWithdrawDetailModalProps {
   isOpen: boolean;
@@ -141,7 +142,7 @@ export function DaoWithdrawDetailModal({
     } catch (error) {
       showNotification(
         "error",
-        error instanceof Error ? error.message : String(error)
+        formatError(error)
       );
     } finally {
       if (progressId) removeNotification(progressId);
@@ -289,23 +290,16 @@ export function DaoWithdrawDetailModal({
         </div>
 
         <button
-          className="w-full font-bold bg-btn-gradient text-gray-800 text-body-2 py-3 rounded-lg hover:bg-btn-gradient-hover transition duration-200 disabled:opacity-50 disabled:hover:bg-btn-gradient"
+          className="flex h-12 w-full items-center justify-center rounded-lg bg-btn-gradient font-bold text-body-2 text-gray-800 transition duration-200 hover:bg-btn-gradient-hover disabled:opacity-50 disabled:hover:bg-btn-gradient"
           onClick={withdraw}
           disabled={remainingDays >= 0 || isSubmitting}
         >
           {isSubmitting ? (
-            <>
-              <TailSpin
-                height="20"
-                width="20"
-                color="#333333"
-                ariaLabel="tail-spin-loading"
-                wrapperStyle={{ display: "inline-block", marginRight: "10px" }}
-              />
+            <ButtonLoadingContent>
               {isPending
                 ? t("daoWithdrawModal.pending")
                 : t("daoWithdrawModal.confirming")}
-            </>
+            </ButtonLoadingContent>
           ) : (
             t("daoWithdrawModal.withdraw")
           )}
