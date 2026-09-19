@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@ckb-ccc/connector-react':
-        specifier: 2.1.5
-        version: 2.1.5(@types/react@19.2.18)(react-native@0.87.1(@babel/core@7.29.7)(@types/react@19.2.18)(react@19.2.8))(react@19.2.8)(typescript@5.9.3)(zod@4.4.3)
+        specifier: 2.1.6
+        version: 2.1.6(@types/react@19.2.18)(react-native@0.87.1(@babel/core@7.29.7)(@types/react@19.2.18)(react@19.2.8))(react@19.2.8)(typescript@5.9.3)(zod@4.4.3)
       '@ckb-lumos/base':
         specifier: ^0.23.0
         version: 0.23.0
@@ -198,14 +198,14 @@ packages:
   '@ckb-ccc/ccc@1.3.4':
     resolution: {integrity: sha512-AeQajSGH0EM6ac4saDjVgfbuK1NdyQZhWtQB1X+nxSFOrzPtSbJ2EDYm2cinAWjwJ6u9JkeAS8fvB7Az6k2mpg==}
 
-  '@ckb-ccc/connector-react@2.1.5':
-    resolution: {integrity: sha512-B6d8F/A70fxB0ruh5v6llFnQxX6sV1HMKcGoXm9PEeWV/p1LRUiO7o1li6uUXU0iOfTWztTqBAbLdQ0mCJqAeA==}
+  '@ckb-ccc/connector-react@2.1.6':
+    resolution: {integrity: sha512-t3rqvKI8TCXBTKYaRyPAZV5rVCv/ezAgAJ93YJsxr/T/3v0/L1BUnjh2WUWKJfBCxHiBG4mVgFtqGHkLiV2EkA==}
     peerDependencies:
       '@types/react': '>=16'
       react: '>=16'
 
-  '@ckb-ccc/connector@2.2.3':
-    resolution: {integrity: sha512-qSZ4dUdyeGtVdvsmiykJGr+bHBeCZd+H1VYlc3CT/4vm95pUaWw+d3QSPyRFlcORI/DD7yAAUT+g7lvUPXAGHA==}
+  '@ckb-ccc/connector@2.2.4':
+    resolution: {integrity: sha512-5iF6iP8WwlDCshgWd31/XlYAKY+I4U7pjJsbAdh27mUBCR6G39qJ2EHO+6HUDZj6V3vGiskrE73RbzmZHdPOpQ==}
 
   '@ckb-ccc/core@1.22.0':
     resolution: {integrity: sha512-h/V1JyHsAiI674PHhDRyxewo8MSj7BdeVH87KlOoppvyhzIICN3kI1hJMzLbK5cZEnQp7Rgx7EOPe7671F5ibg==}
@@ -3852,9 +3852,9 @@ snapshots:
       - utf-8-validate
       - zod
 
-  '@ckb-ccc/connector-react@2.1.5(@types/react@19.2.18)(react-native@0.87.1(@babel/core@7.29.7)(@types/react@19.2.18)(react@19.2.8))(react@19.2.8)(typescript@5.9.3)(zod@4.4.3)':
+  '@ckb-ccc/connector-react@2.1.6(@types/react@19.2.18)(react-native@0.87.1(@babel/core@7.29.7)(@types/react@19.2.18)(react@19.2.8))(react@19.2.8)(typescript@5.9.3)(zod@4.4.3)':
     dependencies:
-      '@ckb-ccc/connector': 2.2.3(react-native@0.87.1(@babel/core@7.29.7)(@types/react@19.2.18)(react@19.2.8))(typescript@5.9.3)(zod@4.4.3)
+      '@ckb-ccc/connector': 2.2.4(react-native@0.87.1(@babel/core@7.29.7)(@types/react@19.2.18)(react@19.2.8))(typescript@5.9.3)(zod@4.4.3)
       '@lit/react': 1.0.8(@types/react@19.2.18)
       '@types/react': 19.2.18
       react: 19.2.8
@@ -3868,7 +3868,7 @@ snapshots:
       - utf-8-validate
       - zod
 
-  '@ckb-ccc/connector@2.2.3(react-native@0.87.1(@babel/core@7.29.7)(@types/react@19.2.18)(react@19.2.8))(typescript@5.9.3)(zod@4.4.3)':
+  '@ckb-ccc/connector@2.2.4(react-native@0.87.1(@babel/core@7.29.7)(@types/react@19.2.18)(react@19.2.8))(typescript@5.9.3)(zod@4.4.3)':
     dependencies:
       '@chainsafe/libp2p-noise': 17.0.0
       '@chainsafe/libp2p-yamux': 8.0.1
