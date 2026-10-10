@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@ckb-ccc/connector-react':
-        specifier: 2.1.6
-        version: 2.1.6(@types/react@19.3.0)(react-native@0.87.1(@babel/core@7.29.7)(@types/react@19.3.0)(react@19.3.0))(react@19.3.0)(typescript@5.9.3)(zod@4.6.5)
+        specifier: 2.2.2
+        version: 2.2.2(@types/react@19.3.0)(react-native@0.87.1(@babel/core@7.29.7)(@types/react@19.3.0)(react@19.3.0))(react@19.3.0)(typescript@5.9.3)(zod@4.6.5)
       '@ckb-lumos/base':
         specifier: ^0.23.0
         version: 0.23.0
@@ -199,65 +199,65 @@ packages:
   '@chainsafe/netmask@2.0.0':
     resolution: {integrity: sha512-I3Z+6SWUoaljh3TBzCnCxjlUyN8tA+NAk5L6m9IxvCf1BENQTePzPMis97CoN/iMW1St3WN+AWCCRp+TTBRiDg==}
 
-  '@ckb-ccc/ccc@1.3.4':
-    resolution: {integrity: sha512-AeQajSGH0EM6ac4saDjVgfbuK1NdyQZhWtQB1X+nxSFOrzPtSbJ2EDYm2cinAWjwJ6u9JkeAS8fvB7Az6k2mpg==}
+  '@ckb-ccc/ccc@1.3.6':
+    resolution: {integrity: sha512-lNX4Q3ymx1dhy6PC0ljheWP9ZkILTFR+1aTRR8jdAZrr6yqykYIlJ5EDKNKD0NFWvgP4Ncao98RGU70DFpirnQ==}
 
-  '@ckb-ccc/connector-react@2.1.6':
-    resolution: {integrity: sha512-t3rqvKI8TCXBTKYaRyPAZV5rVCv/ezAgAJ93YJsxr/T/3v0/L1BUnjh2WUWKJfBCxHiBG4mVgFtqGHkLiV2EkA==}
+  '@ckb-ccc/connector-react@2.2.2':
+    resolution: {integrity: sha512-oCKX/UGeKAFNXiymCbXheW/ZG76AMQwfEacUQvFfgjQ9kIQSDfVuHN1XAVWgtfoslEJ6Rtaexy0qLStrq9m8HQ==}
     peerDependencies:
       '@types/react': '>=16'
       react: '>=16'
 
-  '@ckb-ccc/connector@2.2.4':
-    resolution: {integrity: sha512-5iF6iP8WwlDCshgWd31/XlYAKY+I4U7pjJsbAdh27mUBCR6G39qJ2EHO+6HUDZj6V3vGiskrE73RbzmZHdPOpQ==}
+  '@ckb-ccc/connector@2.3.2':
+    resolution: {integrity: sha512-HsNZ1g0N51Jkjj5/vTjFrbD2lIQ+BhsdZpXTVP3hqsJRMim+AArLkmW07VWoRoB78Ngj6SclTw7GrF7TftYXnw==}
 
-  '@ckb-ccc/core@1.22.0':
-    resolution: {integrity: sha512-h/V1JyHsAiI674PHhDRyxewo8MSj7BdeVH87KlOoppvyhzIICN3kI1hJMzLbK5cZEnQp7Rgx7EOPe7671F5ibg==}
+  '@ckb-ccc/core@1.23.0':
+    resolution: {integrity: sha512-lYCEgsONTqhOBfdqJERtsO1uZbydTn8SR7og1mEhVKSOpdSCc3P6D5SSWYnTL37m3+HLYhW/luA2pOcZkZhhjw==}
 
-  '@ckb-ccc/did-ckb@0.2.13':
-    resolution: {integrity: sha512-txgLxNJUr0IFHnITWdVUfYCjMEwjDnGbZ+x2UrFC6oTj/7NQepFv+cu48EKXGrPuidQxDwW1iE9jCINImgHa3g==}
+  '@ckb-ccc/did-ckb@0.2.15':
+    resolution: {integrity: sha512-B2Yz5pj60ddY4KH+HppOM1jvWDYBJcwqvsr6yCObpoPcDS5BZi+MnyYZONDg07T+s0IDF/kzDtLxHD1QAGXHbg==}
 
-  '@ckb-ccc/eip6963@1.1.13':
-    resolution: {integrity: sha512-X83URXAu0OGBL3SfPtOgADHaubdhwCjRe5kWzhpvKLPYQe+mQ2ON1fdq/bbhJgWVmILDG6HTbHzXqBYFV3Fqgg==}
+  '@ckb-ccc/eip6963@1.1.15':
+    resolution: {integrity: sha512-4/z/PzhMUhzgWMVIM+hddGcZKNxvvmD/VsSQ2nmydiboHbH38ofO81lwVc1ghYMRr5ojdNjgFAUazJrrNwK/VA==}
 
-  '@ckb-ccc/joy-id@1.2.4':
-    resolution: {integrity: sha512-kFFDsGj3BY1J02QfvZpJqDVGAkxFzRFBljgXOSW5LnGYp/+hhEpAfD46SsHKhZEbhLRTT+g6YLRM62ptyykHLQ==}
+  '@ckb-ccc/joy-id@1.2.6':
+    resolution: {integrity: sha512-KczLTb5qBdjZXh8+WAkn/Y7qthr8satwa5UzXTlTLcKjkNuWtfLzp1V5FCpJPzSVnMmeC8vs8nc/elfNBhkVGA==}
 
-  '@ckb-ccc/libp2p@0.3.0':
-    resolution: {integrity: sha512-Yjiol9x34dxJYq3WwoOVI0DbbFD7cdMx+ECwOLwFmXMspqZc8PcrhwYVeVrKPHcpoIExrBoqKgPQIsHqqP3EsA==}
+  '@ckb-ccc/libp2p@0.3.2':
+    resolution: {integrity: sha512-Vd83xpvLY122hROlISg7OtK0h2BRJCxBMXbP2eWJVq0WXrIGOnjFTUrWHdIjZqUYRYu03u/nGfsYifoAE+LA1Q==}
 
-  '@ckb-ccc/nip07@1.1.13':
-    resolution: {integrity: sha512-AoIM7KCUI1H+apfYnsEiE1abxGCT8MIjmpizY+LpDd3au96sxtNJXnOuoKd5X+IB9r2mMbIvaeXWOE/xhkMsoA==}
+  '@ckb-ccc/nip07@1.1.15':
+    resolution: {integrity: sha512-X5TyCxqFhC2lyoRbOgMHzFNrauFULFyl5D9ww5PRVktPQxcTxa96QjxX2DV1W0zJ0Y/j2nk1OcbxABWyGwWrxw==}
 
-  '@ckb-ccc/okx@1.2.4':
-    resolution: {integrity: sha512-7qmYsfwqml+h6AEziP93qHg/cNgAqWBRIoaJwZHJ7KQha3CIeWSR6tiRiBe/+cZLIcLvqqXmiOXkzXEy2/TTfA==}
+  '@ckb-ccc/okx@1.2.6':
+    resolution: {integrity: sha512-fiyh4MqVpOxRnO5jUduD8bUKi4iOTfVWopbM4ogWX/sSKbKUh7+JyNR1cONgcWloOgFgvK5JGc1YGgmMKVRTAg==}
 
-  '@ckb-ccc/rei@1.1.13':
-    resolution: {integrity: sha512-s+MhPYe9Wh3EHGWRyrXe+L6KMoLiuKSOxNMb08Kt1k8v4y6mfydK6eDvUUA6siEV/3139/jidPEsVFcdAc/B5A==}
+  '@ckb-ccc/rei@1.1.15':
+    resolution: {integrity: sha512-xo5R2LBMvV+ITcqr99oWLSXKpOGSWp+339IcFwt+vP6og3iV8oUVISBE6/1mtlu5jd13pxPEl/0EiRVJ92ybWw==}
 
-  '@ckb-ccc/shell@1.3.13':
-    resolution: {integrity: sha512-BgU/CC6bOCPkLfjSi/DMjgrxrcHo+55l6wW4YOJP6XwfTXNgUBwGL7usq0f774stvcl0JLNCFOhRL9K6IxnHtQ==}
+  '@ckb-ccc/shell@1.3.15':
+    resolution: {integrity: sha512-zXKbLEJpJjEIR6EJq9a2Mj6mLSaqKqpzXwotDqvRUlhCFwtIbWUWIP/TfQ4SNQKrPAuK0ilKTSbIc2UAT/ExaA==}
 
-  '@ckb-ccc/spore@1.6.13':
-    resolution: {integrity: sha512-gHwBS4OwYtkx1BhU2O/NXWQbfucDobNw4bdaOwjYcIzNOZI9L+cIYkTEEolxwvMuQYzcavSikfR+r1ljILnijQ==}
+  '@ckb-ccc/spore@1.6.15':
+    resolution: {integrity: sha512-baLLgBG8AN7QLif9pwnon7r5eivqIh1wY1Lbijiys8F2GkyU3eFyusNUFecFqLLvhYCHPauyqQloD78tZBCk0w==}
 
-  '@ckb-ccc/ssri@0.4.3':
-    resolution: {integrity: sha512-ORGVaWHncFFVFmke9NzwvThkVvNKKjaCsL2YWFVecJJLsoyw6Zi+uyaF06UBcIZ5tQAf35M7YO/MCuwZYDzBRA==}
+  '@ckb-ccc/ssri@0.4.5':
+    resolution: {integrity: sha512-7Ixi3NoAo2Pqm0D1E4vVcSieqO4inBhrc4rsZapiCdycMALN+vGQlzQ4H2+J+78SNJx5MYzdJmZsb3lLldMPYA==}
 
-  '@ckb-ccc/type-id@0.1.13':
-    resolution: {integrity: sha512-lk/tQ5lqJ+lt2gALXkiOiU1lvjr6Qiuo+dG2cCvEkLzcm4Q30i85RJE3a0NiL8U6dwnsIcqHbUKr2qhmRDZMiw==}
+  '@ckb-ccc/type-id@0.1.15':
+    resolution: {integrity: sha512-x1DbaAnq+NcxSGaeYNbGt5fXgjbV84bmtIHbd0RdTixchxvgpenhPDpqLZS/jIWW40R5BR5HiTn5HW/n8zWwDA==}
 
-  '@ckb-ccc/udt@0.2.13':
-    resolution: {integrity: sha512-GhqEOOGLOGPSOrmgM5NHPiHql4H5DRDDy/v8spdcze4/X5olSowByqgrAvVhp39GcAhY55+tJToW8qvg7ynoag==}
+  '@ckb-ccc/udt@0.2.15':
+    resolution: {integrity: sha512-W8Vhfv0l1BhKyYm+FEJ5UUyp/S2ol1IMKCN4DJJMn3aF1sRaYtCXWYI87JITpXlI3mkAj6MAw5vaaxb8HnHepQ==}
 
-  '@ckb-ccc/uni-sat@1.2.4':
-    resolution: {integrity: sha512-6LvCHnpZ7dVOHFBnLY1crhKdV4GWzempLzEty1msvJxHq7aEtFsPjaZNC6cv8IpvrwzlNuO47Iige1NsREsafA==}
+  '@ckb-ccc/uni-sat@1.2.6':
+    resolution: {integrity: sha512-BsWxBOb15P3mbiAt54lg3e8ayUsd8PN1GeiTGuwAITrEnZ35eBaAVsQvldOpH22qGCTqIbZDNlE4vjhRdx5f1A==}
 
-  '@ckb-ccc/utxo-global@1.2.4':
-    resolution: {integrity: sha512-qlJHSXimgewkpIJee5gFcbeojT1IHZ+xIYIEG8V5HWAG1ulrcmgStO4rC7B3ouDj8mXOWZL6WjcBoHudwaIjCQ==}
+  '@ckb-ccc/utxo-global@1.2.6':
+    resolution: {integrity: sha512-1Qs0QSN6XuhgLsIwGQKxRCF3Ts3EVcNIXaYWBH+uDFS+apYQWK/vGdypVe8jY9/PUZ9m7EJnvSdj6gB7KM00ng==}
 
-  '@ckb-ccc/xverse@1.2.4':
-    resolution: {integrity: sha512-XXH34s+La64E18yE5OIySdvTEWt095BpYc/j8S1ajnhviNuBixvvHcTYfpHMuiWDnZdZKicIOshUoOYDNJhSww==}
+  '@ckb-ccc/xverse@1.2.6':
+    resolution: {integrity: sha512-sPsEGmGAwbQWACFxmek/7nzRzStsoaoCWyCTe2StftxfcTnTZn7CLbh5bB2NVjl7Fz/RmMZTCKoeYlWAV9evZQ==}
 
   '@ckb-lumos/base@0.23.0':
     resolution: {integrity: sha512-8aLFsUyWIK0rT7GQlYFuXyiG5lQ2bLRK2GvUsxv5G7I3nJ1UyxjwvVOdtlsR/cwhzOam3ujwqASqBIayBL6GLA==}
@@ -603,53 +603,53 @@ packages:
   '@leichtgewicht/ip-codec@2.0.5':
     resolution: {integrity: sha512-Vo+PSpZG2/fmgmiNzYK9qWRh8h/CHrwD0mo1h1DzL4yzHNSfWYujGTYsWGreD000gcgmZ7K4Ys6Tx9TxtsKdDw==}
 
-  '@libp2p/circuit-relay-v2@4.2.13':
-    resolution: {integrity: sha512-AGEzj72W7Ae5eizaM+HeDzJBR28zK4yYp4BYvUOHQViT62W97FIITo/9Gc5rlkKti+gJJAurBm3cHV4A8Wcoxw==}
+  '@libp2p/circuit-relay-v2@4.2.14':
+    resolution: {integrity: sha512-5z4HRCXZDVH5q9u49+l/Ssmv0oW5hLNCDwM17PrG+kdLSFIc5r36JiyEBze+6b9YSvz2MM1fLWdHcZbIS1bmCQ==}
 
-  '@libp2p/crypto@5.1.23':
-    resolution: {integrity: sha512-u6XVMD1YpUJgjS5MAayrxlzi+hQcj3FHY0wS6/M/T93ntyCW13BmmRzFb2ESamk65PEuSCAChmQeSzRV2sh2rQ==}
+  '@libp2p/crypto@5.1.24':
+    resolution: {integrity: sha512-iGRbgb8dLoN7z9nn7xDKZfF+m8pyGVIpNwjzBbzimx/tdfhVAFIYPY58kTRIntpvSvEqQn3lF16TTFbuhV3igQ==}
 
-  '@libp2p/identify@4.1.14':
-    resolution: {integrity: sha512-c7oU0DSKzkMNsanruOQc4Zy6mSf3fq8/W+4E/I936HiHZc/LIbUuCWaxbgmQexdfKqECH1qH4q9IwaCUWmjPMQ==}
+  '@libp2p/identify@4.1.15':
+    resolution: {integrity: sha512-suX3WsebzlP7zDlM2NTGQ+NRWETvaQ0y33L6NkOgZXCtOVTn+qOs73pYAfLmuLh/aEvaNctcHGhKWFxYsXdtEA==}
 
-  '@libp2p/interface-internal@3.1.13':
-    resolution: {integrity: sha512-+vjQzpQl+0uoWCyNwV5NDnv1RAK9LDeWGeMbx/Fl2ZWrndtuFUPa9LxwqHXrTly6YOhgUatSzVqZBWnrQ1PxGg==}
+  '@libp2p/interface-internal@3.1.14':
+    resolution: {integrity: sha512-vmik4OOWnYur7/LI/mJNOxfY9oztHnimFdcGEYQVKPSGyIiE5ryIzJeKJ9FoUFA9I+W1YeMOryilyd4qrnCBnA==}
 
-  '@libp2p/interface@3.3.0':
-    resolution: {integrity: sha512-SXahM/4IgpiFKTtocbXYSTA1wEUVjktmT1yBCzBbc2Vgsu1VBCg6SvsFmXo2Hbeyev3D8EU+y3uaCKDB43C/Vg==}
+  '@libp2p/interface@3.3.1':
+    resolution: {integrity: sha512-o+C4OAW+7HWUDylczSxkX/67HRYtSyKj5wAwNXu3CZnfPBw7x2/mvKT7GoHgEvIpW/5VddsSFt+e8CpmldFkHA==}
 
-  '@libp2p/keychain@6.1.7':
-    resolution: {integrity: sha512-kemRM/37UXfkqmZsFFIsICX8iMX3TUShYGaRL7xXqNq3oIebm12e54DW1dtDuUnpNLctdF6zWPPelUHQm50Szg==}
+  '@libp2p/keychain@6.1.8':
+    resolution: {integrity: sha512-wC9C/DwJYRh60G1BGWejdh0U25MEQ2osuTXYe7csO7ZXkXj09yFp1h9vsuw0d+7Bc22tjubMmA5BUXxRrkJeKA==}
 
-  '@libp2p/logger@6.2.13':
-    resolution: {integrity: sha512-+tkZuRPoiFdh+frG//3hQ3goV1uMzRblpZ+mwtezgLXkRNqB5YKBLl+c/rtrurwAUqjCuI/yoEPJBiCizg2z6w==}
+  '@libp2p/logger@6.2.14':
+    resolution: {integrity: sha512-bkKefJTuVWK350bsRHNasbBpQ2YPsSnIOQhv8/olsXNIUDrbNQg0vcdkc7/xTuClSqc2zzRjbwuayI2yecP92A==}
 
-  '@libp2p/multistream-select@7.0.28':
-    resolution: {integrity: sha512-X6rmxeAlFeTDHDc4IPujz+y9TdA8cSMFfWyGJfxdIbQpDc1PwZI/Ttt3YWp0LAT9sbSYVFaWA6cGTN9EnMWtGQ==}
+  '@libp2p/multistream-select@7.0.29':
+    resolution: {integrity: sha512-OOF3mCpP7L0YfyFJyftZpI7zBc2kQuDOq1NJ8se5SuNKaWV66kskNFj0bM0u70cYBmj6GHxAwLXCs/O6uUbc+Q==}
 
-  '@libp2p/noise@17.0.2':
-    resolution: {integrity: sha512-FY83yQf4/aqqiJHY6XB5aO7vtst6mMoy0r/vGsnTaosaYQ6g9xwkNbTq/juzTXjRbz9pBVkp62zXKJrXmm9G3w==}
+  '@libp2p/noise@17.0.4':
+    resolution: {integrity: sha512-THyMhh3UGDVMbFbEJIWAGufRXRtfOqyCNawsRwSiWH1rJOZ65egnIUZDwj/XlHkiFZJmc2p3b1mn3Bi+BUJXSg==}
 
-  '@libp2p/peer-collections@7.0.28':
-    resolution: {integrity: sha512-+evafZ5oSnGRfB7z+ycf09ehzNhCKoOZaiHgi6TpnDitpRQM5KQeN0H9Ep2uNJtzyW944HOG41BqcSaHbEHv7Q==}
+  '@libp2p/peer-collections@7.0.29':
+    resolution: {integrity: sha512-qpvXWeBmYC0neY9k3dEEpR2EaCTVO6TThHLDlsOB04d/nguC2W0rPPK31sVDeULkyoF9CN6IgbOoAtXsKr83Qg==}
 
-  '@libp2p/peer-id@6.0.15':
-    resolution: {integrity: sha512-aIbYJcldMNOIzmm9J57aESjZInYFdrQ9AY0ij+qn0Oam2vBxDfEIJZxJu+JzVkB2rVvT+FHDQXKWT2nAqNgB8w==}
+  '@libp2p/peer-id@6.0.16':
+    resolution: {integrity: sha512-HnoPT+DA4fGb19/iZrhmNvlyawFCavGNRK/WwM+hp3D+N02XKJ/E+IjB+13iABAzhnyBRk5DTZsl2iiGHpuc7A==}
 
-  '@libp2p/peer-record@9.0.16':
-    resolution: {integrity: sha512-J4QoPr0F1v6xqjHjAJ9KPbg4jdDlGutDk2K3Km6+o0nWzZCgCGeSEIDOO2UvPa2bFoZTL62cD73fn8tm5K06cg==}
+  '@libp2p/peer-record@9.0.17':
+    resolution: {integrity: sha512-GMDBabHAwpM604deTgA6c6iV0nH8EVDlHVCicM8/Wm4qQXAMb6jfEvKRtG6sQ4AGh5uBUsbLFD9V8nDIV6j0pA==}
 
-  '@libp2p/peer-store@12.0.28':
-    resolution: {integrity: sha512-dj4qRhN01kml/It5/4P4DVcjfEZXJ2uZVVItCrs2YBGG2HLEYfWQZYROVbTCXDOCWwZK46aJ8eSLt4orsefq7Q==}
+  '@libp2p/peer-store@12.0.29':
+    resolution: {integrity: sha512-QVTqOMjCoVbD2UAH6XiDdd8IjAlfAdoS+sSVyWiVwqEjMzfdg1QwBnZ13XDEiLcKG7B1YB2SqyDNk/2q1G898Q==}
 
-  '@libp2p/utils@7.4.1':
-    resolution: {integrity: sha512-e9cZeop+awI0rFczG4DvAwVeHqBhuCZfTyskvgONfKQrsT7L0BSlTlTTzZoFF8Dnb+QrzHsoIpnl0PrCr0h+Hg==}
+  '@libp2p/utils@7.4.2':
+    resolution: {integrity: sha512-OWAhPCtvWXPwrkViNxnv8Tqwl5J+s65uGm0Hj6a6cft2lllMhjTEA2ZhR/m2XYMdHWSnjCbvHrqPvAjJX3GcsA==}
 
-  '@libp2p/webrtc@6.0.32':
-    resolution: {integrity: sha512-XJTKNlsVh6v0LqbvBUFQqlwxHEQRA8KW8W2aLEZrjf8NtIww6BYozsaYVe+0W6ujjZWHjTkVjUwPgVqbIPzNFA==}
+  '@libp2p/webrtc@6.1.0':
+    resolution: {integrity: sha512-fEwM34KUzKHB3vvLhiExSG5ZtQFY6If8zRedt9JgNS1+Tcfgy0glN2WeqlGGjxOJUVnP3tqn7xTg7xJ9ebNPvA==}
 
-  '@libp2p/websockets@10.1.21':
-    resolution: {integrity: sha512-2iItZGEfTlGFUEcFCghtlsIiQ+fBowopysBB/8ya0MvZkRic/6o9oSklWT5pWDmXtmqmbp1Dko/iLcBOhDOgFw==}
+  '@libp2p/websockets@10.1.22':
+    resolution: {integrity: sha512-X2s3xfFnVW/uuPKfYsfbypN4Kzyqodpdj/Gtd8tEXPX5pmGAZyet65tEhRiJCD3DlDmMDyHn/S/TKvnPIjz3zw==}
 
   '@lit-labs/ssr-dom-shim@1.6.0':
     resolution: {integrity: sha512-VHb0ALPMTlgKjM6yIxxoQNnpKyUKLD04VzeQdsiXkMqkvYlAHxq9glGLmgbb889/1GsohSOAjvQYoiBppXFqrQ==}
@@ -741,15 +741,15 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@noble/ciphers@2.3.0':
-    resolution: {integrity: sha512-Clu/xdfgVTf9o7ngLOURaxePwR0j8sjclKEtVij10/jGulwFsPWCvvRgG/XjUVf8Nei+jLG6uwyXzUTGY1DQrw==}
+  '@noble/ciphers@2.4.0':
+    resolution: {integrity: sha512-AnjFn0Jv92laAkvMrghlFZq4qQCIN/4DxFV/eooqtC2YTjB7kBeLMS2T9KJX4Dn+ZVXLOwK0lSgqDtx9gvxtiw==}
     engines: {node: '>= 20.19.0'}
 
   '@noble/curves@1.2.0':
     resolution: {integrity: sha512-oYclrNgRaM9SsBUBVbb8M6DTV7ZHRTKugureoYEncY5c65HOmRzvSiTE3y5CYaPYJA/GVkrhXEoF0M3Ya9PMnw==}
 
-  '@noble/curves@2.3.0':
-    resolution: {integrity: sha512-v7cY+4oWYPQszRj6ZFGzTVL7uP2TaLo1xMhWHzYC5wj0ZhOXQ5x+sBre8rF3hi8cAoi0bh1qXoovoOkdFtvqEg==}
+  '@noble/curves@2.4.0':
+    resolution: {integrity: sha512-P4/62zrgfH33CneE3Dn4WhJVA22YUU0eR51wKIan4NVRvwsA0YnPTwWGpNbpuacSujmSFLvyzpyuR30+fbq2Ew==}
     engines: {node: '>= 20.19.0'}
 
   '@noble/hashes@1.3.2':
@@ -760,52 +760,52 @@ packages:
     resolution: {integrity: sha512-jCs9ldd7NwzpgXDIf6P3+NrHh9/sD6CQdxHyjQI+h/6rDNo88ypBxxz45UDuZHz9r3tNz7N/VInSVoVdtXEI4A==}
     engines: {node: ^14.21.3 || >=16}
 
-  '@noble/hashes@2.3.0':
-    resolution: {integrity: sha512-oN+QwyX7VSHotibwubG3kpzbwKrfnyR6OOO+3Nk/53ADL7FmgHHz4TgrbaYKvvOw09u6QTx0oiH1cNCIOuN0CQ==}
+  '@noble/hashes@2.4.0':
+    resolution: {integrity: sha512-X5XaVWZIBCT7HHZGm5I7ZQXDwLG+bGXuSrMQAW+7Zvl87h1kmc1ZB1VSRJcpUfoUrGQp4Fkoxm5kZ+Ms+aW+eA==}
     engines: {node: '>= 20.19.0'}
 
-  '@node-datachannel/android-arm64@0.33.2':
-    resolution: {integrity: sha512-I71a0jICUNYgh4ZI5AcINEMuRtQSVyrpp4FV3kJZMcx31xS0vKKtf06tpsUAtW5uS+uRXbZR+vlMEqS1h710wQ==}
+  '@node-datachannel/android-arm64@0.33.4':
+    resolution: {integrity: sha512-Kd1K+drJlxdGmZYBlzh5HHX2E7les99eTWlt7WldZgvJmcGf2z9L/bnUVn4zbhNm2q/MtNZ2tPX2bd+fGlDDpQ==}
     cpu: [arm64]
     os: [android]
 
-  '@node-datachannel/darwin-arm64@0.33.2':
-    resolution: {integrity: sha512-EwBGiaMh3MX6zjYoZHuK02Q6hmQQIvR39335Kb/ZnP3fXZU0/VWx6ksHLM6K0XFFYRfP+yJeVgU79g++xoeQpw==}
+  '@node-datachannel/darwin-arm64@0.33.4':
+    resolution: {integrity: sha512-bkIA+IbModz/NUmbVYTSWj8dZvkiab+cU4zOa6rhfKsNcW3EkdD2/DDoJjUrRrw+LbEZ40V7NuAKUlMNFDXFsw==}
     cpu: [arm64]
     os: [darwin]
 
-  '@node-datachannel/darwin-x64@0.33.2':
-    resolution: {integrity: sha512-a1nvL6MiskSjV3TWTNXdVpI/2kHNIOP2AbuBZjR5eC7VSrH/6hCFfHIBW4SFKXGFm8LOGliY9Df10UnJUutjwA==}
+  '@node-datachannel/darwin-x64@0.33.4':
+    resolution: {integrity: sha512-+dLnwiwC3GdWqW0OQShZcSFYrx3hRx0+7U85swoiP3iiRqtDUARME6AIAmW3glpP0vmus1jv5KhPCy/Q+jAvqw==}
     cpu: [x64]
     os: [darwin]
 
-  '@node-datachannel/linux-arm64-gnu@0.33.2':
-    resolution: {integrity: sha512-YWAu3EiMl2HRi/fwWlfFTW30wFTkRVYJWRHQcI1uDSeZYG/tfyBqBy6CRy9Sgrb0xjOYZ6XhLDj8cdX0foPlpg==}
+  '@node-datachannel/linux-arm64-gnu@0.33.4':
+    resolution: {integrity: sha512-rR4yjwxpI1miLSrruLGcfR9yfw0Qebw+Twt+u+lKsL9SwmXxTm5pJhUAa9RU+c35oZ98IyAxGFjRwwq85BTbog==}
     cpu: [arm64]
     os: [linux]
 
-  '@node-datachannel/linux-arm64-musl@0.33.2':
-    resolution: {integrity: sha512-16o3Ny5hbxTTjDmhsZog/t7p2tRP6s/Oa/V9kKzZfiGlCqvxxCE4ACOWw/MWHOhN0xI9/63IIRfrrnQnPxjK8g==}
+  '@node-datachannel/linux-arm64-musl@0.33.4':
+    resolution: {integrity: sha512-MR4o1F0aREj/AtbNlXL20YiNx8/pDI8L/5B4Vr9ldiEDottD0IOdCd0khB8fpr5Np2CW7WwU9QG+uto00QGVdw==}
     cpu: [arm64]
     os: [linux]
 
-  '@node-datachannel/linux-x64-gnu@0.33.2':
-    resolution: {integrity: sha512-grLRAbZgSIX8nmObciblyCmnevDCst0snhV+z1fvDmUlzXIVXeDmv6lEzAaWs3KRleagqwSsFg5d1td1bwMT9w==}
+  '@node-datachannel/linux-x64-gnu@0.33.4':
+    resolution: {integrity: sha512-xN0x3lcQ87qwOAmf1dBLVWrYY40LQ7pM4Y9wuNjP+EtN4IwiXqrhPdgupzGAElxna+n2NgBG0gT60dZpgoYU2Q==}
     cpu: [x64]
     os: [linux]
 
-  '@node-datachannel/linux-x64-musl@0.33.2':
-    resolution: {integrity: sha512-PlpgvYjo+gmBhIkRFaZWIhCF335FMTJmCpl+FVa4XliEgyOqD+cvjQPWcbnlrA2Jd+QnLiZt+NxT7nv4QXpoiQ==}
+  '@node-datachannel/linux-x64-musl@0.33.4':
+    resolution: {integrity: sha512-FWqJEjL7TqOPmsqdfwmG/BUwOXQN7MfpEU8kzw6ePbglUbwgdc3976Ls9BCBUXyPgEJyLo8YE1LJyWAlbXWyvA==}
     cpu: [x64]
     os: [linux]
 
-  '@node-datachannel/win32-arm64-msvc@0.33.2':
-    resolution: {integrity: sha512-8NpHkm7R8EY0jHGHOXdK7K0wjWY34PJ+PJY++2VDHTAtXGazNm28zcnVE/4IU0N26YGdCDSSWat3OO3W6nwoRw==}
+  '@node-datachannel/win32-arm64-msvc@0.33.4':
+    resolution: {integrity: sha512-TeDV2tSPm+qAnF6MIPlLFTIlobSYLwOVe3/wQl+8hD/q3cEPTQi7vByFaQQ5lRULKKdnjKRR5iDMsxMilqbtXA==}
     cpu: [arm64]
     os: [win32]
 
-  '@node-datachannel/win32-x64-msvc@0.33.2':
-    resolution: {integrity: sha512-aLk0O/M1JNVpzxx4RVBXMJTMlpswE04Cz5baayKwuEN+qk9hO6DSJgYMR6Wq9a5zGYAmvLFlOg+LsePyXkWliA==}
+  '@node-datachannel/win32-x64-msvc@0.33.4':
+    resolution: {integrity: sha512-eU0w/9ykrNaA5vWs5gjVs3Qxa45jbQ8mYoMyh5OWnRCE5GzXKxHCpfhFUnO+jGqi0KxkyP0hSA6fiwXXkirk6g==}
     cpu: [x64]
     os: [win32]
 
@@ -825,52 +825,52 @@ packages:
     resolution: {integrity: sha512-nn5ozdjYQpUCZlWGuxcJY/KpxkWQs4DcbMCmKojjyrYDEAGy4Ce19NN4v5MduafTwJlbKc99UA8YhSVqq9yPZA==}
     engines: {node: '>=12.4.0'}
 
-  '@peculiar/asn1-asym-key@2.9.4':
-    resolution: {integrity: sha512-s7SJfjcXlR3MYMngDTeMLCy3VjGaIxeEy905CQ0j09pDbeYhNBvBGA7r7cAvCZYkVFo9kVg9RAki0K2iUz7SGQ==}
+  '@peculiar/asn1-asym-key@2.10.0':
+    resolution: {integrity: sha512-1R8xUTeqcUTSMLFTTCzJyFuKiq3y25EQKs9DezUetJ8qMqbJyxo3XkzykiwwT/Xzlt5/vRzS/sW4M1r+pq1FTg==}
     engines: {node: '>=14'}
 
-  '@peculiar/asn1-cms@2.9.4':
-    resolution: {integrity: sha512-cben7oxmQsUGZqotus7yt0srYdncOT6RNWcTQ77T2RFOXejYVYkXadrfePdRcrVpO9K95IRLKKglG2k38jKXuw==}
+  '@peculiar/asn1-cms@2.10.0':
+    resolution: {integrity: sha512-CkX0H4NCIOMHOU3rh2xXZywinYZ/EnJlaOlJiGI0e5L4XjFqHf4iH30LMbXWChVppdA9ljbanjtzQFOhDNfTWg==}
     engines: {node: '>=14'}
 
-  '@peculiar/asn1-csr@2.9.4':
-    resolution: {integrity: sha512-xd4YN4vpRjkDAQWVfZZkeu12IEND7DOpkqaHSIHxZl1uggUNa9Ju0QxY2jHvDAS9pP0zhRBytg8ifsnGo3V0jw==}
+  '@peculiar/asn1-csr@2.10.0':
+    resolution: {integrity: sha512-jTPTr/9rxKM+niQLMF3jiAMb0lWHUhUHIuSOhdGCIfpB4FAQYf9SoiXOgxP8bS/68IB+bj+1OHvVnDVCQfVUZw==}
     engines: {node: '>=14'}
 
-  '@peculiar/asn1-ecc@2.9.4':
-    resolution: {integrity: sha512-JJXefFshRAuVAjWQo/39bkg1ywc1VaiO44S8RRC+Ykvf/u2KDmYffoDb0ZBPCR5uJy4AGKQhl8mX+Q8ShcWaXQ==}
+  '@peculiar/asn1-ecc@2.10.0':
+    resolution: {integrity: sha512-GFd3iOjFrWX+QWH2R2dO5QSJyyRGv9CIBKtRlGlPNCvb2RvmCbBDexe91MJgV76c69d998Xsa+CvuQ98seoiPg==}
     engines: {node: '>=14'}
 
-  '@peculiar/asn1-pfx@2.9.4':
-    resolution: {integrity: sha512-khuGzHTzNzk4GDlIBEILyIs6Lce0yn0ZBdoI9v93kmNncfZRhD+AQ5ODFqdhvoE8cMJF/JMTQ8yA+t1D14kqCw==}
+  '@peculiar/asn1-pfx@2.10.0':
+    resolution: {integrity: sha512-1y3QK9ZH1IPleAMmRoJlPS10eGkAWnULETW8zDFNUK1ffqpG7zmDY+kYBMYQgwlcQZ2iitLm2z2EBP0xzRXpaA==}
     engines: {node: '>=14'}
 
-  '@peculiar/asn1-pkcs8@2.9.4':
-    resolution: {integrity: sha512-duRdotlUx9eDZe6QrQpQKl61RbWykCHBCkKayP8V8XdEFwlKHZ8qGGDMyS6Pye7OX7nLFttTTpRkJeet78ckwQ==}
+  '@peculiar/asn1-pkcs8@2.10.0':
+    resolution: {integrity: sha512-Ri+BZT9bnwqlHWmhs7lvWjvJRxKev2hA2+4EbZajgeYWCbR8hyv0znF4DhsFouOhMj2nSDV/iGJ6DMQtwITnCw==}
     engines: {node: '>=14'}
 
-  '@peculiar/asn1-pkcs9@2.9.4':
-    resolution: {integrity: sha512-kaL4cNxBpdQE2dKlyZBqz4ygCrwffO+8wfoxTEqM1Z8RadvCeELBRzcv0dzM8aY9azHMwODO5nxU65zXmhToOQ==}
+  '@peculiar/asn1-pkcs9@2.10.0':
+    resolution: {integrity: sha512-XIXsbDQFezYk6fudczkuvawkRD4GNpISGCqfYhdkJlvcGF/RFknU+0DDJagOaJqBf+PdPzk4J9oMqDGcvfR9HQ==}
     engines: {node: '>=14'}
 
-  '@peculiar/asn1-rsa@2.9.4':
-    resolution: {integrity: sha512-pZ96eD1PptovcWQ/GSmuNFXd/7EQJNlKfDaNCyE2rx3W0v6QFelkzquVqRSRyyDXXCYD69ZXJDzZ8GhIiQzKoA==}
+  '@peculiar/asn1-rsa@2.10.0':
+    resolution: {integrity: sha512-4Jvmwlh3gZAhNZ4/u7JSyLuce9hofOFZ4o3PYKAccCImGnyaT5CMym/ATgvAvqpOYFNW531oPZvJlEBhJy9VfA==}
     engines: {node: '>=14'}
 
-  '@peculiar/asn1-schema@2.9.4':
-    resolution: {integrity: sha512-GjzePcT9Iw8NzeOPf73iNS9xM+TBhd/FilAfP+RQGkTMQJTVWtytN3JHJACCjf/ABNau5S7mS3g+DcuxmRgYEg==}
+  '@peculiar/asn1-schema@2.10.0':
+    resolution: {integrity: sha512-GhokD41lV4gQrrLYm3wCkHfBOnJrnhDMgt4XeMW8gzfE1UdJqIuSwsE+ggf82XBjUXRJylcm+KIGQFa4utIVLw==}
     engines: {node: '>=14'}
 
-  '@peculiar/asn1-x509-attr@2.9.4':
-    resolution: {integrity: sha512-ehQXbpQaQYycgu8OrvigwSPTFfVRcu0ECNYCWw+yzBp02Lw5paRqzzhUpfOgO2K38+WfFZuEz/0RPtam5g0OMg==}
+  '@peculiar/asn1-x509-attr@2.10.0':
+    resolution: {integrity: sha512-/85GtKOKmgvuSJNlaFfwGWNdRSZZ+hpF02NyM01XiCdzpaZONiBltDyfluFPvFx966CR+ZHNSG1jniwpy07oGg==}
     engines: {node: '>=14'}
 
-  '@peculiar/asn1-x509-post-quantum@2.9.4':
-    resolution: {integrity: sha512-GD0k7BY3dsEIeai7C7bVRPddj/PzZu+sTawRPRxdHKbdy1f9b58WQyk0eFJdr28GShyLVTU8poyi4+bTAZfEtQ==}
+  '@peculiar/asn1-x509-post-quantum@2.10.0':
+    resolution: {integrity: sha512-cXKcZ30wKbUkRK5RK4Z3W1imewXvHAB9apEAuIqJ0OOkOQCpJrwLOuN38QlsEXqOI+3gtUv8Kf3UZohUmCbf3w==}
     engines: {node: '>=14'}
 
-  '@peculiar/asn1-x509@2.9.4':
-    resolution: {integrity: sha512-CxhBo/RdEbMMob7T31ZdQjGuoyRFLVwrDzTn25bihzBasRg9kRm/0IxIPvhgQtcK/9dNcO1XQL2fuPugwELL0Q==}
+  '@peculiar/asn1-x509@2.10.0':
+    resolution: {integrity: sha512-ucNVg8+ANveTpMN3fy9lA2alryONdXc2A4cEG2hMniWbvQt+YOZoe8BI80YYNO8FBcuDY1qbDQ4uQGQVraHxGA==}
     engines: {node: '>=14'}
 
   '@peculiar/json-schema@1.1.12':
@@ -1413,8 +1413,8 @@ packages:
     resolution: {integrity: sha512-9WTZxEjsZ7b13TH8JPmbV2z8CHbl80/2hm3XPEG4JgNdQLK81IBRXmSxHfMAOkSqQeRxT/0dwNDz2GOm3zzpcQ==}
     engines: {node: '>=4'}
 
-  axios@1.19.0:
-    resolution: {integrity: sha512-ht/iuYZXEjFxLH/Hkezgd7m6JKlHHXEUSneaDz8uZe1Gj5QZtCnpyDsckvAiEnT89OEbCLmnte4R4sn7P0EKFw==}
+  axios@1.20.0:
+    resolution: {integrity: sha512-r8aOh8j9cGKpgQAqpzrUHnSIc6a59Y3Xf/cv8sy1DrHCkZHzQGEuoq1tARk6qSyDdtQGSDgpb9kFlruzPvrgwg==}
 
   axobject-query@4.1.0:
     resolution: {integrity: sha512-qIj0G9wZbMGNLjLmg1PT6v2mE9AH2zlnADJD/2tC6E00hgmhUOfEB6greHPAfLRSufHqROIUTkw6E+M3lH0PTQ==}
@@ -1455,12 +1455,12 @@ packages:
   bech32@2.0.0:
     resolution: {integrity: sha512-LcknSilhIGatDAsY1ak2I8VtGaHNhgMSYVxFrGLXv+xLHytaKZKcaUJJUE7qmBr7h33o5YQwP55pMI0xmkpJwg==}
 
-  bip174@3.0.0:
-    resolution: {integrity: sha512-N3vz3rqikLEu0d6yQL8GTrSkpYb35NQKWMR7Hlza0lOj6ZOlvQ3Xr7N9Y+JPebaCVoEUHdBeBSuLxcHr71r+Lw==}
+  bip174@3.0.1:
+    resolution: {integrity: sha512-avOnOoLOwdjw1MebWKh3bHqWOH558Q9VpqmRKUv2S63vjw0pnX7Y+yRihxIibgP55twhc7+YfC0IAH43IF5FqQ==}
     engines: {node: '>=18.0.0'}
 
-  bitcoinjs-lib@7.0.1:
-    resolution: {integrity: sha512-vwEmpL5Tpj0I0RBdNkcDMXePoaYSTeKY6mL6/l5esbnTs+jGdPDuLp4NY1hSh6Zk5wSgePygZ4Wx5JJao30Pww==}
+  bitcoinjs-lib@7.0.2:
+    resolution: {integrity: sha512-ugLk9SR+2gvhpNA7kqQL1eVDKyBNo/rbr+df72nrZj4OOdZvQRHDVtyogPGXAU2MLQimLL7EbUdz95QGh6Th5Q==}
     engines: {node: '>=18.0.0'}
 
   blake2b-wasm@2.4.0:
@@ -1538,8 +1538,8 @@ packages:
   caniuse-lite@1.0.30001815:
     resolution: {integrity: sha512-uDybUEyfgbyJJ93J1vikTylBX31AkdVYeVPeffMQpf8XN7hSfr0oZOn4VFOIMNvtU5+rHvC5Udg2TgtJKHm23Q==}
 
-  cborg@6.1.1:
-    resolution: {integrity: sha512-Ci8+V1OMFtqea8EXicsATqV+3kEqCGXCicM+5MEzpKTxqy58WMzhJUjtUqAjfWpKPZ0wpG8F+u5mC8Xy/0Zevg==}
+  cborg@6.1.3:
+    resolution: {integrity: sha512-Kb/wD/AFuVcqvVjR+HYNOjNiuhVJ2C+RWxQE2Yqq2WVlVkRjdvVLkkM6QsL3NMsBRh+rgNc+aXmcraA+X0HObQ==}
     hasBin: true
 
   chalk@4.1.2:
@@ -2005,8 +2005,8 @@ packages:
     resolution: {integrity: sha512-vEZcHIlnKeN8JSVtYFczj8sWJfHIJOkz+YG00O/oul/Bete+t1ZhTi+O6JRRLFYvGW+yJkZ0YgL16iStnbkUqQ==}
     engines: {node: '>=0.4.0'}
 
-  follow-redirects@1.16.0:
-    resolution: {integrity: sha512-y5rN/uOsadFT/JfYwhxRS5R7Qce+g3zG97+JrtFZlC9klX/W5hD7iiLzScI4nZqUS7DNUdhPgw4xI8W2LuXlUw==}
+  follow-redirects@1.16.1:
+    resolution: {integrity: sha512-FNvFGzoMLWmE6Yj9spb/zjd7yiNCHiAW9/Tg9CXrQ8wuu32HtlJOwWO11OJafl5FfY3DxTdQ0vj42zU1kvv5jg==}
     engines: {node: '>=4.0'}
     peerDependencies:
       debug: '*'
@@ -2508,8 +2508,8 @@ packages:
     resolution: {integrity: sha512-+bT2uH4E5LGE7h/n3evcS/sQlJXCpIp6ym8OWJ5eV6+67Dsql/LaaT7qJBAt2rzfoa/5QBGBhxDix1dMt2kQKQ==}
     engines: {node: '>= 0.8.0'}
 
-  libp2p@3.3.11:
-    resolution: {integrity: sha512-+J3Dw1RnGdcpQaPN1HD+Z6xVS3qY0vnsqE2Tu//pfoiJxabaZVkc2FBNnNQ1Sj+Th2qoloeJ11jvxuNXSa1gtA==}
+  libp2p@3.3.12:
+    resolution: {integrity: sha512-Hq0ii7m6VzaglA9bN9/9iD8mAwm+v8edDeHvTniIIQtA2TI2FK2AgVnprWbcoqGQQ/nAa0hhtHIPGzKsLdRhzg==}
 
   lighthouse-logger@1.4.2:
     resolution: {integrity: sha512-gPWxznF6TKmUHrOQjlVo2UbaL2EJ71mb2CCeRs/2qBpi4L/g4LUVc9+3lKQ6DTUZwJswfM7ainGrLO1+fOqa2g==}
@@ -2828,8 +2828,8 @@ packages:
       sass:
         optional: true
 
-  node-datachannel@0.33.3:
-    resolution: {integrity: sha512-Tf7bbOjUXh7gPiWKTFpMDZXpippya6pdsEz3tgxsIJiW+BMLWSaX7O6F9kDjHu0GCan4vSmXlfA8l21O4D+K9Q==}
+  node-datachannel@0.33.4:
+    resolution: {integrity: sha512-qiUrdh8vY9XhglEnx91HK0N2JEAAu8qTZl0fcR3yQd0fFrdO39NwDeJD/KpG+WKUb9/o4p2UwnP+/HftA/xMbQ==}
     engines: {node: '>=18.20.0'}
 
   node-exports-info@1.6.2:
@@ -2915,8 +2915,8 @@ packages:
     resolution: {integrity: sha512-Mr5KC5efvAK5VUptYEIopP1bakB85k2IWXaRC0rsh1uwn1L6M0LVml8OIQ4Gudg4oyZakf7FmeRLkMMtZW1i5A==}
     engines: {node: '>=12'}
 
-  p-event@7.1.0:
-    resolution: {integrity: sha512-/lkPs5W1aC3cp6vqZefpdosOn65J571sWodyfOQiF0+tmDCpU+H8Atwpu0vQROCVUlZuToDN5eyTLsMLLc54mg==}
+  p-event@7.1.1:
+    resolution: {integrity: sha512-T629EpxCTho6yxIZz2dFZwMkyWUM5jh/0h1+u/Xo4+Fllu0DuKQF6ghqIgSWVTluIvHSXL+XBRScH+E+y9TQ0g==}
     engines: {node: '>=20'}
 
   p-limit@3.1.0:
@@ -2935,8 +2935,8 @@ packages:
     resolution: {integrity: sha512-NAigyu8hfvJe7MsS18mnc4is0MZtau3QMdBklaJKK23oBQb6occO3UPM3vHmTckW8KhfyjMZaUOqdTFEYliHgg==}
     engines: {node: '>=22'}
 
-  p-timeout@7.0.1:
-    resolution: {integrity: sha512-AxTM2wDGORHGEkPCt8yqxOTMgpfbEHqF51f/5fJCmwFC3C/zNcGT63SymH2ttOAaiIws2zVg4+izQCjrakcwHg==}
+  p-timeout@7.0.2:
+    resolution: {integrity: sha512-prbX4Z3YszrFNgH+MW5Zoeq3baXrMtP/MQnFeET90UB/GtGcGDQ5Usg9OCy6ETjTTntOw1SL2z9fMPUppN3Guw==}
     engines: {node: '>=20'}
 
   p-wait-for@6.0.0:
@@ -3008,8 +3008,8 @@ packages:
   protons-runtime@5.6.0:
     resolution: {integrity: sha512-/Kde+sB9DsMFrddJT/UZWe6XqvL7SL5dbag/DBCElFKhkwDj7XKt53S+mzLyaDP5OqS0wXjV5SA572uWDaT0Hg==}
 
-  protons-runtime@7.1.0:
-    resolution: {integrity: sha512-TAL8CpKEUK+k0KKZIQrDTBgyH86zZAjz3ZULcCjxrb9zvkTVEGJyVbATmTV4KpZmFFEH7ERWDNWxfiE+N3bOUQ==}
+  protons-runtime@7.1.2:
+    resolution: {integrity: sha512-j7Y7MfCwPCxYwopyqDt8+CoJULzdajSBrFAzzfBHEhOTfdvOJ2z1QLK9aK34bSBz6V/9JAAlrsc/rFkIbqppuw==}
 
   proxy-from-env@2.1.0:
     resolution: {integrity: sha512-cJ+oHTW1VAEa8cJslgmUZrc+sjRKgAKl3Zyse6+PV38hZe/V6Z14TbCuXcan9F9ghlz4QrFr2c92TNF82UkYHA==}
@@ -3026,8 +3026,8 @@ packages:
     resolution: {integrity: sha512-BbubeCEyTuQjVMakvJQ/Sxbc93F2pwmbsxONT/ZRrwU7Ua38d8unYTwXpTVLAKJ4BDuH9IGztCjQcd/N/39Dvg==}
     engines: {node: '>=16.0.0'}
 
-  qr@0.7.0:
-    resolution: {integrity: sha512-/VrrACmOAwZVipuRITwfEwOL5oAMEHH5PTmBWaGtlTom2Thxaa+rhmna4zU9PRN2uLw2wdccbkHOLGZb1Q9SdA==}
+  qr@0.7.2:
+    resolution: {integrity: sha512-yovYRuacJBJkG9fWSwcB2bKZhr58c04DpOXguDU+rAAoJZdi6/J3DtlomkKqdd1MutIptIK+kigWmT7LKz8y7A==}
     engines: {node: '>= 20.19.0'}
 
   queue-microtask@1.2.3:
@@ -3496,12 +3496,12 @@ packages:
   uint8-varint@3.0.0:
     resolution: {integrity: sha512-S4DdpXBaLwKcFo7f0bWzWfHjbZ/i3QhM842qn+ZvHjxqFCfUcEB9SQNcmI69S+zMlcmIcKxsk9Iyw77S2Kxv6Q==}
 
-  uint8array-extras@1.5.0:
-    resolution: {integrity: sha512-rvKSBiC5zqCCiDZ9kAOszZcDvdAHwwIKJG33Ykj43OKcWsnmcBRL09YTU4nOeHZ8Y2a7l1MgTd08SBe9A8Qj6A==}
+  uint8array-extras@1.6.0:
+    resolution: {integrity: sha512-8iAasVS4wUx0gPLjH8Xtz2PeDzTSiy8QiLGu2DT3X5GU+egFEQhpnbtkehbAwjvDcxIERmCYcysiODFmE3Ud0Q==}
     engines: {node: '>=18'}
 
-  uint8array-tools@0.0.8:
-    resolution: {integrity: sha512-xS6+s8e0Xbx++5/0L+yyexukU7pz//Yg6IHg3BKhXotg1JcYtgxVcUctQ0HxLByiJzpAkNFawz1Nz5Xadzo82g==}
+  uint8array-tools@0.0.10:
+    resolution: {integrity: sha512-sSbrZqlr04w4p8KKpHw0ME/R4JzQaadum+BWhMlk2M7LrDyXWTfJOco3d1jNMdQNxgk5DDm88R3IWYH0nR+tzQ==}
     engines: {node: '>=14.0.0'}
 
   uint8array-tools@0.0.9:
@@ -3573,16 +3573,16 @@ packages:
     deprecated: uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028).
     hasBin: true
 
-  valibot@1.4.2:
-    resolution: {integrity: sha512-gjdCvJ6d3RyHAneqxMYMW9QMCwYMb3jpOO0IyHZV1bnRHFBHrX3VkIILt5XYR0WhwHiH7Mty8ovuPZ/O3gamrg==}
+  valibot@1.5.0:
+    resolution: {integrity: sha512-nil6AkP2TChWL43Z5uJ6GTxX01CUA+g8LWUM+N/rB9NBbkUMaUsi9PUNzlUPgoKASgmx9f7eGOYpJ04/fSa6FQ==}
     peerDependencies:
       typescript: '>=5'
     peerDependenciesMeta:
       typescript:
         optional: true
 
-  varuint-bitcoin@2.0.0:
-    resolution: {integrity: sha512-6QZbU/rHO2ZQYpWFDALCDSRsXbAs1VOEmXAxtbtjLtKuMJ/FQ8YbhfxlaiKv5nklci0M6lZtlZyxo9Q+qNnyog==}
+  varuint-bitcoin@2.0.1:
+    resolution: {integrity: sha512-TTl5qSPJ3FzjuTHo0Ex9WUE3jTxnUsQHR38vIDhHApoVstzJK4gE20WqmTWOT5oo7ilvOSNejXt4CJrfDcqm5A==}
 
   vlq@1.0.1:
     resolution: {integrity: sha512-gQpnTgkubC6hQgdIcRdYGDSDc+SaujOdyesZQMv6JlfQee/9Mp0Qhnys6WxDWvQnL5WZdT7o2Ul187aSt0Rq+w==}
@@ -3659,8 +3659,8 @@ packages:
       utf-8-validate:
         optional: true
 
-  ws@8.21.3:
-    resolution: {integrity: sha512-201TZ/kPWxoPr/OKWjquZR1SWKXcvxdH+e1xrx89b3YbmzLMFCLfnaG1HFIgWzJOEWZ7MvpK++odZufgYR50Rw==}
+  ws@8.22.0:
+    resolution: {integrity: sha512-Ydggc987+RO0AnWtZ/7Wq9FtNvcrL1b/RO0ud9mWjUPgDrsAAwQSF51sm2hm1XofbU/4jkpGEsLFsZZxU+1DOg==}
     engines: {node: '>=10.0.0'}
     peerDependencies:
       bufferutil: ^4.0.1
@@ -3819,13 +3819,13 @@ snapshots:
     dependencies:
       '@chainsafe/as-chacha20poly1305': 0.1.0
       '@chainsafe/as-sha256': 1.2.5
-      '@libp2p/crypto': 5.1.23
-      '@libp2p/interface': 3.3.0
-      '@libp2p/peer-id': 6.0.15
-      '@libp2p/utils': 7.4.1
-      '@noble/ciphers': 2.3.0
-      '@noble/curves': 2.3.0
-      '@noble/hashes': 2.3.0
+      '@libp2p/crypto': 5.1.24
+      '@libp2p/interface': 3.3.1
+      '@libp2p/peer-id': 6.0.16
+      '@libp2p/utils': 7.4.2
+      '@noble/ciphers': 2.4.0
+      '@noble/curves': 2.4.0
+      '@noble/hashes': 2.4.0
       protons-runtime: 5.6.0
       uint8arraylist: 2.4.9
       uint8arrays: 5.1.1
@@ -3833,8 +3833,8 @@ snapshots:
 
   '@chainsafe/libp2p-yamux@8.0.1':
     dependencies:
-      '@libp2p/interface': 3.3.0
-      '@libp2p/utils': 7.4.1
+      '@libp2p/interface': 3.3.1
+      '@libp2p/utils': 7.4.2
       race-signal: 2.0.2
       uint8arraylist: 2.4.9
 
@@ -3842,17 +3842,17 @@ snapshots:
     dependencies:
       '@chainsafe/is-ip': 2.1.0
 
-  '@ckb-ccc/ccc@1.3.4(typescript@5.9.3)(zod@4.6.5)':
+  '@ckb-ccc/ccc@1.3.6(typescript@5.9.3)(zod@4.6.5)':
     dependencies:
-      '@ckb-ccc/eip6963': 1.1.13(typescript@5.9.3)(zod@4.6.5)
-      '@ckb-ccc/joy-id': 1.2.4(typescript@5.9.3)(zod@4.6.5)
-      '@ckb-ccc/nip07': 1.1.13(typescript@5.9.3)(zod@4.6.5)
-      '@ckb-ccc/okx': 1.2.4(typescript@5.9.3)(zod@4.6.5)
-      '@ckb-ccc/rei': 1.1.13(typescript@5.9.3)(zod@4.6.5)
-      '@ckb-ccc/shell': 1.3.13(typescript@5.9.3)(zod@4.6.5)
-      '@ckb-ccc/uni-sat': 1.2.4(typescript@5.9.3)(zod@4.6.5)
-      '@ckb-ccc/utxo-global': 1.2.4(typescript@5.9.3)(zod@4.6.5)
-      '@ckb-ccc/xverse': 1.2.4(typescript@5.9.3)(zod@4.6.5)
+      '@ckb-ccc/eip6963': 1.1.15(typescript@5.9.3)(zod@4.6.5)
+      '@ckb-ccc/joy-id': 1.2.6(typescript@5.9.3)(zod@4.6.5)
+      '@ckb-ccc/nip07': 1.1.15(typescript@5.9.3)(zod@4.6.5)
+      '@ckb-ccc/okx': 1.2.6(typescript@5.9.3)(zod@4.6.5)
+      '@ckb-ccc/rei': 1.1.15(typescript@5.9.3)(zod@4.6.5)
+      '@ckb-ccc/shell': 1.3.15(typescript@5.9.3)(zod@4.6.5)
+      '@ckb-ccc/uni-sat': 1.2.6(typescript@5.9.3)(zod@4.6.5)
+      '@ckb-ccc/utxo-global': 1.2.6(typescript@5.9.3)(zod@4.6.5)
+      '@ckb-ccc/xverse': 1.2.6(typescript@5.9.3)(zod@4.6.5)
     transitivePeerDependencies:
       - bufferutil
       - debug
@@ -3862,9 +3862,9 @@ snapshots:
       - utf-8-validate
       - zod
 
-  '@ckb-ccc/connector-react@2.1.6(@types/react@19.3.0)(react-native@0.87.1(@babel/core@7.29.7)(@types/react@19.3.0)(react@19.3.0))(react@19.3.0)(typescript@5.9.3)(zod@4.6.5)':
+  '@ckb-ccc/connector-react@2.2.2(@types/react@19.3.0)(react-native@0.87.1(@babel/core@7.29.7)(@types/react@19.3.0)(react@19.3.0))(react@19.3.0)(typescript@5.9.3)(zod@4.6.5)':
     dependencies:
-      '@ckb-ccc/connector': 2.2.4(react-native@0.87.1(@babel/core@7.29.7)(@types/react@19.3.0)(react@19.3.0))(typescript@5.9.3)(zod@4.6.5)
+      '@ckb-ccc/connector': 2.3.2(react-native@0.87.1(@babel/core@7.29.7)(@types/react@19.3.0)(react@19.3.0))(typescript@5.9.3)(zod@4.6.5)
       '@lit/react': 1.0.8(@types/react@19.3.0)
       '@types/react': 19.3.0
       react: 19.3.0
@@ -3878,22 +3878,22 @@ snapshots:
       - utf-8-validate
       - zod
 
-  '@ckb-ccc/connector@2.2.4(react-native@0.87.1(@babel/core@7.29.7)(@types/react@19.3.0)(react@19.3.0))(typescript@5.9.3)(zod@4.6.5)':
+  '@ckb-ccc/connector@2.3.2(react-native@0.87.1(@babel/core@7.29.7)(@types/react@19.3.0)(react@19.3.0))(typescript@5.9.3)(zod@4.6.5)':
     dependencies:
       '@chainsafe/libp2p-noise': 17.0.0
       '@chainsafe/libp2p-yamux': 8.0.1
-      '@ckb-ccc/ccc': 1.3.4(typescript@5.9.3)(zod@4.6.5)
-      '@ckb-ccc/libp2p': 0.3.0(typescript@5.9.3)(zod@4.6.5)
-      '@libp2p/circuit-relay-v2': 4.2.13
-      '@libp2p/identify': 4.1.14
-      '@libp2p/interface': 3.3.0
-      '@libp2p/webrtc': 6.0.32(react-native@0.87.1(@babel/core@7.29.7)(@types/react@19.3.0)(react@19.3.0))
-      '@libp2p/websockets': 10.1.21
+      '@ckb-ccc/ccc': 1.3.6(typescript@5.9.3)(zod@4.6.5)
+      '@ckb-ccc/libp2p': 0.3.2(typescript@5.9.3)(zod@4.6.5)
+      '@libp2p/circuit-relay-v2': 4.2.14
+      '@libp2p/identify': 4.1.15
+      '@libp2p/interface': 3.3.1
+      '@libp2p/webrtc': 6.1.0(react-native@0.87.1(@babel/core@7.29.7)(@types/react@19.3.0)(react@19.3.0))
+      '@libp2p/websockets': 10.1.22
       '@multiformats/multiaddr': 13.0.3
       core-js: 3.50.0
-      libp2p: 3.3.11
+      libp2p: 3.3.12
       lit: 3.3.3
-      qr: 0.7.0
+      qr: 0.7.2
     transitivePeerDependencies:
       - bufferutil
       - debug
@@ -3904,18 +3904,18 @@ snapshots:
       - utf-8-validate
       - zod
 
-  '@ckb-ccc/core@1.22.0(typescript@5.9.3)(zod@4.6.5)':
+  '@ckb-ccc/core@1.23.0(typescript@5.9.3)(zod@4.6.5)':
     dependencies:
       '@joyid/ckb': 1.1.4(typescript@5.9.3)(zod@4.6.5)
-      '@noble/ciphers': 2.3.0
-      '@noble/curves': 2.3.0
-      '@noble/hashes': 2.3.0
+      '@noble/ciphers': 2.4.0
+      '@noble/curves': 2.4.0
+      '@noble/hashes': 2.4.0
       bech32: 2.0.0
       bs58check: 4.0.0
       ethers: 6.17.0
-      isomorphic-ws: 5.0.0(ws@8.21.3)
-      uint8array-extras: 1.5.0
-      ws: 8.21.3
+      isomorphic-ws: 5.0.0(ws@8.22.0)
+      uint8array-extras: 1.6.0
+      ws: 8.22.0
     transitivePeerDependencies:
       - bufferutil
       - encoding
@@ -3923,12 +3923,12 @@ snapshots:
       - utf-8-validate
       - zod
 
-  '@ckb-ccc/did-ckb@0.2.13(typescript@5.9.3)(zod@4.6.5)':
+  '@ckb-ccc/did-ckb@0.2.15(typescript@5.9.3)(zod@4.6.5)':
     dependencies:
-      '@ckb-ccc/core': 1.22.0(typescript@5.9.3)(zod@4.6.5)
-      '@ckb-ccc/type-id': 0.1.13(typescript@5.9.3)(zod@4.6.5)
+      '@ckb-ccc/core': 1.23.0(typescript@5.9.3)(zod@4.6.5)
+      '@ckb-ccc/type-id': 0.1.15(typescript@5.9.3)(zod@4.6.5)
       '@ipld/dag-cbor': 10.0.2
-      '@noble/curves': 2.3.0
+      '@noble/curves': 2.4.0
     transitivePeerDependencies:
       - bufferutil
       - encoding
@@ -3936,9 +3936,9 @@ snapshots:
       - utf-8-validate
       - zod
 
-  '@ckb-ccc/eip6963@1.1.13(typescript@5.9.3)(zod@4.6.5)':
+  '@ckb-ccc/eip6963@1.1.15(typescript@5.9.3)(zod@4.6.5)':
     dependencies:
-      '@ckb-ccc/core': 1.22.0(typescript@5.9.3)(zod@4.6.5)
+      '@ckb-ccc/core': 1.23.0(typescript@5.9.3)(zod@4.6.5)
     transitivePeerDependencies:
       - bufferutil
       - encoding
@@ -3946,9 +3946,9 @@ snapshots:
       - utf-8-validate
       - zod
 
-  '@ckb-ccc/joy-id@1.2.4(typescript@5.9.3)(zod@4.6.5)':
+  '@ckb-ccc/joy-id@1.2.6(typescript@5.9.3)(zod@4.6.5)':
     dependencies:
-      '@ckb-ccc/core': 1.22.0(typescript@5.9.3)(zod@4.6.5)
+      '@ckb-ccc/core': 1.23.0(typescript@5.9.3)(zod@4.6.5)
       '@joyid/ckb': 1.1.4(typescript@5.9.3)(zod@4.6.5)
       '@joyid/common': 0.2.2(typescript@5.9.3)(zod@4.6.5)
     transitivePeerDependencies:
@@ -3958,12 +3958,12 @@ snapshots:
       - utf-8-validate
       - zod
 
-  '@ckb-ccc/libp2p@0.3.0(typescript@5.9.3)(zod@4.6.5)':
+  '@ckb-ccc/libp2p@0.3.2(typescript@5.9.3)(zod@4.6.5)':
     dependencies:
-      '@ckb-ccc/core': 1.22.0(typescript@5.9.3)(zod@4.6.5)
-      '@libp2p/interface': 3.3.0
-      '@libp2p/interface-internal': 3.1.13
-      '@libp2p/utils': 7.4.1
+      '@ckb-ccc/core': 1.23.0(typescript@5.9.3)(zod@4.6.5)
+      '@libp2p/interface': 3.3.1
+      '@libp2p/interface-internal': 3.1.14
+      '@libp2p/utils': 7.4.2
       '@multiformats/multiaddr': 13.0.3
       it-length-prefixed: 11.0.1
     transitivePeerDependencies:
@@ -3973,9 +3973,9 @@ snapshots:
       - utf-8-validate
       - zod
 
-  '@ckb-ccc/nip07@1.1.13(typescript@5.9.3)(zod@4.6.5)':
+  '@ckb-ccc/nip07@1.1.15(typescript@5.9.3)(zod@4.6.5)':
     dependencies:
-      '@ckb-ccc/core': 1.22.0(typescript@5.9.3)(zod@4.6.5)
+      '@ckb-ccc/core': 1.23.0(typescript@5.9.3)(zod@4.6.5)
     transitivePeerDependencies:
       - bufferutil
       - encoding
@@ -3983,11 +3983,11 @@ snapshots:
       - utf-8-validate
       - zod
 
-  '@ckb-ccc/okx@1.2.4(typescript@5.9.3)(zod@4.6.5)':
+  '@ckb-ccc/okx@1.2.6(typescript@5.9.3)(zod@4.6.5)':
     dependencies:
-      '@ckb-ccc/core': 1.22.0(typescript@5.9.3)(zod@4.6.5)
-      '@ckb-ccc/nip07': 1.1.13(typescript@5.9.3)(zod@4.6.5)
-      '@ckb-ccc/uni-sat': 1.2.4(typescript@5.9.3)(zod@4.6.5)
+      '@ckb-ccc/core': 1.23.0(typescript@5.9.3)(zod@4.6.5)
+      '@ckb-ccc/nip07': 1.1.15(typescript@5.9.3)(zod@4.6.5)
+      '@ckb-ccc/uni-sat': 1.2.6(typescript@5.9.3)(zod@4.6.5)
     transitivePeerDependencies:
       - bufferutil
       - encoding
@@ -3995,9 +3995,9 @@ snapshots:
       - utf-8-validate
       - zod
 
-  '@ckb-ccc/rei@1.1.13(typescript@5.9.3)(zod@4.6.5)':
+  '@ckb-ccc/rei@1.1.15(typescript@5.9.3)(zod@4.6.5)':
     dependencies:
-      '@ckb-ccc/core': 1.22.0(typescript@5.9.3)(zod@4.6.5)
+      '@ckb-ccc/core': 1.23.0(typescript@5.9.3)(zod@4.6.5)
     transitivePeerDependencies:
       - bufferutil
       - encoding
@@ -4005,27 +4005,14 @@ snapshots:
       - utf-8-validate
       - zod
 
-  '@ckb-ccc/shell@1.3.13(typescript@5.9.3)(zod@4.6.5)':
+  '@ckb-ccc/shell@1.3.15(typescript@5.9.3)(zod@4.6.5)':
     dependencies:
-      '@ckb-ccc/core': 1.22.0(typescript@5.9.3)(zod@4.6.5)
-      '@ckb-ccc/did-ckb': 0.2.13(typescript@5.9.3)(zod@4.6.5)
-      '@ckb-ccc/spore': 1.6.13(typescript@5.9.3)(zod@4.6.5)
-      '@ckb-ccc/ssri': 0.4.3(typescript@5.9.3)(zod@4.6.5)
-      '@ckb-ccc/type-id': 0.1.13(typescript@5.9.3)(zod@4.6.5)
-      '@ckb-ccc/udt': 0.2.13(typescript@5.9.3)(zod@4.6.5)
-    transitivePeerDependencies:
-      - bufferutil
-      - debug
-      - encoding
-      - supports-color
-      - typescript
-      - utf-8-validate
-      - zod
-
-  '@ckb-ccc/spore@1.6.13(typescript@5.9.3)(zod@4.6.5)':
-    dependencies:
-      '@ckb-ccc/core': 1.22.0(typescript@5.9.3)(zod@4.6.5)
-      axios: 1.19.0
+      '@ckb-ccc/core': 1.23.0(typescript@5.9.3)(zod@4.6.5)
+      '@ckb-ccc/did-ckb': 0.2.15(typescript@5.9.3)(zod@4.6.5)
+      '@ckb-ccc/spore': 1.6.15(typescript@5.9.3)(zod@4.6.5)
+      '@ckb-ccc/ssri': 0.4.5(typescript@5.9.3)(zod@4.6.5)
+      '@ckb-ccc/type-id': 0.1.15(typescript@5.9.3)(zod@4.6.5)
+      '@ckb-ccc/udt': 0.2.15(typescript@5.9.3)(zod@4.6.5)
     transitivePeerDependencies:
       - bufferutil
       - debug
@@ -4035,9 +4022,22 @@ snapshots:
       - utf-8-validate
       - zod
 
-  '@ckb-ccc/ssri@0.4.3(typescript@5.9.3)(zod@4.6.5)':
+  '@ckb-ccc/spore@1.6.15(typescript@5.9.3)(zod@4.6.5)':
     dependencies:
-      '@ckb-ccc/core': 1.22.0(typescript@5.9.3)(zod@4.6.5)
+      '@ckb-ccc/core': 1.23.0(typescript@5.9.3)(zod@4.6.5)
+      axios: 1.20.0
+    transitivePeerDependencies:
+      - bufferutil
+      - debug
+      - encoding
+      - supports-color
+      - typescript
+      - utf-8-validate
+      - zod
+
+  '@ckb-ccc/ssri@0.4.5(typescript@5.9.3)(zod@4.6.5)':
+    dependencies:
+      '@ckb-ccc/core': 1.23.0(typescript@5.9.3)(zod@4.6.5)
     transitivePeerDependencies:
       - bufferutil
       - encoding
@@ -4045,9 +4045,9 @@ snapshots:
       - utf-8-validate
       - zod
 
-  '@ckb-ccc/type-id@0.1.13(typescript@5.9.3)(zod@4.6.5)':
+  '@ckb-ccc/type-id@0.1.15(typescript@5.9.3)(zod@4.6.5)':
     dependencies:
-      '@ckb-ccc/core': 1.22.0(typescript@5.9.3)(zod@4.6.5)
+      '@ckb-ccc/core': 1.23.0(typescript@5.9.3)(zod@4.6.5)
     transitivePeerDependencies:
       - bufferutil
       - encoding
@@ -4055,10 +4055,10 @@ snapshots:
       - utf-8-validate
       - zod
 
-  '@ckb-ccc/udt@0.2.13(typescript@5.9.3)(zod@4.6.5)':
+  '@ckb-ccc/udt@0.2.15(typescript@5.9.3)(zod@4.6.5)':
     dependencies:
-      '@ckb-ccc/core': 1.22.0(typescript@5.9.3)(zod@4.6.5)
-      '@ckb-ccc/ssri': 0.4.3(typescript@5.9.3)(zod@4.6.5)
+      '@ckb-ccc/core': 1.23.0(typescript@5.9.3)(zod@4.6.5)
+      '@ckb-ccc/ssri': 0.4.5(typescript@5.9.3)(zod@4.6.5)
     transitivePeerDependencies:
       - bufferutil
       - encoding
@@ -4066,9 +4066,9 @@ snapshots:
       - utf-8-validate
       - zod
 
-  '@ckb-ccc/uni-sat@1.2.4(typescript@5.9.3)(zod@4.6.5)':
+  '@ckb-ccc/uni-sat@1.2.6(typescript@5.9.3)(zod@4.6.5)':
     dependencies:
-      '@ckb-ccc/core': 1.22.0(typescript@5.9.3)(zod@4.6.5)
+      '@ckb-ccc/core': 1.23.0(typescript@5.9.3)(zod@4.6.5)
     transitivePeerDependencies:
       - bufferutil
       - encoding
@@ -4076,9 +4076,9 @@ snapshots:
       - utf-8-validate
       - zod
 
-  '@ckb-ccc/utxo-global@1.2.4(typescript@5.9.3)(zod@4.6.5)':
+  '@ckb-ccc/utxo-global@1.2.6(typescript@5.9.3)(zod@4.6.5)':
     dependencies:
-      '@ckb-ccc/core': 1.22.0(typescript@5.9.3)(zod@4.6.5)
+      '@ckb-ccc/core': 1.23.0(typescript@5.9.3)(zod@4.6.5)
     transitivePeerDependencies:
       - bufferutil
       - encoding
@@ -4086,11 +4086,11 @@ snapshots:
       - utf-8-validate
       - zod
 
-  '@ckb-ccc/xverse@1.2.4(typescript@5.9.3)(zod@4.6.5)':
+  '@ckb-ccc/xverse@1.2.6(typescript@5.9.3)(zod@4.6.5)':
     dependencies:
-      '@ckb-ccc/core': 1.22.0(typescript@5.9.3)(zod@4.6.5)
-      bitcoinjs-lib: 7.0.1(typescript@5.9.3)
-      valibot: 1.4.2(typescript@5.9.3)
+      '@ckb-ccc/core': 1.23.0(typescript@5.9.3)(zod@4.6.5)
+      bitcoinjs-lib: 7.0.2(typescript@5.9.3)
+      valibot: 1.5.0(typescript@5.9.3)
     transitivePeerDependencies:
       - bufferutil
       - encoding
@@ -4488,7 +4488,7 @@ snapshots:
 
   '@ipld/dag-cbor@10.0.2':
     dependencies:
-      cborg: 6.1.1
+      cborg: 6.1.3
       multiformats: 14.0.5
 
   '@isaacs/ttlcache@1.4.1': {}
@@ -4551,15 +4551,15 @@ snapshots:
 
   '@leichtgewicht/ip-codec@2.0.5': {}
 
-  '@libp2p/circuit-relay-v2@4.2.13':
+  '@libp2p/circuit-relay-v2@4.2.14':
     dependencies:
-      '@libp2p/crypto': 5.1.23
-      '@libp2p/interface': 3.3.0
-      '@libp2p/interface-internal': 3.1.13
-      '@libp2p/peer-collections': 7.0.28
-      '@libp2p/peer-id': 6.0.15
-      '@libp2p/peer-record': 9.0.16
-      '@libp2p/utils': 7.4.1
+      '@libp2p/crypto': 5.1.24
+      '@libp2p/interface': 3.3.1
+      '@libp2p/interface-internal': 3.1.14
+      '@libp2p/peer-collections': 7.0.29
+      '@libp2p/peer-id': 6.0.16
+      '@libp2p/peer-record': 9.0.17
+      '@libp2p/utils': 7.4.2
       '@multiformats/multiaddr': 13.0.3
       '@multiformats/multiaddr-matcher': 3.0.2
       any-signal: 4.2.0
@@ -4567,46 +4567,46 @@ snapshots:
       multiformats: 14.0.5
       nanoid: 6.0.2
       progress-events: 1.1.0
-      protons-runtime: 7.1.0
+      protons-runtime: 7.1.2
       retimeable-signal: 1.0.1
       uint8arraylist: 3.0.2
       uint8arrays: 6.1.1
 
-  '@libp2p/crypto@5.1.23':
+  '@libp2p/crypto@5.1.24':
     dependencies:
-      '@libp2p/interface': 3.3.0
-      '@noble/curves': 2.3.0
-      '@noble/hashes': 2.3.0
+      '@libp2p/interface': 3.3.1
+      '@noble/curves': 2.4.0
+      '@noble/hashes': 2.4.0
       multiformats: 14.0.5
-      protons-runtime: 7.1.0
+      protons-runtime: 7.1.2
       uint8arraylist: 3.0.2
       uint8arrays: 6.1.1
 
-  '@libp2p/identify@4.1.14':
+  '@libp2p/identify@4.1.15':
     dependencies:
-      '@libp2p/crypto': 5.1.23
-      '@libp2p/interface': 3.3.0
-      '@libp2p/interface-internal': 3.1.13
-      '@libp2p/peer-id': 6.0.15
-      '@libp2p/peer-record': 9.0.16
-      '@libp2p/utils': 7.4.1
+      '@libp2p/crypto': 5.1.24
+      '@libp2p/interface': 3.3.1
+      '@libp2p/interface-internal': 3.1.14
+      '@libp2p/peer-id': 6.0.16
+      '@libp2p/peer-record': 9.0.17
+      '@libp2p/utils': 7.4.2
       '@multiformats/multiaddr': 13.0.3
       '@multiformats/multiaddr-matcher': 3.0.2
       it-drain: 3.0.12
       it-parallel: 3.0.16
       main-event: 1.0.5
-      protons-runtime: 7.1.0
+      protons-runtime: 7.1.2
       uint8arraylist: 3.0.2
       uint8arrays: 6.1.1
 
-  '@libp2p/interface-internal@3.1.13':
+  '@libp2p/interface-internal@3.1.14':
     dependencies:
-      '@libp2p/interface': 3.3.0
-      '@libp2p/peer-collections': 7.0.28
+      '@libp2p/interface': 3.3.1
+      '@libp2p/peer-collections': 7.0.29
       '@multiformats/multiaddr': 13.0.3
       progress-events: 1.1.0
 
-  '@libp2p/interface@3.3.0':
+  '@libp2p/interface@3.3.1':
     dependencies:
       '@multiformats/dns': 1.0.15
       '@multiformats/multiaddr': 13.0.3
@@ -4615,103 +4615,103 @@ snapshots:
       progress-events: 1.1.0
       uint8arraylist: 3.0.2
 
-  '@libp2p/keychain@6.1.7':
+  '@libp2p/keychain@6.1.8':
     dependencies:
-      '@libp2p/crypto': 5.1.23
-      '@libp2p/interface': 3.3.0
-      '@noble/hashes': 2.3.0
+      '@libp2p/crypto': 5.1.24
+      '@libp2p/interface': 3.3.1
+      '@noble/hashes': 2.4.0
       asn1js: 3.0.10
       interface-datastore: 10.0.1
       multiformats: 14.0.5
       sanitize-filename: 1.6.4
       uint8arrays: 6.1.1
 
-  '@libp2p/logger@6.2.13':
+  '@libp2p/logger@6.2.14':
     dependencies:
-      '@libp2p/interface': 3.3.0
+      '@libp2p/interface': 3.3.1
       '@multiformats/multiaddr': 13.0.3
       interface-datastore: 10.0.1
       multiformats: 14.0.5
       weald: 1.1.3
 
-  '@libp2p/multistream-select@7.0.28':
+  '@libp2p/multistream-select@7.0.29':
     dependencies:
-      '@libp2p/interface': 3.3.0
-      '@libp2p/utils': 7.4.1
+      '@libp2p/interface': 3.3.1
+      '@libp2p/utils': 7.4.2
       it-length-prefixed: 11.0.1
       uint8arraylist: 3.0.2
       uint8arrays: 6.1.1
 
-  '@libp2p/noise@17.0.2':
+  '@libp2p/noise@17.0.4':
     dependencies:
       '@chainsafe/as-chacha20poly1305': 0.1.0
       '@chainsafe/as-sha256': 1.2.5
-      '@libp2p/crypto': 5.1.23
-      '@libp2p/interface': 3.3.0
-      '@libp2p/peer-id': 6.0.15
-      '@libp2p/utils': 7.4.1
-      '@noble/ciphers': 2.3.0
-      '@noble/curves': 2.3.0
-      '@noble/hashes': 2.3.0
-      protons-runtime: 7.1.0
+      '@libp2p/crypto': 5.1.24
+      '@libp2p/interface': 3.3.1
+      '@libp2p/peer-id': 6.0.16
+      '@libp2p/utils': 7.4.2
+      '@noble/ciphers': 2.4.0
+      '@noble/curves': 2.4.0
+      '@noble/hashes': 2.4.0
+      protons-runtime: 7.1.2
       uint8arraylist: 3.0.2
       uint8arrays: 6.1.1
       wherearewe: 2.0.1
 
-  '@libp2p/peer-collections@7.0.28':
+  '@libp2p/peer-collections@7.0.29':
     dependencies:
-      '@libp2p/interface': 3.3.0
-      '@libp2p/peer-id': 6.0.15
-      '@libp2p/utils': 7.4.1
+      '@libp2p/interface': 3.3.1
+      '@libp2p/peer-id': 6.0.16
+      '@libp2p/utils': 7.4.2
       multiformats: 14.0.5
 
-  '@libp2p/peer-id@6.0.15':
+  '@libp2p/peer-id@6.0.16':
     dependencies:
-      '@libp2p/crypto': 5.1.23
-      '@libp2p/interface': 3.3.0
+      '@libp2p/crypto': 5.1.24
+      '@libp2p/interface': 3.3.1
       multiformats: 14.0.5
       uint8arrays: 6.1.1
 
-  '@libp2p/peer-record@9.0.16':
+  '@libp2p/peer-record@9.0.17':
     dependencies:
-      '@libp2p/crypto': 5.1.23
-      '@libp2p/interface': 3.3.0
-      '@libp2p/peer-id': 6.0.15
+      '@libp2p/crypto': 5.1.24
+      '@libp2p/interface': 3.3.1
+      '@libp2p/peer-id': 6.0.16
       '@multiformats/multiaddr': 13.0.3
       multiformats: 14.0.5
-      protons-runtime: 7.1.0
+      protons-runtime: 7.1.2
       uint8-varint: 3.0.0
       uint8arraylist: 3.0.2
       uint8arrays: 6.1.1
 
-  '@libp2p/peer-store@12.0.28':
+  '@libp2p/peer-store@12.0.29':
     dependencies:
-      '@libp2p/crypto': 5.1.23
-      '@libp2p/interface': 3.3.0
-      '@libp2p/peer-collections': 7.0.28
-      '@libp2p/peer-id': 6.0.15
-      '@libp2p/peer-record': 9.0.16
+      '@libp2p/crypto': 5.1.24
+      '@libp2p/interface': 3.3.1
+      '@libp2p/peer-collections': 7.0.29
+      '@libp2p/peer-id': 6.0.16
+      '@libp2p/peer-record': 9.0.17
       '@multiformats/multiaddr': 13.0.3
       interface-datastore: 10.0.1
       it-all: 3.0.11
       main-event: 1.0.5
       mortice: 3.3.1
       multiformats: 14.0.5
-      protons-runtime: 7.1.0
+      protons-runtime: 7.1.2
       uint8arraylist: 3.0.2
       uint8arrays: 6.1.1
 
-  '@libp2p/utils@7.4.1':
+  '@libp2p/utils@7.4.2':
     dependencies:
       '@chainsafe/is-ip': 2.1.0
       '@chainsafe/netmask': 2.0.0
-      '@libp2p/interface': 3.3.0
-      '@libp2p/logger': 6.2.13
+      '@libp2p/interface': 3.3.1
+      '@libp2p/logger': 6.2.14
       '@multiformats/multiaddr': 13.0.3
       '@multiformats/multiaddr-matcher': 3.0.2
       '@sindresorhus/fnv1a': 3.1.0
       any-signal: 4.2.0
-      cborg: 6.1.1
+      cborg: 6.1.3
       delay: 7.0.0
       is-loopback-addr: 2.1.0
       it-length-prefixed: 11.0.1
@@ -4721,24 +4721,24 @@ snapshots:
       main-event: 1.0.5
       netmask: 2.1.1
       p-defer: 4.0.1
-      p-event: 7.1.0
+      p-event: 7.1.1
       progress-events: 1.1.0
-      protons-runtime: 7.1.0
+      protons-runtime: 7.1.2
       race-signal: 2.0.2
       uint8-varint: 3.0.0
       uint8arraylist: 3.0.2
       uint8arrays: 6.1.1
 
-  '@libp2p/webrtc@6.0.32(react-native@0.87.1(@babel/core@7.29.7)(@types/react@19.3.0)(react@19.3.0))':
+  '@libp2p/webrtc@6.1.0(react-native@0.87.1(@babel/core@7.29.7)(@types/react@19.3.0)(react@19.3.0))':
     dependencies:
       '@chainsafe/is-ip': 2.1.0
-      '@libp2p/crypto': 5.1.23
-      '@libp2p/interface': 3.3.0
-      '@libp2p/interface-internal': 3.1.13
-      '@libp2p/keychain': 6.1.7
-      '@libp2p/noise': 17.0.2
-      '@libp2p/peer-id': 6.0.15
-      '@libp2p/utils': 7.4.1
+      '@libp2p/crypto': 5.1.24
+      '@libp2p/interface': 3.3.1
+      '@libp2p/interface-internal': 3.1.14
+      '@libp2p/keychain': 6.1.8
+      '@libp2p/noise': 17.0.4
+      '@libp2p/peer-id': 6.0.16
+      '@libp2p/utils': 7.4.2
       '@multiformats/multiaddr': 13.0.3
       '@multiformats/multiaddr-matcher': 3.0.2
       '@peculiar/webcrypto': 1.7.1
@@ -4751,13 +4751,13 @@ snapshots:
       it-stream-types: 2.0.4
       main-event: 1.0.5
       multiformats: 14.0.5
-      node-datachannel: 0.33.3
+      node-datachannel: 0.33.4
       p-defer: 4.0.1
-      p-event: 7.1.0
-      p-timeout: 7.0.1
+      p-event: 7.1.1
+      p-timeout: 7.0.2
       p-wait-for: 6.0.0
       progress-events: 1.1.0
-      protons-runtime: 7.1.0
+      protons-runtime: 7.1.2
       race-signal: 2.0.2
       react-native-webrtc: 124.0.8(react-native@0.87.1(@babel/core@7.29.7)(@types/react@19.3.0)(react@19.3.0))
       reflect-metadata: 0.2.2
@@ -4768,19 +4768,19 @@ snapshots:
       - react-native
       - supports-color
 
-  '@libp2p/websockets@10.1.21':
+  '@libp2p/websockets@10.1.22':
     dependencies:
-      '@libp2p/interface': 3.3.0
-      '@libp2p/utils': 7.4.1
+      '@libp2p/interface': 3.3.1
+      '@libp2p/utils': 7.4.2
       '@multiformats/multiaddr': 13.0.3
       '@multiformats/multiaddr-matcher': 3.0.2
       '@multiformats/multiaddr-to-uri': 12.0.0
       main-event: 1.0.5
-      p-event: 7.1.0
+      p-event: 7.1.1
       progress-events: 1.1.0
       uint8arraylist: 3.0.2
       uint8arrays: 6.1.1
-      ws: 8.21.3
+      ws: 8.22.0
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
@@ -4798,7 +4798,7 @@ snapshots:
   '@multiformats/dns@1.0.15':
     dependencies:
       '@dnsquery/dns-packet': 6.1.1
-      '@libp2p/interface': 3.3.0
+      '@libp2p/interface': 3.3.1
       hashlru: 2.3.0
       p-queue: 9.3.3
       progress-events: 1.1.0
@@ -4869,47 +4869,47 @@ snapshots:
   '@next/swc-win32-x64-msvc@16.4.0':
     optional: true
 
-  '@noble/ciphers@2.3.0': {}
+  '@noble/ciphers@2.4.0': {}
 
   '@noble/curves@1.2.0':
     dependencies:
       '@noble/hashes': 1.3.2
 
-  '@noble/curves@2.3.0':
+  '@noble/curves@2.4.0':
     dependencies:
-      '@noble/hashes': 2.3.0
+      '@noble/hashes': 2.4.0
 
   '@noble/hashes@1.3.2': {}
 
   '@noble/hashes@1.8.0': {}
 
-  '@noble/hashes@2.3.0': {}
+  '@noble/hashes@2.4.0': {}
 
-  '@node-datachannel/android-arm64@0.33.2':
+  '@node-datachannel/android-arm64@0.33.4':
     optional: true
 
-  '@node-datachannel/darwin-arm64@0.33.2':
+  '@node-datachannel/darwin-arm64@0.33.4':
     optional: true
 
-  '@node-datachannel/darwin-x64@0.33.2':
+  '@node-datachannel/darwin-x64@0.33.4':
     optional: true
 
-  '@node-datachannel/linux-arm64-gnu@0.33.2':
+  '@node-datachannel/linux-arm64-gnu@0.33.4':
     optional: true
 
-  '@node-datachannel/linux-arm64-musl@0.33.2':
+  '@node-datachannel/linux-arm64-musl@0.33.4':
     optional: true
 
-  '@node-datachannel/linux-x64-gnu@0.33.2':
+  '@node-datachannel/linux-x64-gnu@0.33.4':
     optional: true
 
-  '@node-datachannel/linux-x64-musl@0.33.2':
+  '@node-datachannel/linux-x64-musl@0.33.4':
     optional: true
 
-  '@node-datachannel/win32-arm64-msvc@0.33.2':
+  '@node-datachannel/win32-arm64-msvc@0.33.4':
     optional: true
 
-  '@node-datachannel/win32-x64-msvc@0.33.2':
+  '@node-datachannel/win32-x64-msvc@0.33.4':
     optional: true
 
   '@nodelib/fs.scandir@2.1.5':
@@ -4926,94 +4926,94 @@ snapshots:
 
   '@nolyfill/is-core-module@1.0.39': {}
 
-  '@peculiar/asn1-asym-key@2.9.4':
+  '@peculiar/asn1-asym-key@2.10.0':
     dependencies:
-      '@peculiar/asn1-pkcs8': 2.9.4
-      '@peculiar/asn1-schema': 2.9.4
-      '@peculiar/asn1-x509': 2.9.4
+      '@peculiar/asn1-pkcs8': 2.10.0
+      '@peculiar/asn1-schema': 2.10.0
+      '@peculiar/asn1-x509': 2.10.0
       asn1js: 3.0.10
       tslib: 2.8.1
 
-  '@peculiar/asn1-cms@2.9.4':
+  '@peculiar/asn1-cms@2.10.0':
     dependencies:
-      '@peculiar/asn1-schema': 2.9.4
-      '@peculiar/asn1-x509': 2.9.4
-      '@peculiar/asn1-x509-attr': 2.9.4
+      '@peculiar/asn1-schema': 2.10.0
+      '@peculiar/asn1-x509': 2.10.0
+      '@peculiar/asn1-x509-attr': 2.10.0
       asn1js: 3.0.10
       tslib: 2.8.1
 
-  '@peculiar/asn1-csr@2.9.4':
+  '@peculiar/asn1-csr@2.10.0':
     dependencies:
-      '@peculiar/asn1-schema': 2.9.4
-      '@peculiar/asn1-x509': 2.9.4
+      '@peculiar/asn1-schema': 2.10.0
+      '@peculiar/asn1-x509': 2.10.0
       asn1js: 3.0.10
       tslib: 2.8.1
 
-  '@peculiar/asn1-ecc@2.9.4':
+  '@peculiar/asn1-ecc@2.10.0':
     dependencies:
-      '@peculiar/asn1-schema': 2.9.4
-      '@peculiar/asn1-x509': 2.9.4
+      '@peculiar/asn1-schema': 2.10.0
+      '@peculiar/asn1-x509': 2.10.0
       asn1js: 3.0.10
       tslib: 2.8.1
 
-  '@peculiar/asn1-pfx@2.9.4':
+  '@peculiar/asn1-pfx@2.10.0':
     dependencies:
-      '@peculiar/asn1-cms': 2.9.4
-      '@peculiar/asn1-pkcs8': 2.9.4
-      '@peculiar/asn1-rsa': 2.9.4
-      '@peculiar/asn1-schema': 2.9.4
+      '@peculiar/asn1-cms': 2.10.0
+      '@peculiar/asn1-pkcs8': 2.10.0
+      '@peculiar/asn1-rsa': 2.10.0
+      '@peculiar/asn1-schema': 2.10.0
       asn1js: 3.0.10
       tslib: 2.8.1
 
-  '@peculiar/asn1-pkcs8@2.9.4':
+  '@peculiar/asn1-pkcs8@2.10.0':
     dependencies:
-      '@peculiar/asn1-schema': 2.9.4
-      '@peculiar/asn1-x509': 2.9.4
+      '@peculiar/asn1-schema': 2.10.0
+      '@peculiar/asn1-x509': 2.10.0
       asn1js: 3.0.10
       tslib: 2.8.1
 
-  '@peculiar/asn1-pkcs9@2.9.4':
+  '@peculiar/asn1-pkcs9@2.10.0':
     dependencies:
-      '@peculiar/asn1-cms': 2.9.4
-      '@peculiar/asn1-pfx': 2.9.4
-      '@peculiar/asn1-pkcs8': 2.9.4
-      '@peculiar/asn1-schema': 2.9.4
-      '@peculiar/asn1-x509': 2.9.4
-      '@peculiar/asn1-x509-attr': 2.9.4
+      '@peculiar/asn1-cms': 2.10.0
+      '@peculiar/asn1-pfx': 2.10.0
+      '@peculiar/asn1-pkcs8': 2.10.0
+      '@peculiar/asn1-schema': 2.10.0
+      '@peculiar/asn1-x509': 2.10.0
+      '@peculiar/asn1-x509-attr': 2.10.0
       asn1js: 3.0.10
       tslib: 2.8.1
 
-  '@peculiar/asn1-rsa@2.9.4':
+  '@peculiar/asn1-rsa@2.10.0':
     dependencies:
-      '@peculiar/asn1-schema': 2.9.4
-      '@peculiar/asn1-x509': 2.9.4
+      '@peculiar/asn1-schema': 2.10.0
+      '@peculiar/asn1-x509': 2.10.0
       asn1js: 3.0.10
       tslib: 2.8.1
 
-  '@peculiar/asn1-schema@2.9.4':
+  '@peculiar/asn1-schema@2.10.0':
     dependencies:
       '@peculiar/utils': 2.0.3
       asn1js: 3.0.10
       tslib: 2.8.1
 
-  '@peculiar/asn1-x509-attr@2.9.4':
+  '@peculiar/asn1-x509-attr@2.10.0':
     dependencies:
-      '@peculiar/asn1-schema': 2.9.4
-      '@peculiar/asn1-x509': 2.9.4
+      '@peculiar/asn1-schema': 2.10.0
+      '@peculiar/asn1-x509': 2.10.0
       asn1js: 3.0.10
       tslib: 2.8.1
 
-  '@peculiar/asn1-x509-post-quantum@2.9.4':
+  '@peculiar/asn1-x509-post-quantum@2.10.0':
     dependencies:
-      '@peculiar/asn1-asym-key': 2.9.4
-      '@peculiar/asn1-schema': 2.9.4
-      '@peculiar/asn1-x509': 2.9.4
+      '@peculiar/asn1-asym-key': 2.10.0
+      '@peculiar/asn1-schema': 2.10.0
+      '@peculiar/asn1-x509': 2.10.0
       asn1js: 3.0.10
       tslib: 2.8.1
 
-  '@peculiar/asn1-x509@2.9.4':
+  '@peculiar/asn1-x509@2.10.0':
     dependencies:
-      '@peculiar/asn1-schema': 2.9.4
+      '@peculiar/asn1-schema': 2.10.0
       '@peculiar/utils': 2.0.3
       asn1js: 3.0.10
       tslib: 2.8.1
@@ -5028,7 +5028,7 @@ snapshots:
 
   '@peculiar/webcrypto@1.7.1':
     dependencies:
-      '@peculiar/asn1-schema': 2.9.4
+      '@peculiar/asn1-schema': 2.10.0
       '@peculiar/json-schema': 1.1.12
       '@peculiar/utils': 2.0.3
       tslib: 2.8.1
@@ -5036,14 +5036,14 @@ snapshots:
 
   '@peculiar/x509@2.1.0':
     dependencies:
-      '@peculiar/asn1-cms': 2.9.4
-      '@peculiar/asn1-csr': 2.9.4
-      '@peculiar/asn1-ecc': 2.9.4
-      '@peculiar/asn1-pkcs9': 2.9.4
-      '@peculiar/asn1-rsa': 2.9.4
-      '@peculiar/asn1-schema': 2.9.4
-      '@peculiar/asn1-x509': 2.9.4
-      '@peculiar/asn1-x509-post-quantum': 2.9.4
+      '@peculiar/asn1-cms': 2.10.0
+      '@peculiar/asn1-csr': 2.10.0
+      '@peculiar/asn1-ecc': 2.10.0
+      '@peculiar/asn1-pkcs9': 2.10.0
+      '@peculiar/asn1-rsa': 2.10.0
+      '@peculiar/asn1-schema': 2.10.0
+      '@peculiar/asn1-x509': 2.10.0
+      '@peculiar/asn1-x509-post-quantum': 2.10.0
       pvtsutils: 1.3.6
       tslib: 2.8.1
       tsyringe: 4.10.0
@@ -5568,9 +5568,9 @@ snapshots:
 
   axe-core@4.14.0: {}
 
-  axios@1.19.0:
+  axios@1.20.0:
     dependencies:
-      follow-redirects: 1.16.0
+      follow-redirects: 1.16.1
       form-data: 4.0.6
       https-proxy-agent: 5.0.1
       proxy-from-env: 2.1.0
@@ -5600,20 +5600,20 @@ snapshots:
 
   bech32@2.0.0: {}
 
-  bip174@3.0.0:
+  bip174@3.0.1:
     dependencies:
-      uint8array-tools: 0.0.9
-      varuint-bitcoin: 2.0.0
+      uint8array-tools: 0.0.10
+      varuint-bitcoin: 2.0.1
 
-  bitcoinjs-lib@7.0.1(typescript@5.9.3):
+  bitcoinjs-lib@7.0.2(typescript@5.9.3):
     dependencies:
       '@noble/hashes': 1.8.0
       bech32: 2.0.0
-      bip174: 3.0.0
+      bip174: 3.0.1
       bs58check: 4.0.0
       uint8array-tools: 0.0.9
-      valibot: 1.4.2(typescript@5.9.3)
-      varuint-bitcoin: 2.0.0
+      valibot: 1.5.0(typescript@5.9.3)
+      varuint-bitcoin: 2.0.1
     transitivePeerDependencies:
       - typescript
 
@@ -5708,7 +5708,7 @@ snapshots:
 
   caniuse-lite@1.0.30001815: {}
 
-  cborg@6.1.1: {}
+  cborg@6.1.3: {}
 
   chalk@4.1.2:
     dependencies:
@@ -5829,7 +5829,7 @@ snapshots:
 
   datastore-core@12.0.1:
     dependencies:
-      '@libp2p/logger': 6.2.13
+      '@libp2p/logger': 6.2.14
       abort-error: 1.0.2
       interface-datastore: 10.0.1
       interface-store: 8.0.0
@@ -6340,7 +6340,7 @@ snapshots:
     dependencies:
       flow-estree: 0.331.0
 
-  follow-redirects@1.16.0: {}
+  follow-redirects@1.16.1: {}
 
   for-each@0.3.5:
     dependencies:
@@ -6690,9 +6690,9 @@ snapshots:
 
   isexe@2.0.0: {}
 
-  isomorphic-ws@5.0.0(ws@8.21.3):
+  isomorphic-ws@5.0.0(ws@8.22.0):
     dependencies:
-      ws: 8.21.3
+      ws: 8.22.0
 
   it-all@3.0.11: {}
 
@@ -6874,19 +6874,19 @@ snapshots:
       prelude-ls: 1.2.1
       type-check: 0.4.0
 
-  libp2p@3.3.11:
+  libp2p@3.3.12:
     dependencies:
       '@chainsafe/is-ip': 2.1.0
       '@chainsafe/netmask': 2.0.0
-      '@libp2p/crypto': 5.1.23
-      '@libp2p/interface': 3.3.0
-      '@libp2p/interface-internal': 3.1.13
-      '@libp2p/logger': 6.2.13
-      '@libp2p/multistream-select': 7.0.28
-      '@libp2p/peer-collections': 7.0.28
-      '@libp2p/peer-id': 6.0.15
-      '@libp2p/peer-store': 12.0.28
-      '@libp2p/utils': 7.4.1
+      '@libp2p/crypto': 5.1.24
+      '@libp2p/interface': 3.3.1
+      '@libp2p/interface-internal': 3.1.14
+      '@libp2p/logger': 6.2.14
+      '@libp2p/multistream-select': 7.0.29
+      '@libp2p/peer-collections': 7.0.29
+      '@libp2p/peer-id': 6.0.16
+      '@libp2p/peer-store': 12.0.29
+      '@libp2p/utils': 7.4.2
       '@multiformats/dns': 1.0.15
       '@multiformats/multiaddr': 13.0.3
       '@multiformats/multiaddr-matcher': 3.0.2
@@ -6898,7 +6898,7 @@ snapshots:
       main-event: 1.0.5
       multiformats: 14.0.5
       p-defer: 4.0.1
-      p-event: 7.1.0
+      p-event: 7.1.1
       p-retry: 8.0.1
       progress-events: 1.1.0
       race-signal: 2.0.2
@@ -7286,19 +7286,19 @@ snapshots:
       - '@types/node'
       - babel-plugin-macros
 
-  node-datachannel@0.33.3:
+  node-datachannel@0.33.4:
     dependencies:
       detect-libc: 2.1.2
     optionalDependencies:
-      '@node-datachannel/android-arm64': 0.33.2
-      '@node-datachannel/darwin-arm64': 0.33.2
-      '@node-datachannel/darwin-x64': 0.33.2
-      '@node-datachannel/linux-arm64-gnu': 0.33.2
-      '@node-datachannel/linux-arm64-musl': 0.33.2
-      '@node-datachannel/linux-x64-gnu': 0.33.2
-      '@node-datachannel/linux-x64-musl': 0.33.2
-      '@node-datachannel/win32-arm64-msvc': 0.33.2
-      '@node-datachannel/win32-x64-msvc': 0.33.2
+      '@node-datachannel/android-arm64': 0.33.4
+      '@node-datachannel/darwin-arm64': 0.33.4
+      '@node-datachannel/darwin-x64': 0.33.4
+      '@node-datachannel/linux-arm64-gnu': 0.33.4
+      '@node-datachannel/linux-arm64-musl': 0.33.4
+      '@node-datachannel/linux-x64-gnu': 0.33.4
+      '@node-datachannel/linux-x64-musl': 0.33.4
+      '@node-datachannel/win32-arm64-msvc': 0.33.4
+      '@node-datachannel/win32-x64-msvc': 0.33.4
 
   node-exports-info@1.6.2:
     dependencies:
@@ -7394,9 +7394,9 @@ snapshots:
 
   p-defer@4.0.1: {}
 
-  p-event@7.1.0:
+  p-event@7.1.1:
     dependencies:
-      p-timeout: 7.0.1
+      p-timeout: 7.0.2
 
   p-limit@3.1.0:
     dependencies:
@@ -7409,13 +7409,13 @@ snapshots:
   p-queue@9.3.3:
     dependencies:
       eventemitter3: 5.0.4
-      p-timeout: 7.0.1
+      p-timeout: 7.0.2
 
   p-retry@8.0.1:
     dependencies:
       is-network-error: 1.3.2
 
-  p-timeout@7.0.1: {}
+  p-timeout@7.0.2: {}
 
   p-wait-for@6.0.0: {}
 
@@ -7480,7 +7480,7 @@ snapshots:
       uint8arraylist: 2.4.9
       uint8arrays: 5.1.1
 
-  protons-runtime@7.1.0:
+  protons-runtime@7.1.2:
     dependencies:
       uint8-varint: 3.0.0
       uint8arraylist: 3.0.2
@@ -7496,7 +7496,7 @@ snapshots:
 
   pvutils@1.2.0: {}
 
-  qr@0.7.0: {}
+  qr@0.7.2: {}
 
   queue-microtask@1.2.3: {}
 
@@ -8070,9 +8070,9 @@ snapshots:
       uint8arraylist: 3.0.2
       uint8arrays: 6.1.1
 
-  uint8array-extras@1.5.0: {}
+  uint8array-extras@1.6.0: {}
 
-  uint8array-tools@0.0.8: {}
+  uint8array-tools@0.0.10: {}
 
   uint8array-tools@0.0.9: {}
 
@@ -8158,13 +8158,13 @@ snapshots:
 
   uuid@8.3.2: {}
 
-  valibot@1.4.2(typescript@5.9.3):
+  valibot@1.5.0(typescript@5.9.3):
     optionalDependencies:
       typescript: 5.9.3
 
-  varuint-bitcoin@2.0.0:
+  varuint-bitcoin@2.0.1:
     dependencies:
-      uint8array-tools: 0.0.8
+      uint8array-tools: 0.0.10
 
   vlq@1.0.1: {}
 
@@ -8175,7 +8175,7 @@ snapshots:
 
   webcrypto-core@1.9.2:
     dependencies:
-      '@peculiar/asn1-schema': 2.9.4
+      '@peculiar/asn1-schema': 2.10.0
       '@peculiar/json-schema': 1.1.12
       '@peculiar/utils': 2.0.3
       asn1js: 3.0.10
@@ -8251,7 +8251,7 @@ snapshots:
 
   ws@8.21.0: {}
 
-  ws@8.21.3: {}
+  ws@8.22.0: {}
 
   y18n@5.0.8: {}
 
