@@ -67,6 +67,12 @@ If you are a developer and would like to deploy Nerv DAO yourself, follow these 
 
 By following these steps, you can customize and deploy your own instance of Nerv DAO, making it possible to explore and contribute to its development.
 
+## Development checks
+
+Use Node.js 24 and the pnpm version pinned in `package.json`. Run `pnpm install --frozen-lockfile`, then `pnpm lint` and `pnpm typecheck` before submitting changes. Typechecking generates Next.js types before running TypeScript, so it also works on a fresh checkout. GitHub Actions runs both checks on pushes and pull requests.
+
+`pnpm-workspace.yaml` sets `minimumReleaseAge: 1440` (24 hours) when resolving dependency versions, matching the Dependabot cooldown. If a newly published version is unavailable under this policy, wait for the cooldown before updating it.
+
 ## **Relevant Links**
 
 - **Nerv DAO Mainnet**: https://www.nervdao.com/

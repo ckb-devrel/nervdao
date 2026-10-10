@@ -1,5 +1,8 @@
 packages:
   - "."
 
+# Wait 24 hours before resolving newly published dependency versions.
+minimumReleaseAge: 1440
+
 onlyBuiltDependencies:
   - secp256k1
