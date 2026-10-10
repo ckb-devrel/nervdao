@@ -27,8 +27,8 @@ importers:
         specifier: ^5.101.4
         version: 5.104.1(react@19.3.0)
       apexcharts:
-        specifier: ^6.8.0
-        version: 6.8.0
+        specifier: ^8.0.0
+        version: 8.0.0
       framer-motion:
         specifier: ^14.0.0
         version: 14.0.0(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
@@ -1345,8 +1345,11 @@ packages:
     resolution: {integrity: sha512-LndMvYuAPf4rC195lk7oSFuHOYFpOszIYrNYv0gHAvz+aEhE9qPZLhmrIz5pXP2BSsPOXvsuHDXEGaiQhIh9wA==}
     engines: {node: '>=16.0.0', npm: '>=7.0.0'}
 
-  apexcharts@6.8.0:
-    resolution: {integrity: sha512-ifEl3w/NAMsKQ60JNDD8nRCGdnGeuuKNvUzZTQpPr/3JNewoZv98H42VpXFB96sHle/8GDsHn/NQp785xsNh4A==}
+  apex-commons@0.8.1:
+    resolution: {integrity: sha512-F7fqJVh0smeTu1d86uuRSNNZvaM/l11GNQMbu6oAiSvuXp+K8KCufg0oZTy2VQBEEipRLAdFqkHnphlVpTG0Gw==}
+
+  apexcharts@8.0.0:
+    resolution: {integrity: sha512-VA9l6lVKWNzwvnG1mh94SwnBJ+t0m+AlEKpL4wwIBFyn69j9zEyBKdOlQvtk4q1BWyP0SUJtVvgq9Dj8mvYLOw==}
     engines: {node: ^20.19.0 || ^22.12.0 || >=24.0.0}
 
   argparse@2.0.1:
@@ -5475,7 +5478,11 @@ snapshots:
 
   any-signal@4.2.0: {}
 
-  apexcharts@6.8.0: {}
+  apex-commons@0.8.1: {}
+
+  apexcharts@8.0.0:
+    dependencies:
+      apex-commons: 0.8.1
 
   argparse@2.0.1: {}
 
