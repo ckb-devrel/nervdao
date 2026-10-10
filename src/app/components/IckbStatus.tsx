@@ -1,7 +1,6 @@
 
 import { Info } from "lucide-react";
 import React, { useEffect, useState } from "react";
-// import ReactApexChart from "react-apexcharts";
 import { ccc } from "@ckb-ccc/connector-react";
 import { IckbDateType } from "@/cores/utils";
 import { useTranslation } from "react-i18next";
@@ -74,7 +73,6 @@ const IckbStatus: React.FC<{ ickbData: IckbDateType }> = ({ ickbData }) => {
   return (
     <div className="bg-gray-900 rounded-lg p-6 mb-4 mt-4">
       <h3 className="text-xl font-play font-bold mb-4">{t("ickbStatus.liquidity")}</h3>
-      {/* <ReactApexChart options={ChartData} series={ChartData.series} type="area" height={350} /> */}
       <div className="flex flex-col  sm:flex-row item-center justify-between ">
         <div className="bg-gray-800 relative rounded-lg p-3 pr-5 mb-2 w-full sm:w-[30%]" >
           <div className="flex justify-between items-center font-work-sans text-gray-400">
