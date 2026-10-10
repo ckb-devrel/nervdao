@@ -26,9 +26,6 @@ importers:
       '@tanstack/react-query':
         specifier: ^5.101.4
         version: 5.104.1(react@19.3.0)
-      apexcharts:
-        specifier: ^6.8.0
-        version: 6.8.0
       framer-motion:
         specifier: ^14.0.0
         version: 14.0.0(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
@@ -1344,10 +1341,6 @@ packages:
   any-signal@4.2.0:
     resolution: {integrity: sha512-LndMvYuAPf4rC195lk7oSFuHOYFpOszIYrNYv0gHAvz+aEhE9qPZLhmrIz5pXP2BSsPOXvsuHDXEGaiQhIh9wA==}
     engines: {node: '>=16.0.0', npm: '>=7.0.0'}
-
-  apexcharts@6.8.0:
-    resolution: {integrity: sha512-ifEl3w/NAMsKQ60JNDD8nRCGdnGeuuKNvUzZTQpPr/3JNewoZv98H42VpXFB96sHle/8GDsHn/NQp785xsNh4A==}
-    engines: {node: ^20.19.0 || ^22.12.0 || >=24.0.0}
 
   argparse@2.0.1:
     resolution: {integrity: sha512-8+9WqebbFzpX9OR+Wa6O29asIogeRMzcGtAINdpMHHyAg10f05aSFVBbcEqGf/PXw1EjAZ+q2/bEBg3DvurK3Q==}
@@ -5474,8 +5467,6 @@ snapshots:
   ansi-styles@5.2.0: {}
 
   any-signal@4.2.0: {}
-
-  apexcharts@6.8.0: {}
 
   argparse@2.0.1: {}
 
