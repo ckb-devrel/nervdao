@@ -31,7 +31,7 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
             return
         }
         if (txInfo.error !== null) {
-            showNotification("error", t(txInfo.error.i18nKey, txInfo.error.params));
+            showNotification("error", t(txInfo.error.i18nKey, txInfo.error.params ?? {}));
             return
         }
         setTransTBC(true)
@@ -213,12 +213,12 @@ const IckbSwap: React.FC<{ ickbData: IckbDateType, onUpdate: VoidFunction }> = (
                     <ul className="mt-2 text-sm">
                         {
                             txInfo.info.map((token, index) => (
-                                <li className="list-disc list-inside" key={`deposit-info-${index}`}>{t(token.i18nKey, token.params)}</li>
+                                <li className="list-disc list-inside" key={`deposit-info-${index}`}>{t(token.i18nKey, token.params ?? {})}</li>
                             ))
                         }
                         {
                             txInfo.error && (
-                                <li className="list-disc list-inside text-red-500" key={"deposit-error"}>{t(txInfo.error.i18nKey, txInfo.error.params)}</li>
+                                <li className="list-disc list-inside text-red-500" key={"deposit-error"}>{t(txInfo.error.i18nKey, txInfo.error.params ?? {})}</li>
                             )
                         }
                     </ul>
